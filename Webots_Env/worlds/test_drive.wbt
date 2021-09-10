@@ -1,0 +1,25 @@
+#VRML_SIM R2021b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation 0.0020361043133426547 0.980864877192937 0.19467908713703688 3.0681987555415726
+  position 0.04440319976083842 0.23323493849677815 -0.45400418774530504
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorAppearance Parquetry {
+    type "chequered"
+    IBLStrength 0
+  }
+  wallAppearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+Elisa3 {
+  controller "test_drive"
+}

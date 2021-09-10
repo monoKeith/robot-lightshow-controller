@@ -6,6 +6,7 @@
   "main": "./.webpack/main/index.js",
   "scripts": {
     "start": "electron-forge start",
+    "start:debug": "electron-forge start --vscode",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "release": "electron-forge publish",
