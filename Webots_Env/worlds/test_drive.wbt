@@ -1,10 +1,19 @@
 #VRML_SIM R2021b utf8
 WorldInfo {
+  basicTimeStep 16
   coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      material2 "dumbbell"
+      coulombFriction [
+        0
+      ]
+    }
+  ]
 }
 Viewpoint {
-  orientation 0.0020361043133426547 0.980864877192937 0.19467908713703688 3.0681987555415726
-  position 0.04440319976083842 0.23323493849677815 -0.45400418774530504
+  orientation 0.011684827755184278 0.9893247190976451 0.14525861414283692 2.9734660564807913
+  position 0.3945481582436578 0.6518789305497759 -1.3703528177752802
 }
 TexturedBackground {
 }
@@ -22,4 +31,51 @@ RectangleArena {
 }
 Elisa3 {
   controller "test_drive"
+}
+Solid {
+  translation 0.2 0.12 0
+  rotation 0 0 1 1.5708
+  children [
+    DEF G0 Group {
+      children [
+        Transform {
+          translation 0 0.06 0
+          children [
+            Shape {
+              geometry Sphere {
+                radius 0.03
+                subdivision 2
+              }
+            }
+          ]
+        }
+        Transform {
+          translation 0 -0.06 0
+          children [
+            Shape {
+              geometry Sphere {
+                radius 0.03
+                subdivision 2
+              }
+            }
+          ]
+        }
+        Shape {
+          geometry Cylinder {
+            height 0.1
+            radius 0.01
+          }
+        }
+      ]
+    }
+  ]
+  contactMaterial "dumbbell"
+  boundingObject USE G0
+  physics Physics {
+    density -1
+    mass 2
+    centerOfMass [
+      0 0.01 0
+    ]
+  }
 }

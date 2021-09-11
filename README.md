@@ -1,4 +1,4 @@
-# Robot-Lightshow-Controller
+# Robot-Lightshow
 
 ## Overview
 
@@ -16,7 +16,7 @@ complex drone operations are all designed prior to the event, using Intel’s pr
 ## Goal
 
 Similar to the idea of drone light shows, but instead of making the hardware, I will attempt to
-implement a simplified 2-dimensional light show in a simulated environment (Webots) with robots.
+implement a simplified 2-dimensional light show in a simulated environment ([Webots](https://cyberbotics.com/)) with robots.
 
 In total of 10 to 50 robots (users can configure the amount) each with a LED light, able to move to
 pre-defined locations and control the pixels (LED lights), forming a designated image (or
