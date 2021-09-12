@@ -11,6 +11,7 @@ import com.cyberbotics.webots.controller.LED;
 import com.cyberbotics.webots.controller.Robot;
 import com.cyberbotics.webots.controller.DistanceSensor;
 import com.cyberbotics.webots.controller.Motor;
+import com.cyberbotics.webots.controller.GPS;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,13 @@ public class test_drive {
       leds.add(robot.getLED(ledName));
     }
     final LED ledRGB = robot.getLED("ledrgb");
+    final GPS gps = robot.getGPS("gps");
 
     boolean round = true;
     int colorIndex = 0;
+
+    // Initialize GPS, sampling period 100 ms
+    gps.enable(100);
     
     while (robot.step(1000) != -1) {
 
@@ -46,6 +51,10 @@ public class test_drive {
       if (colorIndex >= colors.length){
         colorIndex = 0;
       }
+
+      // Read GPS
+      double[] location = gps.getValues();
+      System.out.println("GPS: X:" + location[0] + " Y:" + location[2] + " Height:" + location[1]);
 
     }
   }
