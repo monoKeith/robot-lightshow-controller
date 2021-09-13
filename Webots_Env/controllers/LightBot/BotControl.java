@@ -1,25 +1,28 @@
 import com.cyberbotics.webots.controller.*;
 
 public class BotControl {
+    private enum MovementStates{
+        STOP,
+        CURVE,
+        ROTATE,
+        FORWARD
+    }
     // Controller class for LightBot
     private static final String[] ledNames  = {"led1", "led2", "led3", "led4", "led5", "led6", "led7"};
     private static final String leftMotor   = "left wheel motor";
     private static final String rightMotor  = "right wheel motor";
     private static final String rgbName     = "ledrgb";
-    private static final String gpsName     = "gps";
-    private static final String compassName = "compass";
     private static final int timeStep       = 1000;
-    private static final int sampleRateMs   = 100;
     // Robot
     private Robot robot;
     // Onboard devices
     private Motor leftWheel, rightWheel;
     private LED[] leds;
     private LED rgb;
-    private GPS gps;
-    private Compass compass;
-    // Target
-    private int targetX, targetY;
+    // Location management
+    private Location location;
+    // State
+    private MovementStates movementState;
 
     public BotControl() {
         robot = new Robot();
@@ -34,20 +37,12 @@ public class BotControl {
         }
         rgb = robot.getLED(rgbName);
         rgb.set(0xffff00);
-        // Init GPS
-        gps = robot.getGPS(gpsName);
-        gps.enable(sampleRateMs);
-        // Init Compass
-        compass = robot.getCompass(compassName);
-        compass.enable(sampleRateMs);
+        // Location
+        location = new Location(robot);
         // Target
-        setTarget(0,0);
-    }
-
-    // Target GPS location of robot
-    public void setTarget(int X, int Y){
-        targetX = X;
-        targetY = Y;
+        location.setTarget(0,0);
+        // State
+        movementState = MovementStates.STOP;
     }
 
     // Stuck until time step
@@ -57,26 +52,13 @@ public class BotControl {
 
     // Update robot status according to sensors readings
     public void run(){
+        location.update();
 
+        leftWheel.setPosition(10);
+        rightWheel.setPosition(10);
 
         // Produce log
-        logGPS();
-        logCompass();
+        location.log();
     }
-
-    public void logGPS(){
-        double[] location = gps.getValues();
-        System.out.println(
-                String.format("GPS: X-Floor:%.02f Y-Floor:%.02f Height:%.02f",
-                        location[2], location[0], location[1]));
-    }
-
-    public void logCompass(){
-        double[] direction = compass.getValues();
-        System.out.println(
-                String.format("COMPASS: X-Floor:%.02f Y-Floor:%.02f UP:%.02f",
-                        direction[2], direction[0], direction[1]));
-    }
-
 
 }
