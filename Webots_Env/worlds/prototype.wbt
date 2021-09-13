@@ -1,10 +1,11 @@
 #VRML_SIM R2021b utf8
 WorldInfo {
+  basicTimeStep 16
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.008725922719646577 0.9711556090452907 0.23828688862915082 3.136069810671122
-  position -0.0006547005437728126 0.38852313343757494 -0.6440171943201768
+  orientation 0.5785932844182152 0.5822040288190671 0.5711989846393193 4.190896807317476
+  position -0.013065316728886776 1.5047493364945066 -0.03338868908036958
 }
 TexturedBackground {
 }
@@ -20,7 +21,8 @@ RectangleArena {
     metalness 0
   }
 }
-Robot {
+DEF LightBot Robot {
+  translation -0.37 0 -0.38
   children [
     DEF ELISA3_Compass Compass {
     }
@@ -65,7 +67,7 @@ Robot {
       ]
       endPoint DEF ELISA3_LEFT_WHEEL Solid {
         translation 0 0.0045 -0.02
-        rotation 0 0 1 0
+        rotation 0 0 -1 0
         children [
           DEF WHEEL_TRANSFORM Group {
             children [
@@ -127,7 +129,7 @@ Robot {
       ]
       endPoint DEF ELISA3_RIGHT_WHEEL Solid {
         translation 0 0.0045 0.02
-        rotation 0 0 1 0
+        rotation 0 0 -1 0
         children [
           USE WHEEL_TRANSFORM
         ]
@@ -900,5 +902,5 @@ Robot {
       0 0 0
     ]
   }
-  controller "test_drive"
+  controller "LightBot"
 }

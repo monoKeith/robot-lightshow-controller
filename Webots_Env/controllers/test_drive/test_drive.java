@@ -7,17 +7,11 @@
 // You may need to add other webots classes such as
 //  import com.cyberbotics.webots.controller.DistanceSensor;
 //  import com.cyberbotics.webots.controller.Motor;
-import com.cyberbotics.webots.controller.LED;
-import com.cyberbotics.webots.controller.Robot;
-import com.cyberbotics.webots.controller.DistanceSensor;
-import com.cyberbotics.webots.controller.Motor;
-import com.cyberbotics.webots.controller.GPS;
+import com.cyberbotics.webots.controller.*;
 
 import java.util.ArrayList;
 
 public class test_drive {
-
-
 
   public static void main(String[] args) throws InterruptedException {
 
@@ -31,12 +25,14 @@ public class test_drive {
     }
     final LED ledRGB = robot.getLED("ledrgb");
     final GPS gps = robot.getGPS("gps");
+    final Compass compass = robot.getCompass("compass");
 
     boolean round = true;
     int colorIndex = 0;
 
-    // Initialize GPS, sampling period 100 ms
+    // Initialize GPS and Compass, sampling period 100 ms
     gps.enable(100);
+    compass.enable(100);
     
     while (robot.step(1000) != -1) {
 
@@ -54,8 +50,13 @@ public class test_drive {
 
       // Read GPS
       double[] location = gps.getValues();
-      System.out.println("GPS: X:" + location[0] + " Y:" + location[2] + " Height:" + location[1]);
+      System.out.println(String.format("GPS: X-Floor:%.02f Y-Floor:%.02f Height:%.02f", location[2], location[0], location[1]));
+
+      // Read Compass
+      double[] direction = compass.getValues();
+      System.out.println(String.format("COMPASS: X-Floor:%.02f Y-Floor:%.02f UP:%.02f", direction[2], direction[0], direction[1]));
 
     }
+
   }
 }
