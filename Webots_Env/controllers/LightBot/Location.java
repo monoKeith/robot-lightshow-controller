@@ -5,7 +5,10 @@ import com.cyberbotics.webots.controller.Robot;
 public class Location {
     private static final String gpsName     = "gps";
     private static final String compassName = "compass";
+    // sampleRateMs - GPS and Compass sample rate (in ms)
     private static final int sampleRateMs   = 100;
+    // accuracy - accuracy for detecting if target position is reached (in meter)
+    private static final double accuracy    = 0.01;
     // Sensors
     private GPS gps;
     private Compass compass;
@@ -14,6 +17,9 @@ public class Location {
     // Delta
     private double deltaX, deltaY;
     // Directions (in Degrees)
+    // targetAngle - when vertex is the robot, angle between x-axis and target point
+    // curAngle - when vertex is the robot, angle between x-axis and robot's forward direction
+    // When these 2 angles match, robot is pointing straight towards target point
     private double targetAngle, curAngle;
     // Sensors data
     private double[] location, direction;
@@ -37,21 +43,47 @@ public class Location {
         targetY = Y;
     }
 
+    // True  - head pointing to correct direction
+    // False - Need alignment
+    public boolean checkAlignment(){
+        int cur = (int) curAngle;
+        int target = (int) targetAngle;
+        return cur == target;
+    }
+
+    // Check if robot in target location
+    public boolean checkPosition(){
+        return (deltaX <= accuracy && deltaY <= accuracy);
+    }
+
     public void update(){
         location = gps.getValues();
         direction = compass.getValues();
-
+        // Calculate targetAngle
         deltaX = targetX - location[2];
         deltaY = targetY - location[0];
         targetAngle = Math.atan(deltaY / deltaX) * 180 / (Math.PI);
         targetAngle = targetAngle >= 0 ? targetAngle : targetAngle + 180;
         targetAngle = deltaY < 0 ? targetAngle + 180 : targetAngle;
-
+        // Calculate curAngle
         double dirX = - direction[2];
         double dirY = direction[0];
         curAngle = Math.atan(dirY / dirX) * 180 / (Math.PI);
         curAngle = curAngle >= 0 ? curAngle : curAngle + 180;
         curAngle = dirY < 0 ? curAngle + 180 : curAngle;
+    }
+
+    public double getTargetAngle(){
+        return targetAngle;
+    }
+
+    public double getCurAngle(){
+        return curAngle;
+    }
+
+    // absolute Distance from target position
+    public double getDistance(){
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
     }
 
     /* Log */
