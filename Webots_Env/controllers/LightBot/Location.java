@@ -9,8 +9,10 @@ public class Location {
     private static final int sampleRateMs   = 100;
     // posAccuracy - accuracy for detecting if target position is reached (in meter)
     private static final double posAccuracy = 0.01;
-    // dirAccuracy - accuracy for pointing at target position (in degrees)
-    private static final double dirAccuracy = 5;
+    // spinAccuracy - accuracy for spinning towards target position (in degrees)
+    private static final double spinAccuracy = 5;
+    // curveAccuracy - accuracy for curving towards target position (in degrees)
+    private static final double curveAccuracy = 0.1;
     // Sensors
     private GPS gps;
     private Compass compass;
@@ -47,10 +49,12 @@ public class Location {
 
     // True  - head pointing to correct direction
     // False - Need alignment
-    public boolean checkAlignment(){
-        int cur = (int) curAngle;
-        int target = (int) targetAngle;
-        return Math.abs(cur - target) <= dirAccuracy;
+    public boolean checkSpinAlignment(){
+        return Math.abs(curAngle - targetAngle) <= spinAccuracy;
+    }
+
+    public boolean checkCurveAlignment(){
+        return Math.abs(curAngle - targetAngle) <= curveAccuracy;
     }
 
     // Check if robot in target location

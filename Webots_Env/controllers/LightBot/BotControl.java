@@ -81,18 +81,18 @@ public class BotControl {
                 // Check position
                 if (!location.checkPosition()){
                     // Update state according to alignment
-                    movementState = location.checkAlignment() ? MovementStates.FORWARD : MovementStates.ROTATE;
+                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
+                    movementState = location.checkSpinAlignment() ? movementState : MovementStates.ROTATE;
                 }
             }
             case ROTATE -> {
-                if (location.checkAlignment()){
+                if (location.checkSpinAlignment()){
                     movementState = MovementStates.FORWARD;
                 }
             }
             case CURVE -> {
-                if (location.checkAlignment()){
-                    double dirDiff = Math.abs(location.directionDiff());
-                    movementState = dirDiff < 1 ? MovementStates.FORWARD : MovementStates.CURVE;
+                if (location.checkSpinAlignment()){
+                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
                 } else {
                     movementState = MovementStates.ROTATE;
                 }
@@ -103,7 +103,7 @@ public class BotControl {
                     movementState = MovementStates.STOP;
                 } else {
                     // Not arrived yet, update state according to alignment
-                    movementState = location.checkAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
+                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
                 }
             }
             default -> {
@@ -115,23 +115,10 @@ public class BotControl {
 
         // Action
         switch(movementState) {
-            case STOP -> {
-                // Do nothing
-            }
-            case ROTATE -> {
-                spin();
-            }
-            case CURVE -> {
-                curve();
-            }
-            case FORWARD -> {
-                forward();
-            }
-            default -> {
-                System.out.println(
-                        String.format("Unknown state: %s, abort.", movementState));
-                return;
-            }
+            case STOP       -> arrived();
+            case ROTATE     -> spin();
+            case CURVE      -> curve();
+            case FORWARD    -> forward();
         }
     }
 
@@ -142,9 +129,9 @@ public class BotControl {
     }
 
     // Adjust speed of motor according target direction
-    // One side reach stop when angle offset is 180 degrees
+    // Sensitivity - One side reach stop when angle offset is 45 degrees
     private void curve(){
-        double speedOffset = (location.directionDiff() / 180) * defaultV;
+        double speedOffset = (location.directionDiff() / 45) * defaultV;
         leftWheel.setVelocity(defaultV - speedOffset);
         rightWheel.setVelocity(defaultV + speedOffset);
     }
@@ -169,6 +156,10 @@ public class BotControl {
         resetSpeed();
         leftWheel.setPosition(curLPosition + distanceToGo);
         rightWheel.setPosition(curRPosition + distanceToGo);
+    }
+
+    private void arrived(){
+
     }
 
 }
