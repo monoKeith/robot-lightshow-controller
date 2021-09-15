@@ -7,8 +7,10 @@ public class Location {
     private static final String compassName = "compass";
     // sampleRateMs - GPS and Compass sample rate (in ms)
     private static final int sampleRateMs   = 100;
-    // accuracy - accuracy for detecting if target position is reached (in meter)
-    private static final double accuracy    = 0.01;
+    // posAccuracy - accuracy for detecting if target position is reached (in meter)
+    private static final double posAccuracy = 0.01;
+    // dirAccuracy - accuracy for pointing at target position (in degrees)
+    private static final double dirAccuracy = 5;
     // Sensors
     private GPS gps;
     private Compass compass;
@@ -38,7 +40,7 @@ public class Location {
         deltaY = 0;
     }
 
-    public void setTarget(int X, int Y){
+    public void setTarget(double X, double Y){
         targetX = X;
         targetY = Y;
     }
@@ -48,12 +50,12 @@ public class Location {
     public boolean checkAlignment(){
         int cur = (int) curAngle;
         int target = (int) targetAngle;
-        return cur == target;
+        return Math.abs(cur - target) <= dirAccuracy;
     }
 
     // Check if robot in target location
     public boolean checkPosition(){
-        return (deltaX <= accuracy && deltaY <= accuracy);
+        return (deltaX <= posAccuracy && deltaY <= posAccuracy);
     }
 
     public void update(){
@@ -84,6 +86,13 @@ public class Location {
     // absolute Distance from target position
     public double getDistance(){
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    }
+
+    // Returns difference between target angle and current angle
+    // https://stackoverflow.com/questions/1878907/how-can-i-find-the-difference-between-two-angles
+    public double directionDiff(){
+        double diff = targetAngle - curAngle;
+        return (diff + 180) % 360 - 180;
     }
 
     /* Log */

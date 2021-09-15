@@ -19,6 +19,8 @@ public class BotControl {
     private static final double spinConst   = 0.1;
     // moveConst - Number of position unit both wheels rotate to move 1 meter
     private static final double moveConst   = 200;
+    // defaultV - default velocity for wheels
+    private static final double defaultV    = 60;
     // Robot
     private Robot robot;
     // Onboard devices
@@ -51,9 +53,11 @@ public class BotControl {
         // Location
         location = new Location(robot);
         // Target
-        location.setTarget(0,0);
+        location.setTarget(0.45,0.45);
         // State
         movementState = MovementStates.STOP;
+        // Default velocity
+        resetSpeed();
     }
 
     // Stuck until time step
@@ -65,6 +69,7 @@ public class BotControl {
     public void run(){
         location.update();
         location.log();
+        System.out.println("State: " + movementState.toString());
         // Update state according to current state
         switch (movementState) {
             case STOP -> {
@@ -76,8 +81,15 @@ public class BotControl {
             }
             case ROTATE -> {
                 if (location.checkAlignment()){
-                    // Update state to forward
                     movementState = MovementStates.FORWARD;
+                }
+            }
+            case CURVE -> {
+                if (location.checkAlignment()){
+                    double dirDiff = Math.abs(location.directionDiff());
+                    movementState = dirDiff < 1 ? MovementStates.FORWARD : MovementStates.CURVE;
+                } else {
+                    movementState = MovementStates.ROTATE;
                 }
             }
             case FORWARD -> {
@@ -86,7 +98,7 @@ public class BotControl {
                     movementState = MovementStates.STOP;
                 } else {
                     // Not arrived yet, update state according to alignment
-                    movementState = location.checkAlignment() ? MovementStates.FORWARD : MovementStates.ROTATE;
+                    movementState = location.checkAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
                 }
             }
             default -> {
@@ -102,11 +114,13 @@ public class BotControl {
                 // Do nothing
             }
             case ROTATE -> {
-                // Spin towards target direction
-                spin(location.getTargetAngle());
+                spin();
+            }
+            case CURVE -> {
+                curve();
             }
             case FORWARD -> {
-                forward(location.getDistance());
+                forward();
             }
             default -> {
                 System.out.println(
@@ -116,21 +130,38 @@ public class BotControl {
         }
     }
 
-    // Spin robot to point to a specified direction
-    private void spin(double targetAngle){
+    // Set wheel velocity to default value
+    private void resetSpeed(){
+        leftWheel.setVelocity(defaultV);
+        rightWheel.setVelocity(defaultV);
+    }
+
+    // Adjust speed of motor according target direction
+    // One side reach stop when angle offset is 45 degrees
+    private void curve(){
+        double speedOffset = (location.directionDiff() / 90) * defaultV;
+        leftWheel.setVelocity(defaultV - speedOffset);
+        rightWheel.setVelocity(defaultV + speedOffset);
+    }
+
+    // Spin robot to point to a target direction
+    private void spin(){
         double curLPosition = leftPosition.getValue();
         double curRPosition = rightPosition.getValue();
-        double degreesToTurn = (targetAngle - location.getCurAngle()) * spinConst;
+        double degreesToTurn = location.directionDiff() * spinConst;
         // Spin wheels in opposite direction
+        resetSpeed();
         leftWheel.setPosition(curLPosition - degreesToTurn);
         rightWheel.setPosition(curRPosition + degreesToTurn);
     }
 
-    private void forward(double distance){
+    // Move forward, should be called only when aligned to target
+    private void forward(){
         double curLPosition = leftPosition.getValue();
         double curRPosition = rightPosition.getValue();
-        double distanceToGo = distance * moveConst;
+        double distanceToGo = location.getDistance() * moveConst;
         // Spin wheels in same direction
+        resetSpeed();
         leftWheel.setPosition(curLPosition + distanceToGo);
         rightWheel.setPosition(curRPosition + distanceToGo);
     }
