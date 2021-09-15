@@ -53,7 +53,7 @@ public class BotControl {
         // Location
         location = new Location(robot);
         // Target
-        location.setTarget(0.45,0.45);
+        location.setTarget(-0.25,-0.25);
         // State
         movementState = MovementStates.STOP;
         // Default velocity
@@ -63,6 +63,11 @@ public class BotControl {
     // Stuck until time step
     public boolean waitTimeStep(){
         return robot.step(timeStep) != -1;
+    }
+
+    public void debug(){
+        location.update();
+        location.log();
     }
 
     // Update robot status according to sensors readings
@@ -137,9 +142,9 @@ public class BotControl {
     }
 
     // Adjust speed of motor according target direction
-    // One side reach stop when angle offset is 45 degrees
+    // One side reach stop when angle offset is 180 degrees
     private void curve(){
-        double speedOffset = (location.directionDiff() / 90) * defaultV;
+        double speedOffset = (location.directionDiff() / 180) * defaultV;
         leftWheel.setVelocity(defaultV - speedOffset);
         rightWheel.setVelocity(defaultV + speedOffset);
     }

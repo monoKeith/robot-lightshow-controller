@@ -22,7 +22,7 @@ RectangleArena {
   }
 }
 DEF LightBot Robot {
-  translation -0.37 0 -0.38
+  translation 0 0 0.24
   children [
     DEF ELISA3_Compass Compass {
     }

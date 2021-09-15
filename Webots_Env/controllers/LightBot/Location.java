@@ -55,7 +55,7 @@ public class Location {
 
     // Check if robot in target location
     public boolean checkPosition(){
-        return (deltaX <= posAccuracy && deltaY <= posAccuracy);
+        return Math.abs(deltaX) <= posAccuracy && Math.abs(deltaY) <= posAccuracy;
     }
 
     public void update(){
@@ -73,14 +73,6 @@ public class Location {
         curAngle = Math.atan(dirY / dirX) * 180 / (Math.PI);
         curAngle = curAngle >= 0 ? curAngle : curAngle + 180;
         curAngle = dirY < 0 ? curAngle + 180 : curAngle;
-    }
-
-    public double getTargetAngle(){
-        return targetAngle;
-    }
-
-    public double getCurAngle(){
-        return curAngle;
     }
 
     // absolute Distance from target position
@@ -102,6 +94,7 @@ public class Location {
         logCompass();
         logDelta();
         logDirection();
+        System.out.println("Direction diff: " + directionDiff());
     }
 
     public void logGPS(){
