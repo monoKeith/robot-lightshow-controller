@@ -6,7 +6,7 @@ public class Location {
     private static final String gpsName     = "gps";
     private static final String compassName = "compass";
     // sampleRateMs - GPS and Compass sample rate (in ms)
-    private static final int sampleRateMs   = 100;
+    private static final int sampleRateMs   = BotControl.sampleRateMs;
     // posAccuracy - accuracy for detecting if target position is reached (in meter)
     private static final double posAccuracy = 0.01;
     // spinAccuracy - accuracy for spinning towards target position (in degrees)

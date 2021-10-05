@@ -12,9 +12,9 @@ public class BotControl {
     private static final String leftMotor   = "left wheel motor";
     private static final String rightMotor  = "right wheel motor";
     private static final String rgbName     = "ledrgb";
-    private static final int timeStep       = 100;
+    private static final int timeStep       = 16;
     // sampleRateMs - Wheels position sensor sample rate (in ms)
-    private static final int sampleRateMs   = 100;
+    public static final int sampleRateMs    = timeStep;
     // spinConst - Number of position unit both wheels rotate (in opposite direction) to turn robot by 1 degree
     private static final double spinConst   = 0.1;
     // moveConst - Number of position unit both wheels rotate to move 1 meter
@@ -32,6 +32,8 @@ public class BotControl {
     private Location location;
     // State
     private MovementStates movementState;
+    // Enable Logging
+    private final boolean LOG_ENABLE = false;
 
     public BotControl() {
         robot = new Robot();
@@ -73,8 +75,10 @@ public class BotControl {
     // Update robot status according to sensors readings
     public void run(){
         location.update();
-        location.log();
-        System.out.println("State: " + movementState.toString());
+        if (LOG_ENABLE){
+            location.log();
+            System.out.println("State: " + movementState.toString());
+        }
         // Update state according to current state
         switch (movementState) {
             case STOP -> {
