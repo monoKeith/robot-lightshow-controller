@@ -12,7 +12,7 @@ public class Sender {
         connectionFactory.setHost("tcp://localhost:55555");
         connectionFactory.setUsername("default");
         connectionFactory.setPassword("default");
-        connectionFactory.setVPN("LightBot");
+        connectionFactory.setVPN("default");
         Connection connection = connectionFactory.createConnection();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
@@ -22,7 +22,7 @@ public class Sender {
         Topic topic = session.createTopic(TOPIC_NAME);
         MessageProducer messageProducer = session.createProducer(topic);
 
-        TextMessage message = session.createTextMessage("Hello world!");
+        TextMessage message = session.createTextMessage("Hello world! From Java JMS.");
         messageProducer.send(topic, message, DeliveryMode.NON_PERSISTENT,
                 Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
 

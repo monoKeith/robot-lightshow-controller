@@ -4,7 +4,7 @@ import com.solacesystems.jms.SolJmsUtility;
 import javax.jms.*;
 import java.util.concurrent.CountDownLatch;
 
-public class Subscriber {
+public class Subscribe_JMS {
 
     public static void main(String[] args) throws Exception {
         // Setup
