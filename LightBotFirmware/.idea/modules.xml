@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LightBot.iml" filepath="$PROJECT_DIR$/LightBot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LightBotFirmware.iml" filepath="$PROJECT_DIR$/LightBotFirmware.iml" />
     </modules>
   </component>
 </project>

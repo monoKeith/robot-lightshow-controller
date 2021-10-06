@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="LightBot" />
+        <module name="LightBotFirmware" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="LightBot" target="16" />
+      <module name="LightBotFirmware" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>
