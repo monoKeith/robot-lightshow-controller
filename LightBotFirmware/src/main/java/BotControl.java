@@ -7,6 +7,7 @@ public class BotControl {
         ROTATE,
         FORWARD
     }
+
     // Controller class for LightBot
     private static final String[] ledNames  = {"led1", "led2", "led3", "led4", "led5", "led6", "led7"};
     private static final String leftMotor   = "left wheel motor";
@@ -32,11 +33,15 @@ public class BotControl {
     private Location location;
     // State
     private MovementStates movementState;
+    // Transmitter
+    private Transmitter transmitter;
+
     // Enable Logging
     private final boolean LOG_ENABLE = false;
 
-    public BotControl() {
+    public BotControl(Transmitter transmitter) {
         robot = new Robot();
+        this.transmitter = transmitter;
         // Init motors
         leftWheel = robot.getMotor(leftMotor);
         rightWheel = robot.getMotor(rightMotor);
@@ -55,11 +60,14 @@ public class BotControl {
         // Location
         location = new Location(robot);
         // Target
-        setTarget(-0.25,-0.25);
+        location.setTarget(-0.25,-0.25);
         // State
         movementState = MovementStates.STOP;
         // Default velocity
         resetSpeed();
+
+        // Start connection handler thread
+        new Thread(this::connectionThread).start();
     }
 
     // Stuck until time step
@@ -72,8 +80,37 @@ public class BotControl {
         location.log();
     }
 
+    // Update robot status according to remote control instructions
+    // Require transmitter to be already set up
+    private void connectionThread(){
+        while(true){
+            String originalMsg;
+
+            // Receive message
+            try {
+                originalMsg = transmitter.waitForMsg();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            String[] msg = originalMsg.split(" ");
+
+            switch (msg[0]){
+                case "TARGET" -> {
+                    // TARGET X Y
+                    double x = Double.parseDouble(msg[1]);
+                    double y = Double.parseDouble(msg[2]);
+                    location.setTarget(x, y);
+                }
+                default -> System.out.println("Unknown instruction: " + originalMsg);
+            }
+        }
+    }
+
     // Update robot status according to sensors readings
-    public void run(){
+    // Mostly corresponds to movements of the robot
+    public void controlThread(){
         location.update();
         if (LOG_ENABLE){
             location.log();
@@ -160,11 +197,6 @@ public class BotControl {
         resetSpeed();
         leftWheel.setPosition(curLPosition + distanceToGo);
         rightWheel.setPosition(curRPosition + distanceToGo);
-    }
-
-    // Set target location
-    public void setTarget(double X, double Y){
-        location.setTarget(X, Y);
     }
 
     private void arrived(){

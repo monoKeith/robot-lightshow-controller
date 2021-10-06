@@ -14,12 +14,11 @@ public class LightBotFirmware {
         UUID uuid= UUID.randomUUID();
         // Setup transmitter identity
         Transmitter transmitter = new Transmitter(uuid);
-
-        BotControl thisBot = new BotControl();
-
+        // Init Bot
+        BotControl thisBot = new BotControl(transmitter);
         // Run loop
         while (thisBot.waitTimeStep()) {
-            thisBot.run();
+            thisBot.controlThread();
         }
 
     }
