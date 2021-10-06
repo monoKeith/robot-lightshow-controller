@@ -10,9 +10,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.solacesystems</groupId>
-            <artifactId>sol-jms</artifactId>
-            <version>10.2.1</version>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
 

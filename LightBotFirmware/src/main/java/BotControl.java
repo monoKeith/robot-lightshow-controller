@@ -55,7 +55,7 @@ public class BotControl {
         // Location
         location = new Location(robot);
         // Target
-        location.setTarget(-0.25,-0.25);
+        setTarget(-0.25,-0.25);
         // State
         movementState = MovementStates.STOP;
         // Default velocity
@@ -160,6 +160,11 @@ public class BotControl {
         resetSpeed();
         leftWheel.setPosition(curLPosition + distanceToGo);
         rightWheel.setPosition(curRPosition + distanceToGo);
+    }
+
+    // Set target location
+    public void setTarget(double X, double Y){
+        location.setTarget(X, Y);
     }
 
     private void arrived(){

@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="LightBotFirmware:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LightBotFirmware_jar</output-path>
+    <root id="root">
+      <element id="archive" name="LightBotFirmware.jar">
+        <element id="module-output" name="LightBotFirmware" />
+      </element>
+      <element id="library" level="project" name="Controller" />
+      <element id="library" level="project" name="Maven: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0" />
+    </root>
+  </artifact>
+</component>

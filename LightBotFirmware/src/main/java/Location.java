@@ -42,27 +42,27 @@ public class Location {
         deltaY = 0;
     }
 
-    public void setTarget(double X, double Y){
+    public synchronized void setTarget(double X, double Y){
         targetX = X;
         targetY = Y;
     }
 
     // True  - head pointing to correct direction
     // False - Need alignment
-    public boolean checkSpinAlignment(){
+    public synchronized boolean checkSpinAlignment(){
         return Math.abs(curAngle - targetAngle) <= spinAccuracy;
     }
 
-    public boolean checkCurveAlignment(){
+    public synchronized boolean checkCurveAlignment(){
         return Math.abs(curAngle - targetAngle) <= curveAccuracy;
     }
 
     // Check if robot in target location
-    public boolean checkPosition(){
+    public synchronized boolean checkPosition(){
         return Math.abs(deltaX) <= posAccuracy && Math.abs(deltaY) <= posAccuracy;
     }
 
-    public void update(){
+    public synchronized void update(){
         location = gps.getValues();
         direction = compass.getValues();
         // Calculate targetAngle
@@ -80,13 +80,13 @@ public class Location {
     }
 
     // absolute Distance from target position
-    public double getDistance(){
+    public synchronized double getDistance(){
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
     }
 
     // Returns difference between target angle and current angle
     // https://stackoverflow.com/questions/1878907/how-can-i-find-the-difference-between-two-angles
-    public double directionDiff(){
+    public synchronized double directionDiff(){
         double diff = targetAngle - curAngle;
         return (diff + 180) % 360 - 180;
     }

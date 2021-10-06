@@ -902,5 +902,5 @@ DEF LightBot Robot {
       0 0 0
     ]
   }
-  controller "LightBot"
+  controller "LightBotFirmware"
 }
