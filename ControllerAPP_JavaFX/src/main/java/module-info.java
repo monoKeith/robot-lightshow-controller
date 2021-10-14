@@ -4,6 +4,6 @@ module com.keith.controllerapp_javafx {
     requires javafx.graphics;
 
 
-    opens com.keith.controllerapp_javafx to javafx.fxml;
-    exports com.keith.controllerapp_javafx;
+    opens com.keith.bot_control to javafx.fxml;
+    exports com.keith.bot_control;
 }

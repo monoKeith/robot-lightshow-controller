@@ -5,15 +5,15 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="com.keith.controllerapp_javafx.HelloController">
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.GlobalView">
    <children>
       <MenuBar>
         <menus>
@@ -48,17 +48,26 @@
          <children>
             <VBox prefHeight="782.0" prefWidth="235.0" GridPane.rowSpan="2">
                <children>
-                  <Pane prefHeight="200.0" prefWidth="200.0">
+                  <Pane prefHeight="347.0" prefWidth="235.0">
                      <children>
-                        <Label layoutX="14.0" layoutY="6.0" text="Global Control Options" />
-                        <Label layoutX="14.0" layoutY="44.0" text="Event Broker IP" />
-                        <TextField layoutX="133.0" layoutY="40.0" prefHeight="25.0" prefWidth="88.0" text="localhost" />
+                        <Label layoutX="14.0" layoutY="6.0" text="Global Control Options">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
                      </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
                   </Pane>
+                  <fx:include source="connection-view.fxml" />
                </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </VBox>
             <Pane prefHeight="745.0" prefWidth="948.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
             <FlowPane prefHeight="200.0" prefWidth="800.0" prefWrapLength="40.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />

@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.keith.controllerapp_javafx/com.keith.controllerapp_javafx.HelloApplication
+                            <mainClass>com.keith.controllerapp_javafx/com.keith.bot_control.BotControlAPP
                             </mainClass>
                         </configuration>
                     </execution>
