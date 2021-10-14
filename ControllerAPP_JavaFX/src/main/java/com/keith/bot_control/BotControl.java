@@ -7,19 +7,29 @@ import java.util.UUID;
 public class BotControl {
     UUID uuid;
     Transmitter transmitter;
+    Boolean connected;
 
     public BotControl() {
         uuid = UUID.randomUUID();
+        connected = false;
     }
 
     public boolean initTransmitter(String brokerAddress){
+        if (connected) return true;
         try {
             transmitter = new Transmitter(uuid, brokerAddress);
+            connected = true;
         } catch (MqttException e) {
             e.printStackTrace();
-            return false;
+            connected = false;
         }
-        return true;
+        return connected;
+    }
+
+    public void resetTransmitter(){
+        connected = false;
+        transmitter.disconnect();
+        transmitter = null;
     }
 
 }

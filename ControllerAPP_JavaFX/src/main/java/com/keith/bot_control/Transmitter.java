@@ -90,6 +90,15 @@ public class Transmitter {
         return newMsg;
     }
 
+    // Disconnect mqtt client
+    public void disconnect(){
+        try {
+            mqttClient.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void reportUUID() throws MqttException {
         MqttMessage newMessage = new MqttMessage(uuid.toString().getBytes(StandardCharsets.UTF_8));
         newMessage.setQos(0);
