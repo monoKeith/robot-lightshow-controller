@@ -8,10 +8,23 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class BotControlAPP extends Application {
+
+    private static BotControl botControl;
+    private static boolean initialized = false;
+
+    public BotControlAPP() {
+        botControl = new BotControl();
+        initialized = true;
+    }
+
+    public static BotControl getBotControl() {
+        return initialized ? botControl : null;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BotControlAPP.class.getResource("global-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1440, 900);
+        Scene scene = new Scene(fxmlLoader.load(), 1440, 945);
         stage.setTitle("WeBots - Robot Light Show Controller");
         stage.setScene(scene);
         stage.setResizable(false);

@@ -73,7 +73,7 @@
             <FlowPane prefHeight="200.0" prefWidth="800.0" prefWrapLength="40.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
          </children>
          <opaqueInsets>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets />
          </opaqueInsets>
       </GridPane>
    </children>
