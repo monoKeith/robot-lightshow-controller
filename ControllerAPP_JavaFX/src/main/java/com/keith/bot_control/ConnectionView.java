@@ -11,7 +11,7 @@ import java.util.Date;
 public class ConnectionView {
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-    BotControl botControl = BotControlAPP.getBotControl();
+    ConnectionControl control = BotControlAPP.getConnectionControl();
 
     @FXML
     private Button connectButton;
@@ -22,28 +22,24 @@ public class ConnectionView {
     @FXML
     private TextArea logs;
 
-    @FXML
-    protected synchronized void onConnectButtonClick() {
-        connectButton.setDisable(true);
-        if (botControl.connected) {
-            // Need to Disconnect
-            botControl.resetTransmitter();
-            connectButton.setText("Connect");
-            log("disconnected from event broker\n");
-        } else {
-            // Need to Connect
-            connectButton.setText("Connecting...");
-            if (botControl.initTransmitter(brokerIP.getText())){
-                connectButton.setText("Disconnect");
-                log("connected to event broker\n");
-            } else {
-                log("failed to connect to event broker\n");
-            }
-        }
-        connectButton.setDisable(false);
+    public ConnectionView(){
+        control.setView(this);
     }
 
-    private void log(String msg){
+    @FXML
+    protected synchronized void onConnectButtonClick() {
+        control.buttonClick();
+    }
+
+    public Button getConnectButton(){
+        return connectButton;
+    }
+
+    public TextField getBrokerIP(){
+        return brokerIP;
+    }
+
+    public void log(String msg){
         logs.appendText(String.format("[%s]\n%s\n",dateFormatter.format(new Date()), msg));
     }
 }

@@ -62,8 +62,7 @@ public class Transmitter {
             }
 
             public void connectionLost(Throwable cause) {
-                System.out.println("Connection to Solace broker lost!" + cause.getMessage());
-                System.exit(1);
+                System.out.println("Lost connection to event broker!" + cause.getMessage());
             }
 
             public void deliveryComplete(IMqttDeliveryToken token) {

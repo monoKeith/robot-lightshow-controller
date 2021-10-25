@@ -1,35 +1,22 @@
 package com.keith.bot_control;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import java.util.UUID;
 
 public class BotControl {
     UUID uuid;
-    Transmitter transmitter;
-    Boolean connected;
+    private ConnectionControl connectionControl;
 
     public BotControl() {
         uuid = UUID.randomUUID();
-        connected = false;
+        connectionControl = new ConnectionControl(uuid);
     }
 
-    public boolean initTransmitter(String brokerAddress){
-        if (connected) return true;
-        try {
-            transmitter = new Transmitter(uuid, brokerAddress);
-            connected = true;
-        } catch (MqttException e) {
-            e.printStackTrace();
-            connected = false;
-        }
-        return connected;
+    public ConnectionControl getConnectionControl(){
+        return connectionControl;
     }
 
-    public void resetTransmitter(){
-        connected = false;
-        transmitter.disconnect();
-        transmitter = null;
+    public void terminate(){
+        connectionControl.resetTransmitter();
     }
 
 }

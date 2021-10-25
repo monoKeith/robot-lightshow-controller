@@ -21,6 +21,10 @@ public class BotControlAPP extends Application {
         return initialized ? botControl : null;
     }
 
+    public static ConnectionControl getConnectionControl() {
+        return initialized ? botControl.getConnectionControl() : null;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BotControlAPP.class.getResource("global-view.fxml"));
@@ -28,6 +32,12 @@ public class BotControlAPP extends Application {
         stage.setTitle("WeBots - Robot Light Show Controller");
         stage.setScene(scene);
         stage.setResizable(false);
+
+        stage.setOnCloseRequest(windowEvent -> {
+            botControl.terminate();
+        });
+
+        // Start application
         stage.show();
     }
 
