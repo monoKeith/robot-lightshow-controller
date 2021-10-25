@@ -1,5 +1,7 @@
 package com.keith.bot_control;
 
+import com.keith.bot_control.controller.BotControl;
+import com.keith.bot_control.controller.ConnectionControl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -1,5 +1,7 @@
-package com.keith.bot_control;
+package com.keith.bot_control.controller;
 
+import com.keith.bot_control.model.Transmitter;
+import com.keith.bot_control.view.ConnectionView;
 import javafx.scene.control.Button;
 import org.eclipse.paho.client.mqttv3.MqttException;
 

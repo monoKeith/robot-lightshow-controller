@@ -1,4 +1,4 @@
-package com.keith.bot_control;
+package com.keith.bot_control.model;
 
 import org.eclipse.paho.client.mqttv3.*;
 

@@ -1,5 +1,7 @@
-package com.keith.bot_control;
+package com.keith.bot_control.view;
 
+import com.keith.bot_control.BotControlAPP;
+import com.keith.bot_control.controller.ConnectionControl;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;

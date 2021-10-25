@@ -1,4 +1,4 @@
-package com.keith.bot_control;
+package com.keith.bot_control.controller;
 
 import java.util.UUID;
 
