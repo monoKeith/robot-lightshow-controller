@@ -2,6 +2,7 @@ package com.keith.bot_control;
 
 import com.keith.bot_control.controller.BotControl;
 import com.keith.bot_control.controller.ConnectionControl;
+import com.keith.bot_control.controller.DotsControl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +22,10 @@ public class BotControlAPP extends Application {
 
     public static BotControl getBotControl() {
         return initialized ? botControl : null;
+    }
+
+    public static DotsControl getDotsControl() {
+        return initialized ? botControl.getDotsControl() : null;
     }
 
     public static ConnectionControl getConnectionControl() {

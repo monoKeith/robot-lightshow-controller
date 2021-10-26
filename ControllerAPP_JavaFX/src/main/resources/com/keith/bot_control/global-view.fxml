@@ -69,7 +69,13 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <Pane prefHeight="745.0" prefWidth="948.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
+            <Pane prefHeight="745.0" prefWidth="948.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
+               <children>
+                  <fx:include source="dots-view.fxml" />
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Pane>
             <FlowPane prefHeight="200.0" prefWidth="800.0" prefWrapLength="40.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
          </children>
          <opaqueInsets>

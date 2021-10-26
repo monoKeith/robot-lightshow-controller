@@ -29,6 +29,12 @@ public class ConnectionView {
     }
 
     @FXML
+    public void initialize(){
+        // FXML initialized and populated vars
+        control.updateView();
+    }
+
+    @FXML
     protected synchronized void onConnectButtonClick() {
         control.buttonClick();
     }
@@ -43,5 +49,6 @@ public class ConnectionView {
 
     public void log(String msg){
         logs.appendText(String.format("[%s]\n%s\n",dateFormatter.format(new Date()), msg));
+        logs.setScrollTop(Double.MAX_VALUE);
     }
 }

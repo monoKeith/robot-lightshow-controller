@@ -3,6 +3,7 @@ package com.keith.bot_control.controller;
 import com.keith.bot_control.model.Transmitter;
 import com.keith.bot_control.view.ConnectionView;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.UUID;
@@ -68,21 +69,27 @@ public class ConnectionControl {
     public void updateView(){
         if (view == null) return;
         Button connectButton = view.getConnectButton();
+        TextField brokerIP = view.getBrokerIP();
         switch (state) {
             case CONNECTED -> {
                 connectButton.setText("Disconnect");
                 connectButton.setDisable(false);
+                brokerIP.setDisable(true);
             }
             case CONNECTING -> {
                 connectButton.setText("Connecting");
                 connectButton.setDisable(true);
+                brokerIP.setDisable(true);
+                view.log(String.format("connecting to message broker at: %s\n", brokerAddress));
             }
             case DISCONNECTED -> {
                 connectButton.setText("Connect");
                 connectButton.setDisable(false);
+                brokerIP.setDisable(false);
             }
         }
-        view.log(String.format("State update: %s\n", state.name()));
+        view.log(String.format("current status: %s\n", state.name()));
+
     }
 
     public void resetTransmitter(){

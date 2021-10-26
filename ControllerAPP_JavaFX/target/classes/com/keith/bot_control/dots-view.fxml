@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ScrollPane?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="735.0" prefWidth="938.0" style="-fx-border-color: #000; -fx-background-color: #aaa;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="com.keith.bot_control.view.DotsView">
+   <content>
+      <Canvas fx:id="canvas" height="700.0" width="735.0" />
+   </content>
+</ScrollPane>
