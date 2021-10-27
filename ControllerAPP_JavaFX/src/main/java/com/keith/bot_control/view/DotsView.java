@@ -18,7 +18,7 @@ public class DotsView {
 
     @FXML
     public void initialize(){
-        control.updateView();
+        control.refreshView();
     }
 
     public Canvas getCanvas(){
