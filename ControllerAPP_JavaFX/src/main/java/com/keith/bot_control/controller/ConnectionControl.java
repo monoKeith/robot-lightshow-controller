@@ -10,21 +10,21 @@ import java.util.UUID;
 
 public class ConnectionControl {
 
-    public enum ConnectionState{
+    public enum State {
         CONNECTED,
         CONNECTING,
         DISCONNECTED;
     }
 
+    BotControl botControl;
     Transmitter transmitter;
-    ConnectionState state;
     UUID uuid;
     String brokerAddress;
     ConnectionView view;
 
-    public ConnectionControl(UUID uuid){
-        this.uuid = uuid;
-        this.state = ConnectionState.DISCONNECTED;
+    public ConnectionControl(BotControl botControl){
+        this.botControl = botControl;
+        this.uuid = botControl.getUuid();
         this.brokerAddress = "localhost";
         this.view = null;
     }
@@ -34,7 +34,7 @@ public class ConnectionControl {
     }
 
     public void buttonClick(){
-        switch (state){
+        switch (botControl.getConnectionState()){
             case CONNECTED -> {
                 // To Disconnect
                 resetTransmitter();
@@ -42,11 +42,9 @@ public class ConnectionControl {
             }
             case DISCONNECTED -> {
                 // To Connect
-                state = ConnectionState.CONNECTING;
+                botControl.updateConnectionState(State.CONNECTING);
                 brokerAddress = view.getBrokerIP().getText();
-                updateView();
                 initTransmitter(brokerAddress);
-                updateView();
             }
         }
     }
@@ -59,10 +57,11 @@ public class ConnectionControl {
     public void initTransmitter(String brokerAddress){
         try {
             transmitter = new Transmitter(uuid, brokerAddress);
-            state = ConnectionState.CONNECTED;
+            botControl.updateConnectionState(State.CONNECTED);
         } catch (MqttException e) {
             e.printStackTrace();
-            state = ConnectionState.DISCONNECTED;
+            view.log("Failed to establish connection");
+            botControl.updateConnectionState(State.DISCONNECTED);
         }
     }
 
@@ -70,7 +69,7 @@ public class ConnectionControl {
         if (view == null) return;
         Button connectButton = view.getConnectButton();
         TextField brokerIP = view.getBrokerIP();
-        switch (state) {
+        switch (botControl.getConnectionState()) {
             case CONNECTED -> {
                 connectButton.setText("Disconnect");
                 connectButton.setDisable(false);
@@ -88,7 +87,7 @@ public class ConnectionControl {
                 brokerIP.setDisable(false);
             }
         }
-        view.log(String.format("current status: %s\n", state.name()));
+        view.log(String.format("current status: %s\n", botControl.getConnectionState().name()));
 
     }
 
@@ -97,7 +96,7 @@ public class ConnectionControl {
             transmitter.disconnect();
             transmitter = null;
         }
-        state = ConnectionState.DISCONNECTED;
+        botControl.updateConnectionState(State.DISCONNECTED);
     }
 
 }

@@ -13,7 +13,7 @@ import java.util.Date;
 public class ConnectionView {
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-    ConnectionControl control = BotControlAPP.getConnectionControl();
+    ConnectionControl control = BotControlAPP.getBotControl().getConnectionControl();
 
     @FXML
     private Button connectButton;
@@ -48,7 +48,7 @@ public class ConnectionView {
     }
 
     public void log(String msg){
-        logs.appendText(String.format("[%s]\n%s\n",dateFormatter.format(new Date()), msg));
+        logs.appendText(String.format("[%s]\n%s\n", dateFormatter.format(new Date()), msg));
         logs.setScrollTop(Double.MAX_VALUE);
     }
 }

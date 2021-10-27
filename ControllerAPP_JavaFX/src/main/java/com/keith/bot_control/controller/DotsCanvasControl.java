@@ -6,14 +6,14 @@ import com.keith.bot_control.view.DotsView;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DotsControl {
+public class DotsCanvasControl {
 
     static final int PIXEL_RADIUS = 10;
 //    final int PIXEL_COUNT;
     DotsView view;
     BotFrame frame;
 
-    public DotsControl(){
+    public DotsCanvasControl(){
 //        PIXEL_COUNT = 0;
         this.view = null;
 //        this.frame = null;
