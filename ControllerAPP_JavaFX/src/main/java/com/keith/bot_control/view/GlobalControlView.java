@@ -1,14 +1,14 @@
 package com.keith.bot_control.view;
 
 import com.keith.bot_control.BotControlAPP;
-import com.keith.bot_control.controller.GlobalControl;
+import com.keith.bot_control.controller.GlobalOptionControl;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class GlobalControlView {
 
-    GlobalControl control = BotControlAPP.getBotControl().getGlobalControl();
+    GlobalOptionControl control = BotControlAPP.getBotControl().getGlobalControl();
 
     @FXML
     private Label connectedBotsCount;

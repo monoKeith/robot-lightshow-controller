@@ -1,5 +1,7 @@
 package com.keith.bot_control.controller;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class BotControl {
@@ -8,21 +10,30 @@ public class BotControl {
     // Controllers
     private ConnectionControl connectionControl;
     private DotsCanvasControl dotsCanvasControl;
-    private GlobalControl globalControl;
+    private GlobalOptionControl globalControl;
 
     // States
     private ConnectionControl.State connectionState;
-    private GlobalControl.State globalState;
+    private GlobalOptionControl.State globalState;
+
+    Thread msgProcessor;
+    Boolean msgProcessorStopSignal;
+    // Set of UUIDs of connected bots
+    Set<UUID> connectedBots;
 
     public BotControl() {
         uuid = UUID.randomUUID();
         // Initialize all controllers
         connectionControl = new ConnectionControl(this);
         dotsCanvasControl = new DotsCanvasControl();
-        globalControl = new GlobalControl(this);
+        globalControl = new GlobalOptionControl(this);
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
-        globalState = GlobalControl.State.IDLE;
+        globalState = GlobalOptionControl.State.IDLE;
+        // Init vars
+        connectedBots = new HashSet<>();
+        // Init message processor
+        initMsgProcessor();
     }
 
     /* Getters */
@@ -39,7 +50,7 @@ public class BotControl {
         return dotsCanvasControl;
     }
 
-    public GlobalControl getGlobalControl(){
+    public GlobalOptionControl getGlobalControl(){
         return globalControl;
     }
 
@@ -50,7 +61,7 @@ public class BotControl {
         return connectionState;
     }
 
-    public GlobalControl.State getGlobalState(){
+    public GlobalOptionControl.State getGlobalState(){
         return globalState;
     }
 
@@ -59,18 +70,46 @@ public class BotControl {
         switch (connectionState){
             case CONNECTED -> {
                 // Update global state to READY
-                updateGlobalState(GlobalControl.State.READY);
+                updateGlobalState(GlobalOptionControl.State.READY);
             }
             case DISCONNECTED -> {
-                updateGlobalState(GlobalControl.State.IDLE);
+                // Update global state to IDLE
+                updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
         connectionControl.updateView();
     }
 
-    public void updateGlobalState(GlobalControl.State state){
+    public void updateGlobalState(GlobalOptionControl.State state){
         globalState = state;
         globalControl.updateView();
+    }
+
+    /* Message processor - Receives message from transmitter and process */
+
+    // Spawn a new thread to receive message
+    public void initMsgProcessor(){
+        // Terminate if already exist
+        if (msgProcessor != null) {
+            msgProcessorStopSignal = true;
+            try {
+                msgProcessor.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+        // New thread
+        msgProcessorStopSignal = false;
+        msgProcessor = new Thread(this::processMsg);
+        msgProcessor.start();
+    }
+
+    public void processMsg(){
+        while(!msgProcessorStopSignal){
+            String msg = connectionControl.waitForMsg();
+            System.out.println("BotControl processing msg: " + msg);
+        }
     }
 
     /* Bot Control Functions */

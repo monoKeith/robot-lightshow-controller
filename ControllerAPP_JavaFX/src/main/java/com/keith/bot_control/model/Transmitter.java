@@ -1,5 +1,6 @@
 package com.keith.bot_control.model;
 
+import com.keith.bot_control.controller.ConnectionControl;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.nio.charset.StandardCharsets;
@@ -21,15 +22,14 @@ public class Transmitter {
     private final MqttClient mqttClient;
     private final MqttConnectOptions connOpts;
 
-    // Queue to save received messages
-    private LinkedList<String> receiveQueue;
+    private ConnectionControl control;
 
-    public Transmitter(UUID uuid, String brokerAddress) throws MqttException {
+    public Transmitter(UUID uuid, String brokerAddress, ConnectionControl control) throws MqttException {
         BROKER_ADDR = String.format("tcp://%s", brokerAddress);
         System.out.printf("Connecting to message broker at: [%s]...\n", BROKER_ADDR);
         // Initialize vars
         this.uuid = uuid;
-        receiveQueue = new LinkedList<String>();
+        this.control = control;
 
         // Initialize MQTT
         mqttClient = new MqttClient(BROKER_ADDR, "BotControl/" + uuid);
@@ -54,11 +54,11 @@ public class Transmitter {
                 String msg = new String(message.getPayload());
                 System.out.println("\nReceived message:" +
                         "\n\tTopic:   " + topic +
-                        "\n\tMessage: " +  msg +
+                        "\n\tMessage: " + msg +
                         "\n\tQoS:     " + message.getQos() + "\n");
 
                 // Save message to queue
-                queueMsg(msg);
+                control.queueMsg(msg);
             }
 
             public void connectionLost(Throwable cause) {
@@ -72,21 +72,6 @@ public class Transmitter {
 
         // Report UUID once during startup
         reportUUID();
-    }
-
-    private synchronized void queueMsg(String newMsg){
-        receiveQueue.add(newMsg);
-        notifyAll();
-    }
-
-    // Get the newest message, stuck here if no new message
-    public synchronized String waitForMsg() throws InterruptedException {
-        while(receiveQueue.isEmpty()){
-            wait();
-        }
-        String newMsg = receiveQueue.pop();
-        notifyAll();
-        return newMsg;
     }
 
     // Disconnect mqtt client

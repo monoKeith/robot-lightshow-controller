@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 public class ConnectionControl {
@@ -22,11 +23,15 @@ public class ConnectionControl {
     String brokerAddress;
     ConnectionView view;
 
+    // Queue to save received messages
+    private LinkedList<String> receiveQueue;
+
     public ConnectionControl(BotControl botControl){
         this.botControl = botControl;
         this.uuid = botControl.getUuid();
         this.brokerAddress = "localhost";
         this.view = null;
+        this.receiveQueue = new LinkedList<>();
     }
 
     public void setView(ConnectionView view){
@@ -49,15 +54,13 @@ public class ConnectionControl {
         }
     }
 
-    // Used by view class to set broker address
-    public void setBrokerAddress(String newAddress){
-        brokerAddress = newAddress;
-    }
-
-    public void initTransmitter(String brokerAddress){
+    public synchronized void initTransmitter(String brokerAddress){
+        if (transmitter != null) return;
         try {
-            transmitter = new Transmitter(uuid, brokerAddress);
+            transmitter = new Transmitter(uuid, brokerAddress, this);
             botControl.updateConnectionState(State.CONNECTED);
+            // waitForMsg() might be waiting for transmitter to be initialized
+            notifyAll();
         } catch (MqttException e) {
             e.printStackTrace();
             view.log("Failed to establish connection");
@@ -91,12 +94,35 @@ public class ConnectionControl {
 
     }
 
-    public void resetTransmitter(){
+    public synchronized void resetTransmitter(){
         if (transmitter != null){
             transmitter.disconnect();
             transmitter = null;
         }
         botControl.updateConnectionState(State.DISCONNECTED);
+    }
+
+    /* Receive message */
+
+    public synchronized void queueMsg(String newMsg){
+        receiveQueue.add(newMsg);
+        notifyAll();
+    }
+
+    // Synchronized: Get message from transmitter
+    // Stuck until new message comes
+    public synchronized String waitForMsg(){
+        // Wait if transmitter is not initialized
+        while (transmitter == null || receiveQueue.isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        notifyAll();
+        return receiveQueue.pop();
     }
 
 }

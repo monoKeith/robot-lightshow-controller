@@ -2,7 +2,7 @@ package com.keith.bot_control.controller;
 
 import com.keith.bot_control.view.GlobalControlView;
 
-public class GlobalControl {
+public class GlobalOptionControl {
 
     enum State{
         PLAYING,
@@ -13,7 +13,7 @@ public class GlobalControl {
     BotControl botControl;
     GlobalControlView view;
 
-    public GlobalControl(BotControl botControl){
+    public GlobalOptionControl(BotControl botControl){
         this.botControl = botControl;
         view = null;
     }
