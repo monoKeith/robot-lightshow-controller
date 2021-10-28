@@ -22,14 +22,12 @@ public class Transmitter {
     private final MqttClient mqttClient;
     private final MqttConnectOptions connOpts;
 
-    private ConnectionControl control;
 
     public Transmitter(UUID uuid, String brokerAddress, ConnectionControl control) throws MqttException {
         BROKER_ADDR = String.format("tcp://%s", brokerAddress);
         System.out.printf("Connecting to message broker at: [%s]...\n", BROKER_ADDR);
         // Initialize vars
         this.uuid = uuid;
-        this.control = control;
 
         // Initialize MQTT
         mqttClient = new MqttClient(BROKER_ADDR, "BotControl/" + uuid);
@@ -58,7 +56,7 @@ public class Transmitter {
                         "\n\tQoS:     " + message.getQos() + "\n");
 
                 // Save message to queue
-                control.queueMsg(msg);
+                control.queueMsg(new BotMessage(topic, msg));
             }
 
             public void connectionLost(Throwable cause) {

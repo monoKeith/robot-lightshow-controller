@@ -1,5 +1,6 @@
 package com.keith.bot_control.controller;
 
+import com.keith.bot_control.model.BotMessage;
 import com.keith.bot_control.model.Transmitter;
 import com.keith.bot_control.view.ConnectionView;
 import javafx.scene.control.Button;
@@ -23,8 +24,10 @@ public class ConnectionControl {
     String brokerAddress;
     ConnectionView view;
 
+    Boolean terminateFlag;
+
     // Queue to save received messages
-    private LinkedList<String> receiveQueue;
+    private LinkedList<BotMessage> receiveQueue;
 
     public ConnectionControl(BotControl botControl){
         this.botControl = botControl;
@@ -32,6 +35,7 @@ public class ConnectionControl {
         this.brokerAddress = "localhost";
         this.view = null;
         this.receiveQueue = new LinkedList<>();
+        this.terminateFlag = false;
     }
 
     public void setView(ConnectionView view){
@@ -102,20 +106,28 @@ public class ConnectionControl {
         botControl.updateConnectionState(State.DISCONNECTED);
     }
 
+
+
     /* Receive message */
 
-    public synchronized void queueMsg(String newMsg){
+    public synchronized void terminateMsgQueue(){
+        terminateFlag = true;
+        notifyAll();
+    }
+
+    public synchronized void queueMsg(BotMessage newMsg){
         receiveQueue.add(newMsg);
         notifyAll();
     }
 
     // Synchronized: Get message from transmitter
     // Stuck until new message comes
-    public synchronized String waitForMsg(){
+    public synchronized BotMessage waitForMsg(){
         // Wait if transmitter is not initialized
         while (transmitter == null || receiveQueue.isEmpty()) {
             try {
                 wait();
+                if (terminateFlag) return null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

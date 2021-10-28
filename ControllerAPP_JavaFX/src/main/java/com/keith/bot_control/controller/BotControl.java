@@ -1,5 +1,7 @@
 package com.keith.bot_control.controller;
 
+import com.keith.bot_control.model.BotMessage;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -88,34 +90,41 @@ public class BotControl {
     /* Message processor - Receives message from transmitter and process */
 
     // Spawn a new thread to receive message
-    public void initMsgProcessor(){
-        // Terminate if already exist
-        if (msgProcessor != null) {
-            msgProcessorStopSignal = true;
-            try {
-                msgProcessor.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
+    private void initMsgProcessor(){
+        // Do nothing if already exist
+        if (msgProcessor != null) return;
         // New thread
         msgProcessorStopSignal = false;
         msgProcessor = new Thread(this::processMsg);
         msgProcessor.start();
     }
 
-    public void processMsg(){
+    private void terminateMsgProcessor(){
+        if (msgProcessor == null) return;
+        msgProcessorStopSignal = true;
+        connectionControl.terminateMsgQueue();
+        try {
+            msgProcessor.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processMsg(){
         while(!msgProcessorStopSignal){
-            String msg = connectionControl.waitForMsg();
+            BotMessage msg = connectionControl.waitForMsg();
+            if (msg == null) continue;
+
             System.out.println("BotControl processing msg: " + msg);
         }
+        System.out.println("Message Processor thread terminated");
     }
 
     /* Bot Control Functions */
 
     public void terminate(){
         connectionControl.resetTransmitter();
+        terminateMsgProcessor();
     }
 
 }
