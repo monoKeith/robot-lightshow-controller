@@ -1,6 +1,7 @@
 package com.keith.bot_control.controller;
 
 import com.keith.bot_control.model.BotMessage;
+import com.keith.bot_control.model.TransmitterMQTT;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -56,6 +57,10 @@ public class BotControl {
         return globalControl;
     }
 
+    public Set<UUID> getConnectedBots(){
+        return connectedBots;
+    }
+
 
     /* State update */
 
@@ -68,6 +73,7 @@ public class BotControl {
     }
 
     public void updateConnectionState(ConnectionControl.State state){
+        if (connectionState == state) return;
         connectionState = state;
         switch (connectionState){
             case CONNECTED -> {
@@ -76,6 +82,7 @@ public class BotControl {
             }
             case DISCONNECTED -> {
                 // Update global state to IDLE
+                connectedBots = new HashSet<>();
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
@@ -83,6 +90,7 @@ public class BotControl {
     }
 
     public void updateGlobalState(GlobalOptionControl.State state){
+        if (globalState == state) return;
         globalState = state;
         globalControl.updateView();
     }
@@ -95,7 +103,7 @@ public class BotControl {
         if (msgProcessor != null) return;
         // New thread
         msgProcessorStopSignal = false;
-        msgProcessor = new Thread(this::processMsg);
+        msgProcessor = new Thread(this::receiveMessage);
         msgProcessor.start();
     }
 
@@ -110,14 +118,23 @@ public class BotControl {
         }
     }
 
-    private void processMsg(){
+    private void receiveMessage(){
         while(!msgProcessorStopSignal){
             BotMessage msg = connectionControl.waitForMsg();
             if (msg == null) continue;
-
-            System.out.println("BotControl processing msg: " + msg);
+            processMessage(msg);
         }
-        System.out.println("Message Processor thread terminated");
+        System.out.println("message processor thread terminated");
+    }
+
+    private void processMessage(BotMessage msg){
+        System.out.println("processing message: " + msg);
+        switch (msg.getTopic()){
+            case TransmitterMQTT.UUID_TOPIC -> {
+                connectedBots.add(UUID.fromString(msg.getMessage()));
+                globalControl.updateView();
+            }
+        }
     }
 
     /* Bot Control Functions */

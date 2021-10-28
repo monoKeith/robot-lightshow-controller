@@ -89,6 +89,7 @@ public class BotControl {
             // Receive message
             try {
                 originalMsg = transmitter.waitForMsg();
+                if (originalMsg == null) break;
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 continue;
@@ -106,6 +107,7 @@ public class BotControl {
                 default -> System.out.println("Unknown instruction: " + originalMsg);
             }
         }
+        System.out.println("Connection thread terminated");
     }
 
     // Update robot status according to sensors readings

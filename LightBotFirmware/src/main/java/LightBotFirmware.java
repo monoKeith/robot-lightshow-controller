@@ -9,17 +9,32 @@ import java.util.UUID;
 
 public class LightBotFirmware {
 
-    public static void main(String[] args) throws InterruptedException, MqttException {
-        // Generate a random UUID
-        UUID uuid= UUID.randomUUID();
-        // Setup transmitter identity
-        Transmitter transmitter = new Transmitter(uuid);
-        // Init Bot
-        BotControl thisBot = new BotControl(transmitter);
-        // Run loop
+    private UUID uuid;
+    private Transmitter transmitter;
+    private BotControl thisBot;
+
+    public LightBotFirmware() throws MqttException {
+        // Initialize Vars
+        uuid= UUID.randomUUID();
+        transmitter = new Transmitter(uuid);
+        thisBot = new BotControl(transmitter);
+    }
+
+    private void run(){
         while (thisBot.waitTimeStep()) {
             thisBot.controlThread();
         }
+        // Exit
+        terminate();
+    }
 
+    private void terminate(){
+        transmitter.disconnect();
+        System.out.println("Light Bot Firmware terminated");
+    }
+
+    public static void main(String[] args) throws MqttException {
+        LightBotFirmware firmware = new LightBotFirmware();
+        firmware.run();
     }
 }

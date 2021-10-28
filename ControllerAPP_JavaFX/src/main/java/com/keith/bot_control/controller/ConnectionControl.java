@@ -1,8 +1,9 @@
 package com.keith.bot_control.controller;
 
 import com.keith.bot_control.model.BotMessage;
-import com.keith.bot_control.model.Transmitter;
+import com.keith.bot_control.model.TransmitterMQTT;
 import com.keith.bot_control.view.ConnectionView;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -19,7 +20,7 @@ public class ConnectionControl {
     }
 
     BotControl botControl;
-    Transmitter transmitter;
+    TransmitterMQTT transmitter;
     UUID uuid;
     String brokerAddress;
     ConnectionView view;
@@ -61,7 +62,7 @@ public class ConnectionControl {
     public synchronized void initTransmitter(String brokerAddress){
         if (transmitter != null) return;
         try {
-            transmitter = new Transmitter(uuid, brokerAddress, this);
+            transmitter = new TransmitterMQTT(uuid, brokerAddress, this);
             botControl.updateConnectionState(State.CONNECTED);
             // waitForMsg() might be waiting for transmitter to be initialized
             notifyAll();
@@ -74,28 +75,29 @@ public class ConnectionControl {
 
     public void updateView(){
         if (view == null) return;
-        Button connectButton = view.getConnectButton();
-        TextField brokerIP = view.getBrokerIP();
-        switch (botControl.getConnectionState()) {
-            case CONNECTED -> {
-                connectButton.setText("Disconnect");
-                connectButton.setDisable(false);
-                brokerIP.setDisable(true);
+        Platform.runLater(() -> {
+            Button connectButton = view.getConnectButton();
+            TextField brokerIP = view.getBrokerIP();
+            switch (botControl.getConnectionState()) {
+                case CONNECTED -> {
+                    connectButton.setText("Disconnect");
+                    connectButton.setDisable(false);
+                    brokerIP.setDisable(true);
+                }
+                case CONNECTING -> {
+                    connectButton.setText("Connecting");
+                    connectButton.setDisable(true);
+                    brokerIP.setDisable(true);
+                    view.log(String.format("connecting to message broker at: %s\n", brokerAddress));
+                }
+                case DISCONNECTED -> {
+                    connectButton.setText("Connect");
+                    connectButton.setDisable(false);
+                    brokerIP.setDisable(false);
+                }
             }
-            case CONNECTING -> {
-                connectButton.setText("Connecting");
-                connectButton.setDisable(true);
-                brokerIP.setDisable(true);
-                view.log(String.format("connecting to message broker at: %s\n", brokerAddress));
-            }
-            case DISCONNECTED -> {
-                connectButton.setText("Connect");
-                connectButton.setDisable(false);
-                brokerIP.setDisable(false);
-            }
-        }
-        view.log(String.format("current status: %s\n", botControl.getConnectionState().name()));
-
+            view.log(String.format("current status: %s\n", botControl.getConnectionState().name()));
+        });
     }
 
     public synchronized void resetTransmitter(){

@@ -4,10 +4,9 @@ import com.keith.bot_control.controller.ConnectionControl;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
 import java.util.UUID;
 
-public class Transmitter {
+public class TransmitterMQTT {
     // Topics const
     public final String BROKER_ADDR;
     public static final String USERNAME = "default";
@@ -23,7 +22,7 @@ public class Transmitter {
     private final MqttConnectOptions connOpts;
 
 
-    public Transmitter(UUID uuid, String brokerAddress, ConnectionControl control) throws MqttException {
+    public TransmitterMQTT(UUID uuid, String brokerAddress, ConnectionControl control) throws MqttException {
         BROKER_ADDR = String.format("tcp://%s", brokerAddress);
         System.out.printf("Connecting to message broker at: [%s]...\n", BROKER_ADDR);
         // Initialize vars
@@ -50,10 +49,10 @@ public class Transmitter {
 
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = new String(message.getPayload());
-                System.out.println("\nReceived message:" +
-                        "\n\tTopic:   " + topic +
-                        "\n\tMessage: " + msg +
-                        "\n\tQoS:     " + message.getQos() + "\n");
+//                System.out.println("\nReceived message:" +
+//                        "\n\tTopic:   " + topic +
+//                        "\n\tMessage: " + msg +
+//                        "\n\tQoS:     " + message.getQos() + "\n");
 
                 // Save message to queue
                 control.queueMsg(new BotMessage(topic, msg));
@@ -68,8 +67,6 @@ public class Transmitter {
 
         });
 
-        // Report UUID once during startup
-        reportUUID();
     }
 
     // Disconnect mqtt client

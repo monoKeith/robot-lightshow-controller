@@ -3,6 +3,7 @@ package com.keith.bot_control.controller;
 import com.keith.bot_control.model.BotFrame;
 import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.view.DotsView;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -30,18 +31,20 @@ public class DotsCanvasControl {
 
     public void refreshView(){
         if(frame == null) return;
-        // Canvas
-        GraphicsContext gc = view.getCanvas().getGraphicsContext2D();
+        Platform.runLater(() -> {
+            // Canvas
+            GraphicsContext gc = view.getCanvas().getGraphicsContext2D();
 
-        // Fill pixels
-        for (BotPixel pixel: frame.getPixels()){
-            gc.setFill(pixel.getColor());
-            double x = pixel.getLocation().getX();
-            double y = pixel.getLocation().getY();
-            gc.fillOval(x - PIXEL_RADIUS, y - PIXEL_RADIUS, PIXEL_RADIUS, PIXEL_RADIUS);
-        }
+            // Fill pixels
+            for (BotPixel pixel: frame.getPixels()){
+                gc.setFill(pixel.getColor());
+                double x = pixel.getLocation().getX();
+                double y = pixel.getLocation().getY();
+                gc.fillOval(x - PIXEL_RADIUS, y - PIXEL_RADIUS, PIXEL_RADIUS, PIXEL_RADIUS);
+            }
 
-        System.out.println("updated canvas");
+            System.out.println("updated canvas");
+        });
     }
 
 

@@ -10,6 +10,14 @@ public class BotMessage {
         this.message = message;
     }
 
+    public String getTopic(){
+        return topic;
+    }
+
+    public String getMessage(){
+        return message;
+    }
+
     public String toString(){
         return String.format("Topic: %s Message: %s", topic, message);
     }

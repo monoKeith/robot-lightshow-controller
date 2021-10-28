@@ -22,10 +22,13 @@ public class Transmitter {
     // Queue to save received messages
     private LinkedList<String> receiveQueue;
 
+    private boolean terminationFlag;
+
     public Transmitter(UUID uuid) throws MqttException {
         // Initialize vars
         this.uuid = uuid;
         receiveQueue = new LinkedList<String>();
+        terminationFlag = false;
 
         // Initialize MQTT
         mqttClient = new MqttClient(HOST, "LightBot/" + uuid);
@@ -77,6 +80,7 @@ public class Transmitter {
     public synchronized String waitForMsg() throws InterruptedException {
         while(receiveQueue.isEmpty()){
             wait();
+            if (terminationFlag) return null;
         }
         String newMsg = receiveQueue.pop();
         notifyAll();
@@ -89,5 +93,15 @@ public class Transmitter {
         mqttClient.publish(UUID_TOPIC, newMessage);
     }
 
+    // Disconnect mqtt client
+    public synchronized void disconnect(){
+        try {
+            mqttClient.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+        terminationFlag = true;
+        notifyAll();
+    }
 
 }
