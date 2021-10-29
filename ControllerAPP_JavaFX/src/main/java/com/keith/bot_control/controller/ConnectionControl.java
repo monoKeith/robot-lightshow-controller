@@ -19,24 +19,32 @@ public class ConnectionControl {
         DISCONNECTED;
     }
 
-    BotControl botControl;
-    TransmitterMQTT transmitter;
-    UUID uuid;
-    String brokerAddress;
-    ConnectionView view;
+    private BotControl botControl;
+    private TransmitterMQTT transmitter;
+    private String brokerAddress;
+    private ConnectionView view;
 
-    Boolean terminateFlag;
+    private Thread publishProcessor;
+
+    // Once set to true, goes in termination state and connectionControl can't be recovered.
+    private Boolean terminateFlag;
+
+    // Queue to store messages to be published
+    private LinkedList<BotMessage> publishQueue;
 
     // Queue to save received messages
     private LinkedList<BotMessage> receiveQueue;
 
+
     public ConnectionControl(BotControl botControl){
         this.botControl = botControl;
-        this.uuid = botControl.getUuid();
         this.brokerAddress = "localhost";
         this.view = null;
+        this.publishQueue = new LinkedList<>();
         this.receiveQueue = new LinkedList<>();
         this.terminateFlag = false;
+
+        initPublishProcessor();
     }
 
     public void setView(ConnectionView view){
@@ -62,7 +70,7 @@ public class ConnectionControl {
     public synchronized void initTransmitter(String brokerAddress){
         if (transmitter != null) return;
         try {
-            transmitter = new TransmitterMQTT(uuid, brokerAddress, this);
+            transmitter = new TransmitterMQTT(botControl.getUuid(), brokerAddress, this);
             botControl.updateConnectionState(State.CONNECTED);
             // waitForMsg() might be waiting for transmitter to be initialized
             notifyAll();
@@ -109,6 +117,38 @@ public class ConnectionControl {
     }
 
 
+    /* Send message */
+
+    private void initPublishProcessor(){
+        publishProcessor = new Thread(this::publishProcessor);
+        publishProcessor.start();
+    }
+
+    private synchronized void publishProcessor(){
+        while(true){
+            // Wait for message to publish
+            while(transmitter == null || publishQueue.isEmpty()){
+                try {
+                    wait();
+                    if (terminateFlag) return;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+            // Attempt to publish
+            try {
+                transmitter.publish(publishQueue.removeFirst());
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public synchronized void publishMessage(BotMessage message){
+        publishQueue.add(message);
+        notifyAll();
+    }
 
     /* Receive message */
 

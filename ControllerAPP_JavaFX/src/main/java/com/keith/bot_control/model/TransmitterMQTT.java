@@ -38,9 +38,9 @@ public class TransmitterMQTT {
 
         System.out.println("Connected");
 
-        // Robot listen to control topic, uuid reports, and broadcast
-        String topic = "T/BotControl/" + uuid;
-        mqttClient.subscribe(topic, 0);
+//        // Robot listen to control topic, uuid reports, and broadcast
+//        String topic = "T/BotControl/" + uuid;
+//        mqttClient.subscribe(topic, 0);
         mqttClient.subscribe(UUID_TOPIC, 0);
         mqttClient.subscribe(BROADCAST_TOPIC, 0);
 
@@ -84,5 +84,11 @@ public class TransmitterMQTT {
         mqttClient.publish(UUID_TOPIC, newMessage);
     }
 
+    public void publish(BotMessage message) throws MqttException {
+        MqttMessage newMessage = new MqttMessage(message.getMessage().getBytes(StandardCharsets.UTF_8));
+        newMessage.setQos(0);
+        mqttClient.publish(message.getTopic(), newMessage);
+        System.out.println("Published msg: " + message);
+    }
 
 }

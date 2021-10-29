@@ -1,6 +1,5 @@
 package com.keith.bot_control.controller;
 
-import com.keith.bot_control.model.BotFrame;
 import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.view.DotsView;
 import javafx.application.Platform;
@@ -11,32 +10,26 @@ public class DotsCanvasControl {
 
     static final int PIXEL_RADIUS = 10;
 //    final int PIXEL_COUNT;
-    DotsView view;
-    BotFrame frame;
+    private BotControl control;
+    private DotsView view;
 
-    public DotsCanvasControl(){
+    public DotsCanvasControl(BotControl control){
 //        PIXEL_COUNT = 0;
+        this.control = control;
         this.view = null;
-//        this.frame = null;
-        this.frame = new BotFrame();
     }
 
     public void setView(DotsView view) {
         this.view = view;
     }
 
-    public void setFrame(BotFrame frame) {
-        this.frame = frame;
-    }
-
     public void refreshView(){
-        if(frame == null) return;
         Platform.runLater(() -> {
             // Canvas
             GraphicsContext gc = view.getCanvas().getGraphicsContext2D();
 
             // Fill pixels
-            for (BotPixel pixel: frame.getPixels()){
+            for (BotPixel pixel: control.getCurrentFrame().getPixels()){
                 gc.setFill(pixel.getColor());
                 double x = pixel.getLocation().getX();
                 double y = pixel.getLocation().getY();

@@ -25,10 +25,12 @@ public class GlobalOptionControl {
 
     public void play(){
         if (botControl.getGlobalState() != State.READY) return;
-
         botControl.updateGlobalState(State.PLAYING);
-        System.out.println("Play!");
 
+        System.out.println("Play!");
+        botControl.updateBotsTarget();
+
+        botControl.updateGlobalState(State.READY);
     }
 
     public void updateView(){

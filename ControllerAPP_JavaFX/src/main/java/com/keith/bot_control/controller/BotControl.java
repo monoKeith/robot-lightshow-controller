@@ -1,9 +1,13 @@
 package com.keith.bot_control.controller;
 
+import com.keith.bot_control.model.BotFrame;
 import com.keith.bot_control.model.BotMessage;
+import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.model.TransmitterMQTT;
+import javafx.geometry.Point2D;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,17 +28,20 @@ public class BotControl {
     // Set of UUIDs of connected bots
     Set<UUID> connectedBots;
 
+    BotFrame currentFrame;
+
     public BotControl() {
         uuid = UUID.randomUUID();
         // Initialize all controllers
         connectionControl = new ConnectionControl(this);
-        dotsCanvasControl = new DotsCanvasControl();
+        dotsCanvasControl = new DotsCanvasControl(this);
         globalControl = new GlobalOptionControl(this);
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
         // Init vars
         connectedBots = new HashSet<>();
+        currentFrame = new BotFrame();
         // Init message processor
         initMsgProcessor();
     }
@@ -59,6 +66,10 @@ public class BotControl {
 
     public Set<UUID> getConnectedBots(){
         return connectedBots;
+    }
+
+    public BotFrame getCurrentFrame(){
+        return currentFrame;
     }
 
 
@@ -138,6 +149,20 @@ public class BotControl {
     }
 
     /* Bot Control Functions */
+
+    // Send message to all bots, update target location
+    public void updateBotsTarget(){
+        // TODO optimize location for each bot in BotFrame class!!!
+        Map<UUID, BotPixel> targetMap = currentFrame.generateTargetMap(connectedBots);
+        // Send target message
+        for (Map.Entry<UUID, BotPixel> entry: targetMap.entrySet()){
+            UUID uuid = entry.getKey();
+            BotPixel pixel = entry.getValue();
+            Point2D target = pixel.getLocation();
+            BotMessage message = BotMessage.newTarget(uuid, target.getX(), target.getY());
+            connectionControl.publishMessage(message);
+        }
+    }
 
     public void terminate(){
         connectionControl.resetTransmitter();
