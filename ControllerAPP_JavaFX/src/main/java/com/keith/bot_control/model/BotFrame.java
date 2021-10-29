@@ -3,22 +3,34 @@ package com.keith.bot_control.model;
 import java.util.*;
 
 public class BotFrame {
+
+    private String name;
     private Set<BotPixel> pixels;
 
     public BotFrame(){
 //        pixels = new HashSet<>();
+        name = "default";
         pixels = testPixels();
     }
 
     public static Set<BotPixel> testPixels(){
         Set<BotPixel> pixels = new HashSet<>();
-        pixels.add(new BotPixel(100, 150));
-        pixels.add(new BotPixel(200, 450));
+//        pixels.add(new BotPixel(0, 0));
+        pixels.add(new BotPixel(-0.25, 0.25));
+//        pixels.add(new BotPixel(-0.5, 0.5));
         return pixels;
     }
 
     public Set<BotPixel> getPixels(){
         return pixels;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     public Map<UUID, BotPixel> generateTargetMap(Set<UUID> bots){

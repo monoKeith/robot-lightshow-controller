@@ -13,11 +13,12 @@ public class DotsView {
     private Canvas canvas;
 
     public DotsView(){
-        control.setView(this);
+
     }
 
     @FXML
     public void initialize(){
+        control.setView(this);
         control.refreshView();
     }
 

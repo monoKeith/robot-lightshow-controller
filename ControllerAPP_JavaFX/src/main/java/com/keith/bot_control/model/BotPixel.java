@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 public class BotPixel {
 
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
-    public static final Color DEFAULT_COLOR = Color.AQUA;
+    public static final Color DEFAULT_COLOR = Color.BROWN;
 
     private Point2D location;
     private Color color;
@@ -16,6 +16,7 @@ public class BotPixel {
         color = DEFAULT_COLOR;
     }
 
+    // Unit of coordinates of a pixel is meter (should match location unit in Webots)
     public BotPixel(double x, double y){
         location = new Point2D(x, y);
         color = DEFAULT_COLOR;

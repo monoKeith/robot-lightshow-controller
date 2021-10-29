@@ -15,6 +15,9 @@ public class GlobalControlView {
     private Label connectedBotsCount;
 
     @FXML
+    private Label currentFrameName;
+
+    @FXML
     private Button playButton;
 
     public GlobalControlView(){
@@ -38,6 +41,10 @@ public class GlobalControlView {
 
     public void setConnectedBotsCount(int count){
         connectedBotsCount.setText("" + count);
+    }
+
+    public void setCurrentFrameName(String name){
+        currentFrameName.setText(name);
     }
 
 }
