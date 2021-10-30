@@ -16,8 +16,8 @@ public class BotFrame {
     public static Set<BotPixel> testPixels(){
         Set<BotPixel> pixels = new HashSet<>();
 //        pixels.add(new BotPixel(0, 0));
-        pixels.add(new BotPixel(-0.25, 0.25));
-//        pixels.add(new BotPixel(-0.5, 0.5));
+        pixels.add(new BotPixel(400, 400));
+//        pixels.add(new BotPixel(-0.4, 0.4));
         return pixels;
     }
 

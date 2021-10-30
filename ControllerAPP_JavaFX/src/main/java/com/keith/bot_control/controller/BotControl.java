@@ -158,7 +158,7 @@ public class BotControl {
         for (Map.Entry<UUID, BotPixel> entry: targetMap.entrySet()){
             UUID uuid = entry.getKey();
             BotPixel pixel = entry.getValue();
-            Point2D target = pixel.getLocation();
+            Point2D target = pixel.getPhysicalLocation();
             BotMessage message = BotMessage.newTarget(uuid, target.getX(), target.getY());
             connectionControl.publishMessage(message);
         }
