@@ -24,7 +24,7 @@ public class TransmitterMQTT {
 
     public TransmitterMQTT(UUID uuid, String brokerAddress, ConnectionControl control) throws MqttException {
         BROKER_ADDR = String.format("tcp://%s", brokerAddress);
-        System.out.printf("Connecting to message broker at: [%s]...\n", BROKER_ADDR);
+        log(String.format("Connecting to message broker at: [%s]...\n", BROKER_ADDR));
         // Initialize vars
         this.uuid = uuid;
 
@@ -36,7 +36,7 @@ public class TransmitterMQTT {
         connOpts.setPassword(PASSWORD.toCharArray());
         mqttClient.connect(connOpts);
 
-        System.out.println("Connected");
+        log("Connected");
 
 //        // Robot listen to control topic, uuid reports, and broadcast
 //        String topic = "T/BotControl/" + uuid;
@@ -59,7 +59,7 @@ public class TransmitterMQTT {
             }
 
             public void connectionLost(Throwable cause) {
-                System.out.println("Lost connection to event broker!" + cause.getMessage());
+                log("Lost connection to event broker!" + cause.getMessage());
             }
 
             public void deliveryComplete(IMqttDeliveryToken token) {
@@ -88,7 +88,13 @@ public class TransmitterMQTT {
         MqttMessage newMessage = new MqttMessage(message.getMessage().getBytes(StandardCharsets.UTF_8));
         newMessage.setQos(0);
         mqttClient.publish(message.getTopic(), newMessage);
-        System.out.println("Published msg: " + message);
+        log("Publish: " + message);
+    }
+
+    /* Logging */
+
+    private void log(String msg){
+        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
     }
 
 }

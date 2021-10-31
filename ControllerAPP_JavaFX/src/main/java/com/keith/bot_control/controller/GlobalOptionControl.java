@@ -27,7 +27,7 @@ public class GlobalOptionControl {
         if (botControl.getGlobalState() != State.READY) return;
         botControl.updateGlobalState(State.PLAYING);
 
-        System.out.println("Play!");
+        log("Play!");
         botControl.updateBotsTarget();
 
         botControl.updateGlobalState(State.READY);
@@ -55,6 +55,12 @@ public class GlobalOptionControl {
             // Current Frame name
             view.setCurrentFrameName(botControl.getCurrentFrame().getName());
         });
+    }
+
+    /* Logging */
+
+    private void log(String msg){
+        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
     }
 
 }

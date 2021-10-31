@@ -75,12 +75,22 @@ public class BotControl {
         return currentFrame;
     }
 
+    // Bot Pixel selection
+
+    public Set<BotPixel> getSelectedPixels() {
+        return selectedPixels;
+    }
+
     public void clearSelectedPixels() {
         selectedPixels.clear();
     }
 
-    public boolean newPixelSelection(BotPixel newSelection) {
+    public boolean selectPixel(BotPixel newSelection) {
         return selectedPixels.add(newSelection);
+    }
+
+    public void deSelectPixel(BotPixel pixel){
+        selectedPixels.remove(pixel);
     }
 
     public boolean pixelIsSelected(BotPixel pixel) {
@@ -150,11 +160,11 @@ public class BotControl {
             if (msg == null) continue;
             processMessage(msg);
         }
-        System.out.println("message processor thread terminated");
+        log("message processor thread terminated");
     }
 
     private void processMessage(BotMessage msg){
-        System.out.println("processing message: " + msg);
+        log("processing message: " + msg);
         switch (msg.getTopic()){
             case TransmitterMQTT.UUID_TOPIC -> {
                 connectedBots.add(UUID.fromString(msg.getMessage()));
@@ -182,6 +192,12 @@ public class BotControl {
     public void terminate(){
         connectionControl.resetTransmitter();
         terminateMsgProcessor();
+    }
+
+    /* Logging */
+
+    private void log(String msg){
+        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
     }
 
 }

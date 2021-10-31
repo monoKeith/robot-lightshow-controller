@@ -4,6 +4,7 @@ package com.keith.bot_control.view;
 import com.keith.bot_control.BotControlAPP;
 import com.keith.bot_control.controller.DotsCanvasControl;
 import javafx.fxml.FXML;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,8 +17,11 @@ public class DotsView {
     @FXML
     private Canvas canvas;
 
-    public DotsView(){
+    private Point2D dragStartingPoint;
+    private Boolean dragging;
 
+    public DotsView(){
+        dragging = false;
     }
 
     @FXML
@@ -26,13 +30,42 @@ public class DotsView {
         control.refreshView();
     }
 
-    @FXML
-    public void mousePress(MouseEvent event){
+    /* Mouse Events */
+
+    public Point2D point(MouseEvent event){
         double x = event.getX();
         double y = event.getY();
-        control.mousePress(new Point2D(x, y));
+        return new Point2D(x, y);
     }
 
+    public Dimension2D delta(MouseEvent event){
+        double deltaX = event.getX() - dragStartingPoint.getX();
+        double deltaY = event.getY() - dragStartingPoint.getY();
+        return new Dimension2D(deltaX, deltaY);
+    }
+
+    @FXML
+    public synchronized void mouseDragUpdate(MouseEvent event){
+        if (!dragging){
+            dragStartingPoint = point(event);
+            dragging = true;
+        }
+        control.mouseDragging(delta(event));
+    }
+
+    @FXML
+    public void mouseRelease(MouseEvent event){
+        if (dragging) {
+            // drag released
+            control.mouseDragReleased(delta(event));
+        } else {
+            // mouse clicked
+            control.mouseClick(point(event));
+        }
+        dragging = false;
+    }
+
+    /* Getter and Setter */
     public Canvas getCanvas(){
         return canvas;
     }

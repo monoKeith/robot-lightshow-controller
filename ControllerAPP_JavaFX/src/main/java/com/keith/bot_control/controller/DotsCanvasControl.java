@@ -3,6 +3,7 @@ package com.keith.bot_control.controller;
 import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.view.DotsView;
 import javafx.application.Platform;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -26,12 +27,17 @@ public class DotsCanvasControl {
         this.view = null;
     }
 
+    /* Getter and Setter */
+
     public void setView(DotsView view) {
         this.view = view;
         CANVAS_RESOLUTION = (int) view.getCanvas().getWidth();
     }
 
-    public void mousePress(Point2D point){
+
+    /* Mouse Event Controls */
+
+    public void mouseClick(Point2D point){
         BotPixel newSelection = null;
         // Update selected pixel
         for (BotPixel pixel: control.getCurrentFrame().getPixels()){
@@ -40,17 +46,43 @@ public class DotsCanvasControl {
                 break;
             }
         }
-        // Set selectedPixel
+        // Reset, Select, deSelect
         if (newSelection == null){
             control.clearSelectedPixels();
-            System.out.println("Reset pixel selection");
+            log("Reset pixel selection");
+        } else if (control.selectPixel(newSelection)){
+            log("select pixel: " + newSelection);
         } else {
-            if (control.newPixelSelection(newSelection))
-                System.out.println("Selected pixel: " + newSelection);
+            control.deSelectPixel(newSelection);
+            log("de-select pixel: " + newSelection);
         }
         // Refresh
         refreshView();
     }
+
+    // Update view to preview mouse dragging behavior
+    // arg: delta of mouse movement from starting position
+    public void mouseDragging(Dimension2D delta){
+
+
+    }
+
+    // Finalize dragging behavior when it's completed
+    // arg: delta of mouse movement from starting position
+    public void mouseDragReleased(Dimension2D delta){
+        for (BotPixel pixel: control.getSelectedPixels()){
+            Point2D oldLocation = pixel.getPixelLocation();
+            Point2D newLocation = new Point2D(
+                    oldLocation.getX() + delta.getWidth(),
+                    oldLocation.getY() + delta.getHeight());
+            pixel.setPixelLocation(newLocation);
+        }
+        // Refresh
+        refreshView();
+    }
+
+
+    /* View controls */
 
     public void refreshView(){
         Platform.runLater(() -> {
@@ -73,9 +105,14 @@ public class DotsCanvasControl {
                 gc.fillOval(x - PIXEL_R, y - PIXEL_R, PIXEL_D, PIXEL_D);
             }
 
-            System.out.println("refresh canvas");
+            log("refresh canvas");
         });
     }
 
+    /* Logging */
+
+    private void log(String msg){
+        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
+    }
 
 }
