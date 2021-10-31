@@ -12,12 +12,12 @@ import java.util.Set;
 import java.util.UUID;
 
 public class BotControl {
-    private UUID uuid;
+    private final UUID uuid;
 
     // Controllers
-    private ConnectionControl connectionControl;
-    private DotsCanvasControl dotsCanvasControl;
-    private GlobalOptionControl globalControl;
+    private final ConnectionControl connectionControl;
+    private final DotsCanvasControl dotsCanvasControl;
+    private final GlobalOptionControl globalControl;
 
     // States
     private ConnectionControl.State connectionState;
@@ -28,9 +28,9 @@ public class BotControl {
     // Set of UUIDs of connected bots
     private Set<UUID> connectedBots;
 
-    private BotFrame currentFrame;
+    private final BotFrame currentFrame;
     // Pixels selected in canvas
-    private Set<BotPixel> selectedPixels;
+    private final Set<BotPixel> selectedPixels;
 
     public BotControl() {
         uuid = UUID.randomUUID();
@@ -197,7 +197,7 @@ public class BotControl {
     /* Logging */
 
     private void log(String msg){
-        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
+        System.out.printf("[%s] %s%n", getClass().getSimpleName() , msg);
     }
 
 }

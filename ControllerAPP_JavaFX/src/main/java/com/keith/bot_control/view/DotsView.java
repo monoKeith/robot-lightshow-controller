@@ -1,4 +1,3 @@
-
 package com.keith.bot_control.view;
 
 import com.keith.bot_control.BotControlAPP;

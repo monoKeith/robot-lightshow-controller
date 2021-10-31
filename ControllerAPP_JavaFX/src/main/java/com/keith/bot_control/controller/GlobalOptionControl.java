@@ -5,10 +5,10 @@ import javafx.application.Platform;
 
 public class GlobalOptionControl {
 
-    enum State{
+    public enum State{
         PLAYING,
         READY,
-        IDLE;
+        IDLE
     }
 
     BotControl botControl;
@@ -60,7 +60,7 @@ public class GlobalOptionControl {
     /* Logging */
 
     private void log(String msg){
-        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
+        System.out.printf("[%s] %s%n", getClass().getSimpleName() , msg);
     }
 
 }

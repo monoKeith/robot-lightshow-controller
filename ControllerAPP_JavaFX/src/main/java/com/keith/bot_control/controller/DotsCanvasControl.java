@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 import static com.keith.bot_control.model.BotPixel.*;
 
@@ -18,7 +17,7 @@ public class DotsCanvasControl {
     // size of playground in Webots, must be square for now (unit: meter)
     public static int PLAYGROUND_SIZE = 1;
 
-    private BotControl control;
+    private final BotControl control;
     private DotsView view;
     private Boolean showPreviewPixels;
 
@@ -132,7 +131,7 @@ public class DotsCanvasControl {
     /* Logging */
 
     private void log(String msg){
-        System.out.println(String.format("[%s] %s", getClass().getSimpleName() , msg));
+        System.out.printf("[%s] %s%n", getClass().getSimpleName() , msg);
     }
 
 }

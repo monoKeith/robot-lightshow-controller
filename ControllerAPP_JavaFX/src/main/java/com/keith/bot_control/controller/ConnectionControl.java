@@ -9,31 +9,28 @@ import javafx.scene.control.TextField;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.LinkedList;
-import java.util.UUID;
 
 public class ConnectionControl {
 
     public enum State {
         CONNECTED,
         CONNECTING,
-        DISCONNECTED;
+        DISCONNECTED
     }
 
-    private BotControl botControl;
+    private final BotControl botControl;
     private TransmitterMQTT transmitter;
     private String brokerAddress;
     private ConnectionView view;
-
-    private Thread publishProcessor;
 
     // Once set to true, goes in termination state and connectionControl can't be recovered.
     private Boolean terminateFlag;
 
     // Queue to store messages to be published
-    private LinkedList<BotMessage> publishQueue;
+    private final LinkedList<BotMessage> publishQueue;
 
     // Queue to save received messages
-    private LinkedList<BotMessage> receiveQueue;
+    private final LinkedList<BotMessage> receiveQueue;
 
 
     public ConnectionControl(BotControl botControl){
@@ -120,8 +117,7 @@ public class ConnectionControl {
     /* Send message */
 
     private void initPublishProcessor(){
-        publishProcessor = new Thread(this::publishProcessor);
-        publishProcessor.start();
+        new Thread(this::publishProcessor).start();
     }
 
     private synchronized void publishProcessor(){
