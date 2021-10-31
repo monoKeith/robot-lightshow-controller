@@ -29,7 +29,6 @@ public class BotPixel {
         setColor(DEFAULT_COLOR);
     }
 
-    // Unit of coordinates of a pixel is meter (should match location unit in Webots)
     public BotPixel(double x, double y, Color color){
         setPixelLocation(new Point2D(x, y));
         setColor(color);
@@ -53,6 +52,16 @@ public class BotPixel {
 
     /* Setters and Getters */
 
+    private Point2D limitToCanvas(Point2D pixelLocation){
+        double x = pixelLocation.getX();
+        double y = pixelLocation.getY();
+        x = Math.max(x, PIXEL_SELECT_R);
+        x = Math.min(x, CANVAS_RESOLUTION - PIXEL_SELECT_R);
+        y = Math.max(y, PIXEL_SELECT_R);
+        y = Math.min(y, CANVAS_RESOLUTION - PIXEL_SELECT_R);
+        return new Point2D(x, y);
+    }
+
     public void setPhysicalLocation(Point2D physicalLocation) {
         this.physicalLocation = physicalLocation;
         this.pixelLocation = convertToPixel(physicalLocation);
@@ -60,13 +69,14 @@ public class BotPixel {
     }
 
     public void setPixelLocation(Point2D pixelLocation) {
+        pixelLocation = limitToCanvas(pixelLocation);
         this.pixelLocation = pixelLocation;
         this.dragPixelLocation = pixelLocation;
         this.physicalLocation = convertToMeter(pixelLocation);
     }
 
     public void setDragPixelLocation(Point2D dragPixelLocation){
-        this.dragPixelLocation = dragPixelLocation;
+        this.dragPixelLocation = limitToCanvas(dragPixelLocation);
     }
 
     public Point2D getPhysicalLocation(){
@@ -104,10 +114,7 @@ public class BotPixel {
     /* Pixel Selection */
 
     public boolean containsPixel(Point2D point){
-        double diffX = point.getX() - pixelLocation.getX();
-        double diffY = point.getY() - pixelLocation.getY();
-        double distanceFromCenter = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-        return distanceFromCenter <= PIXEL_R;
+        return pixelLocation.distance(point) <= PIXEL_R;
     }
 
 }
