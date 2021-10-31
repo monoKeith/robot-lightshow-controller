@@ -53,7 +53,7 @@ public class GlobalOptionControl {
             // Connected Bot counts
             view.setConnectedBotsCount(botControl.getConnectedBots().size());
             // Current Frame name
-            view.setCurrentFrameName(botControl.currentFrame.getName());
+            view.setCurrentFrameName(botControl.getCurrentFrame().getName());
         });
     }
 

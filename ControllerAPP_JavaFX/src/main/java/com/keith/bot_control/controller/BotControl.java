@@ -23,12 +23,14 @@ public class BotControl {
     private ConnectionControl.State connectionState;
     private GlobalOptionControl.State globalState;
 
-    Thread msgProcessor;
-    Boolean msgProcessorStopSignal;
+    private Thread msgProcessor;
+    private Boolean msgProcessorStopSignal;
     // Set of UUIDs of connected bots
-    Set<UUID> connectedBots;
+    private Set<UUID> connectedBots;
 
-    BotFrame currentFrame;
+    private BotFrame currentFrame;
+    // Pixels selected in canvas
+    private Set<BotPixel> selectedPixels;
 
     public BotControl() {
         uuid = UUID.randomUUID();
@@ -42,6 +44,7 @@ public class BotControl {
         // Init vars
         connectedBots = new HashSet<>();
         currentFrame = new BotFrame();
+        selectedPixels = new HashSet<>();
         // Init message processor
         initMsgProcessor();
     }
@@ -70,6 +73,14 @@ public class BotControl {
 
     public BotFrame getCurrentFrame(){
         return currentFrame;
+    }
+
+    public void clearSelectedPixels() {
+        selectedPixels = new HashSet<>();
+    }
+
+    public boolean newPixelSelection(BotPixel newSelection) {
+        return selectedPixels.add(newSelection);
     }
 
 

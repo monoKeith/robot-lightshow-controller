@@ -1,13 +1,15 @@
 package com.keith.bot_control.model;
 
+import com.keith.bot_control.controller.DotsCanvasControl;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
-import static com.keith.bot_control.controller.DotsCanvasControl.CANVAS_RESOLUTION;
-import static com.keith.bot_control.controller.DotsCanvasControl.PLAYGROUND_SIZE;
+import static com.keith.bot_control.controller.DotsCanvasControl.*;
 
 public class BotPixel {
 
+    // radius of the circle representing a bot on canvas
+    public static final int PIXEL_RADIUS = 10;
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
     public static final Color DEFAULT_COLOR = Color.BROWN;
 
@@ -68,6 +70,21 @@ public class BotPixel {
 
     public Color getColor(){
         return color;
+    }
+
+    public String toString(){
+        return String.format("BotPixel @ Physical [%.2f, %.2f] @ Canvas [%d, %d]",
+                physicalLocation.getX(), physicalLocation.getY(),
+                (int) pixelLocation.getX(), (int) pixelLocation.getY());
+    }
+
+    /* Pixel Selection */
+
+    public boolean containsPixel(Point2D point){
+        double diffX = point.getX() - pixelLocation.getX();
+        double diffY = point.getY() - pixelLocation.getY();
+        double distanceFromCenter = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+        return distanceFromCenter <= PIXEL_RADIUS;
     }
 
 }

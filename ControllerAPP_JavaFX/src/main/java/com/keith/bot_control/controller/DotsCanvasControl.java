@@ -6,10 +6,11 @@ import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
+import static com.keith.bot_control.model.BotPixel.PIXEL_RADIUS;
+
 public class DotsCanvasControl {
 
-    // radius of the circle representing a bot on canvas
-    static final int PIXEL_RADIUS = 10;
+
     // resolution of the canvas, default 720x720, must be square for now
     public static int CANVAS_RESOLUTION = 720;
     // size of playground in Webots, must be square for now (unit: meter)
@@ -27,6 +28,25 @@ public class DotsCanvasControl {
     public void setView(DotsView view) {
         this.view = view;
         CANVAS_RESOLUTION = (int) view.getCanvas().getWidth();
+    }
+
+    public void mousePress(Point2D point){
+        BotPixel newSelection = null;
+        // Update selected pixel
+        for (BotPixel pixel: control.getCurrentFrame().getPixels()){
+            if (pixel.containsPixel(point)){
+                newSelection = pixel;
+                break;
+            }
+        }
+        // Set selectedPixel
+        if (newSelection == null){
+            control.clearSelectedPixels();
+            System.out.println("Reset pixel selection");
+        } else {
+            if (control.newPixelSelection(newSelection))
+                System.out.println("Selected pixel: " + newSelection);
+        }
     }
 
     public void refreshView(){
