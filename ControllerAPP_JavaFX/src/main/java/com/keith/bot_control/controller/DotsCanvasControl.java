@@ -5,8 +5,9 @@ import com.keith.bot_control.view.DotsView;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-import static com.keith.bot_control.model.BotPixel.PIXEL_RADIUS;
+import static com.keith.bot_control.model.BotPixel.*;
 
 public class DotsCanvasControl {
 
@@ -47,23 +48,32 @@ public class DotsCanvasControl {
             if (control.newPixelSelection(newSelection))
                 System.out.println("Selected pixel: " + newSelection);
         }
+        // Refresh
+        refreshView();
     }
 
     public void refreshView(){
         Platform.runLater(() -> {
             // Canvas
+            view.clearCanvas();
             GraphicsContext gc = view.getCanvas().getGraphicsContext2D();
 
             // Fill pixels
             for (BotPixel pixel: control.getCurrentFrame().getPixels()){
-                gc.setFill(pixel.getColor());
                 Point2D canvasPixel = pixel.getPixelLocation();
                 double x = canvasPixel.getX();
                 double y = canvasPixel.getY();
-                gc.fillOval(x - PIXEL_RADIUS, y - PIXEL_RADIUS, PIXEL_RADIUS, PIXEL_RADIUS);
+                // Selected pixels = have a ring around it
+                if (control.pixelIsSelected(pixel)){
+                    gc.setFill(Color.GRAY);
+                    gc.fillOval(x - PIXEL_SELECT_R, y - PIXEL_SELECT_R, PIXEL_SELECT_D, PIXEL_SELECT_D);
+                }
+                // Fill Bot Pixel color
+                gc.setFill(pixel.getColor());
+                gc.fillOval(x - PIXEL_R, y - PIXEL_R, PIXEL_D, PIXEL_D);
             }
 
-            System.out.println("updated canvas");
+            System.out.println("refresh canvas");
         });
     }
 

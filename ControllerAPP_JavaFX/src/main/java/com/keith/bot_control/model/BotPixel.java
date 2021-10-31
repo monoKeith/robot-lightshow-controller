@@ -1,6 +1,5 @@
 package com.keith.bot_control.model;
 
-import com.keith.bot_control.controller.DotsCanvasControl;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -8,10 +7,14 @@ import static com.keith.bot_control.controller.DotsCanvasControl.*;
 
 public class BotPixel {
 
-    // radius of the circle representing a bot on canvas
-    public static final int PIXEL_RADIUS = 10;
+    // Constants: drawing pixels on canvas
+    public static final int PIXEL_R = 16;
+    public static final int PIXEL_D = 2 * PIXEL_R;
+    public static final int PIXEL_SELECT_R = PIXEL_R + 4;
+    public static final int PIXEL_SELECT_D = 2 * PIXEL_SELECT_R;
+
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
-    public static final Color DEFAULT_COLOR = Color.BROWN;
+    public static final Color DEFAULT_COLOR = Color.ORANGE;
 
     private Point2D physicalLocation;
     private Point2D pixelLocation;
@@ -84,7 +87,7 @@ public class BotPixel {
         double diffX = point.getX() - pixelLocation.getX();
         double diffY = point.getY() - pixelLocation.getY();
         double distanceFromCenter = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-        return distanceFromCenter <= PIXEL_RADIUS;
+        return distanceFromCenter <= PIXEL_R;
     }
 
 }

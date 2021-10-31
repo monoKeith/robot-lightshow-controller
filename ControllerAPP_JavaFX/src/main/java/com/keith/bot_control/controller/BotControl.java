@@ -76,11 +76,15 @@ public class BotControl {
     }
 
     public void clearSelectedPixels() {
-        selectedPixels = new HashSet<>();
+        selectedPixels.clear();
     }
 
     public boolean newPixelSelection(BotPixel newSelection) {
         return selectedPixels.add(newSelection);
+    }
+
+    public boolean pixelIsSelected(BotPixel pixel) {
+        return selectedPixels.contains(pixel);
     }
 
 
