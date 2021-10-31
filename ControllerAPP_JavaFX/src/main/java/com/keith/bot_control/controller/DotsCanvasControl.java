@@ -17,16 +17,15 @@ public class DotsCanvasControl {
     public static int CANVAS_RESOLUTION = 720;
     // size of playground in Webots, must be square for now (unit: meter)
     public static int PLAYGROUND_SIZE = 1;
-//    final int PIXEL_COUNT;
+
     private BotControl control;
     private DotsView view;
-    private Boolean dragPreview;
+    private Boolean showPreviewPixels;
 
     public DotsCanvasControl(BotControl control){
-//        PIXEL_COUNT = 0;
         this.control = control;
         this.view = null;
-        this.dragPreview = false;
+        this.showPreviewPixels = false;
     }
 
     /* Getter and Setter */
@@ -50,6 +49,7 @@ public class DotsCanvasControl {
         }
         // Reset, Select, deSelect
         if (newSelection == null){
+            if (control.getSelectedPixels().isEmpty()) return;
             control.clearSelectedPixels();
             log("Reset pixel selection");
         } else if (control.selectPixel(newSelection)){
@@ -70,10 +70,10 @@ public class DotsCanvasControl {
             Point2D newLocation = new Point2D(
                     oldLocation.getX() + delta.getWidth(),
                     oldLocation.getY() + delta.getHeight());
-            pixel.setDragPixelLocation(newLocation);
+            pixel.setPixelPreviewLocation(newLocation);
         }
         // Refresh
-        dragPreview = true;
+        showPreviewPixels = true;
         refreshView();
     }
 
@@ -88,7 +88,7 @@ public class DotsCanvasControl {
             pixel.setPixelLocation(newLocation);
         }
         // Refresh
-        dragPreview = false;
+        showPreviewPixels = false;
         refreshView();
     }
 
@@ -101,7 +101,7 @@ public class DotsCanvasControl {
             view.clearCanvas();
             GraphicsContext gc = view.getCanvas().getGraphicsContext2D();
 
-            // Fill pixels
+            // Each BotPixel
             for (BotPixel pixel: control.getCurrentFrame().getPixels()){
                 Point2D canvasPixel = pixel.getPixelLocation();
                 double x = canvasPixel.getX();
@@ -109,7 +109,7 @@ public class DotsCanvasControl {
 
                 // Draw a ring around selected pixels
                 if (control.pixelIsSelected(pixel)){
-                    gc.setFill(Color.GRAY);
+                    gc.setFill(SELECTION_RING_COLOR);
                     gc.fillOval(x - PIXEL_SELECT_R, y - PIXEL_SELECT_R, PIXEL_SELECT_D, PIXEL_SELECT_D);
                 }
 
@@ -118,10 +118,10 @@ public class DotsCanvasControl {
                 gc.fillOval(x - PIXEL_R, y - PIXEL_R, PIXEL_D, PIXEL_D);
 
                 // Preview dragging location when dragging selected pixels
-                if (dragPreview && control.pixelIsSelected(pixel)){
-                    Point2D dragLocation = pixel.getDragPixelLocation();
-                    double preview_x = dragLocation.getX();
-                    double preview_y = dragLocation.getY();
+                if (showPreviewPixels && control.pixelIsSelected(pixel)){
+                    Point2D previewLocation = pixel.getPixelPreviewLocation();
+                    double preview_x = previewLocation.getX();
+                    double preview_y = previewLocation.getY();
                     gc.setFill(pixel.getPreviewColor());
                     gc.fillOval(preview_x - PIXEL_R, preview_y - PIXEL_R, PIXEL_D, PIXEL_D);
                 }

@@ -16,11 +16,12 @@ public class BotPixel {
     // Default values
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
     public static final Color DEFAULT_COLOR = Color.ORANGE;
+    public static final Color SELECTION_RING_COLOR = Color.ROSYBROWN;
 
     // Properties
     private Point2D physicalLocation;
     private Point2D pixelLocation;
-    private Point2D dragPixelLocation;
+    private Point2D pixelPreviewLocation;
     private Color color;
     private Color previewColor;
 
@@ -65,18 +66,18 @@ public class BotPixel {
     public void setPhysicalLocation(Point2D physicalLocation) {
         this.physicalLocation = physicalLocation;
         this.pixelLocation = convertToPixel(physicalLocation);
-        this.dragPixelLocation = pixelLocation;
+        this.pixelPreviewLocation = pixelLocation;
     }
 
     public void setPixelLocation(Point2D pixelLocation) {
         pixelLocation = limitToCanvas(pixelLocation);
         this.pixelLocation = pixelLocation;
-        this.dragPixelLocation = pixelLocation;
+        this.pixelPreviewLocation = pixelLocation;
         this.physicalLocation = convertToMeter(pixelLocation);
     }
 
-    public void setDragPixelLocation(Point2D dragPixelLocation){
-        this.dragPixelLocation = limitToCanvas(dragPixelLocation);
+    public void setPixelPreviewLocation(Point2D pixelPreviewLocation){
+        this.pixelPreviewLocation = limitToCanvas(pixelPreviewLocation);
     }
 
     public Point2D getPhysicalLocation(){
@@ -87,8 +88,8 @@ public class BotPixel {
         return pixelLocation;
     }
 
-    public Point2D getDragPixelLocation() {
-        return dragPixelLocation;
+    public Point2D getPixelPreviewLocation() {
+        return pixelPreviewLocation;
     }
 
     public void setColor(Color color){
