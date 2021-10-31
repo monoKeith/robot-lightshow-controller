@@ -20,11 +20,13 @@ public class DotsCanvasControl {
 //    final int PIXEL_COUNT;
     private BotControl control;
     private DotsView view;
+    private Boolean dragPreview;
 
     public DotsCanvasControl(BotControl control){
 //        PIXEL_COUNT = 0;
         this.control = control;
         this.view = null;
+        this.dragPreview = false;
     }
 
     /* Getter and Setter */
@@ -63,8 +65,16 @@ public class DotsCanvasControl {
     // Update view to preview mouse dragging behavior
     // arg: delta of mouse movement from starting position
     public void mouseDragging(Dimension2D delta){
-
-
+        for (BotPixel pixel: control.getSelectedPixels()){
+            Point2D oldLocation = pixel.getPixelLocation();
+            Point2D newLocation = new Point2D(
+                    oldLocation.getX() + delta.getWidth(),
+                    oldLocation.getY() + delta.getHeight());
+            pixel.setDragPixelLocation(newLocation);
+        }
+        // Refresh
+        dragPreview = true;
+        refreshView();
     }
 
     // Finalize dragging behavior when it's completed
@@ -78,6 +88,7 @@ public class DotsCanvasControl {
             pixel.setPixelLocation(newLocation);
         }
         // Refresh
+        dragPreview = false;
         refreshView();
     }
 
@@ -95,17 +106,26 @@ public class DotsCanvasControl {
                 Point2D canvasPixel = pixel.getPixelLocation();
                 double x = canvasPixel.getX();
                 double y = canvasPixel.getY();
-                // Selected pixels = have a ring around it
+
+                // Draw a ring around selected pixels
                 if (control.pixelIsSelected(pixel)){
                     gc.setFill(Color.GRAY);
                     gc.fillOval(x - PIXEL_SELECT_R, y - PIXEL_SELECT_R, PIXEL_SELECT_D, PIXEL_SELECT_D);
                 }
-                // Fill Bot Pixel color
+
+                // Draw center of BotPixel
                 gc.setFill(pixel.getColor());
                 gc.fillOval(x - PIXEL_R, y - PIXEL_R, PIXEL_D, PIXEL_D);
-            }
 
-            log("refresh canvas");
+                // Preview dragging location when dragging selected pixels
+                if (dragPreview && control.pixelIsSelected(pixel)){
+                    Point2D dragLocation = pixel.getDragPixelLocation();
+                    double preview_x = dragLocation.getX();
+                    double preview_y = dragLocation.getY();
+                    gc.setFill(pixel.getPreviewColor());
+                    gc.fillOval(preview_x - PIXEL_R, preview_y - PIXEL_R, PIXEL_D, PIXEL_D);
+                }
+            }
         });
     }
 

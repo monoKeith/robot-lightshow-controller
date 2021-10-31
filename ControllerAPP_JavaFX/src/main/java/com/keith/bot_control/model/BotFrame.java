@@ -1,5 +1,7 @@
 package com.keith.bot_control.model;
 
+import javafx.scene.paint.Color;
+
 import java.util.*;
 
 public class BotFrame {
@@ -15,9 +17,9 @@ public class BotFrame {
 
     public static Set<BotPixel> testPixels(){
         Set<BotPixel> pixels = new HashSet<>();
-        pixels.add(new BotPixel(300, 200));
-//        pixels.add(new BotPixel(600, 600));
-//        pixels.add(new BotPixel(420, 100));
+        pixels.add(new BotPixel(300, 200, Color.ORANGE));
+        pixels.add(new BotPixel(600, 600, Color.BLUE));
+        pixels.add(new BotPixel(420, 100, Color.PINK));
         return pixels;
     }
 
