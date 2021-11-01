@@ -18,6 +18,7 @@ public class BotControl {
     private final ConnectionControl connectionControl;
     private final DotsCanvasControl dotsCanvasControl;
     private final GlobalOptionControl globalControl;
+    private final PropertiesControl propertiesControl;
 
     // States
     private ConnectionControl.State connectionState;
@@ -38,6 +39,7 @@ public class BotControl {
         connectionControl = new ConnectionControl(this);
         dotsCanvasControl = new DotsCanvasControl(this);
         globalControl = new GlobalOptionControl(this);
+        propertiesControl = new PropertiesControl(this);
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
@@ -48,6 +50,7 @@ public class BotControl {
         // Init message processor
         initMsgProcessor();
     }
+
 
     /* Getters */
 
@@ -67,6 +70,10 @@ public class BotControl {
         return globalControl;
     }
 
+    public PropertiesControl getPropertiesControl(){
+        return propertiesControl;
+    }
+
     public Set<UUID> getConnectedBots(){
         return connectedBots;
     }
@@ -75,7 +82,8 @@ public class BotControl {
         return currentFrame;
     }
 
-    // Bot Pixel selection
+
+    /* Bot Pixel selection */
 
     public Set<BotPixel> getSelectedPixels() {
         return selectedPixels;
@@ -83,18 +91,29 @@ public class BotControl {
 
     public void clearSelectedPixels() {
         selectedPixels.clear();
+        propertiesControl.refreshView();
     }
 
     public boolean selectPixel(BotPixel newSelection) {
-        return selectedPixels.add(newSelection);
+        if (selectedPixels.add(newSelection)){
+            propertiesControl.refreshView();
+            return true;
+        }
+        return false;
     }
 
     public void deSelectPixel(BotPixel pixel){
         selectedPixels.remove(pixel);
+        propertiesControl.refreshView();
     }
 
     public boolean pixelIsSelected(BotPixel pixel) {
         return selectedPixels.contains(pixel);
+    }
+
+    // Called by Properties Control when properties of BotPixel changed
+    public void pixelPropertiesUpdate(){
+        dotsCanvasControl.refreshView();
     }
 
 
@@ -122,14 +141,15 @@ public class BotControl {
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
-        connectionControl.updateView();
+        connectionControl.refreshView();
     }
 
     public void updateGlobalState(GlobalOptionControl.State state){
         if (globalState == state) return;
         globalState = state;
-        globalControl.updateView();
+        globalControl.refreshView();
     }
+
 
     /* Message processor - Receives message from transmitter and process */
 
@@ -168,15 +188,16 @@ public class BotControl {
         switch (msg.getTopic()){
             case TransmitterMQTT.UUID_TOPIC -> {
                 connectedBots.add(UUID.fromString(msg.getMessage()));
-                globalControl.updateView();
+                globalControl.refreshView();
             }
         }
     }
 
+
     /* Bot Control Functions */
 
     // Send message to all bots, update target location
-    public void updateBotsTarget(){
+    public void publishTargets(){
         // TODO optimize location for each bot in BotFrame class!!!
         Map<UUID, BotPixel> targetMap = currentFrame.generateTargetMap(connectedBots);
         // Send target message
@@ -194,10 +215,11 @@ public class BotControl {
         terminateMsgProcessor();
     }
 
+
     /* Logging */
 
     private void log(String msg){
-        System.out.printf("[%s] %s%n", getClass().getSimpleName() , msg);
+        System.out.printf("[%s] %s%n", getClass().getSimpleName(), msg);
     }
 
 }

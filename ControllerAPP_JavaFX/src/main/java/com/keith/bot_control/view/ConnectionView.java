@@ -31,7 +31,7 @@ public class ConnectionView {
     @FXML
     public void initialize(){
         // FXML initialized and populated vars
-        control.updateView();
+        control.refreshView();
     }
 
     @FXML

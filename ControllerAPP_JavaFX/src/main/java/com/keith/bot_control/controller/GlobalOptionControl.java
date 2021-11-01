@@ -11,8 +11,8 @@ public class GlobalOptionControl {
         IDLE
     }
 
-    BotControl botControl;
-    GlobalControlView view;
+    private BotControl botControl;
+    private GlobalControlView view;
 
     public GlobalOptionControl(BotControl botControl){
         this.botControl = botControl;
@@ -28,12 +28,12 @@ public class GlobalOptionControl {
         botControl.updateGlobalState(State.PLAYING);
 
         log("Play!");
-        botControl.updateBotsTarget();
+        botControl.publishTargets();
 
         botControl.updateGlobalState(State.READY);
     }
 
-    public void updateView(){
+    public void refreshView(){
         if (view == null) return;
         Platform.runLater(() -> {
             switch (botControl.getGlobalState()){

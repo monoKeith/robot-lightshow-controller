@@ -21,8 +21,8 @@ public class DotsCanvasControl {
     private DotsView view;
     private Boolean showPreviewPixels;
 
-    public DotsCanvasControl(BotControl control){
-        this.control = control;
+    public DotsCanvasControl(BotControl botControl){
+        this.control = botControl;
         this.view = null;
         this.showPreviewPixels = false;
     }

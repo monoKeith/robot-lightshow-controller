@@ -2,7 +2,6 @@ package com.keith.bot_control.view;
 
 import com.keith.bot_control.BotControlAPP;
 import com.keith.bot_control.controller.GlobalOptionControl;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,7 +26,7 @@ public class GlobalControlView {
     @FXML
     public void initialize(){
         control.setView(this);
-        control.updateView();
+        control.refreshView();
     }
 
     @FXML

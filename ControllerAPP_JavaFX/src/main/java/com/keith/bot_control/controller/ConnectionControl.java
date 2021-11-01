@@ -53,7 +53,7 @@ public class ConnectionControl {
             case CONNECTED -> {
                 // To Disconnect
                 resetTransmitter();
-                updateView();
+                refreshView();
             }
             case DISCONNECTED -> {
                 // To Connect
@@ -78,7 +78,7 @@ public class ConnectionControl {
         }
     }
 
-    public void updateView(){
+    public void refreshView(){
         if (view == null) return;
         Platform.runLater(() -> {
             Button connectButton = view.getConnectButton();
