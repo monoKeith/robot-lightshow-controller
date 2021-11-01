@@ -50,7 +50,7 @@ public class DotsCanvasControl {
         if (newSelection == null){
             if (control.getSelectedPixels().isEmpty()) return;
             control.clearSelectedPixels();
-            log("Reset pixel selection");
+            log("reset pixel selection");
         } else if (control.selectPixel(newSelection)){
             log("select pixel: " + newSelection);
         } else {
