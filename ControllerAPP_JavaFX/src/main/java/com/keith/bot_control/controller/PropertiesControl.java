@@ -68,7 +68,7 @@ public class PropertiesControl {
                 view.setBotPixelPaneEnable(true);
                 view.displayMultipleSelectionWarning(false);
                 view.enableLocationProperties(true);
-                
+
                 BotPixel pixel = singleSelectedPixel();
                 // Color
                 view.botPixelPresetColor(pixel.getColor());
