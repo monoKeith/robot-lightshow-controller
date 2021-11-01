@@ -89,6 +89,7 @@ public class DotsCanvasControl {
         // Refresh
         showPreviewPixels = false;
         refreshView();
+        control.notifyLocationUpdate();
     }
 
 

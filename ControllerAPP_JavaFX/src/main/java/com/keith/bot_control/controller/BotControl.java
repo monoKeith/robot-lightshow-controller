@@ -111,8 +111,13 @@ public class BotControl {
         return selectedPixels.contains(pixel);
     }
 
+    // Called by DotsCanvasControl to update properties when BotPixel moved
+    public void notifyLocationUpdate(){
+        propertiesControl.refreshView();
+    }
+
     // Called by Properties Control when properties of BotPixel changed
-    public void pixelPropertiesUpdate(){
+    public void notifyPropertiesUpdate(){
         dotsCanvasControl.refreshView();
     }
 

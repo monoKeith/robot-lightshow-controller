@@ -64,9 +64,7 @@ public class BotPixel {
     }
 
     public void setPhysicalLocation(Point2D physicalLocation) {
-        this.physicalLocation = physicalLocation;
-        this.pixelLocation = convertToPixel(physicalLocation);
-        this.pixelPreviewLocation = pixelLocation;
+        setPixelLocation(convertToPixel(physicalLocation));
     }
 
     public void setPixelLocation(Point2D pixelLocation) {
