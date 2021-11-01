@@ -29,7 +29,7 @@
          <children>
             <Label text="Global Options">
                <font>
-                  <Font name="System Bold" size="12.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
             </Label>
             <Label text="# Bots Connected" GridPane.rowIndex="1" />
