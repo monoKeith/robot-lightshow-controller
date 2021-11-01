@@ -34,9 +34,9 @@ public class PropertiesControl {
     /* Handlers */
 
     public void pixelColorModified(Color color){
-        BotPixel selectedPixel = singleSelectedPixel();
-        if (selectedPixel == null) return;
-        selectedPixel.setColor(color);
+        for (BotPixel pixel: control.getSelectedPixels()){
+            pixel.setColor(color);
+        }
         // Refresh canvas
         control.notifyPropertiesUpdate();
     }
@@ -62,10 +62,14 @@ public class PropertiesControl {
 
             if (selectedPixels.isEmpty()){
                 view.setBotPixelPaneEnable(false);
+                view.displayMultipleSelectionWarning(false);
+
             } else if (selectedPixels.size() == 1){
                 view.setBotPixelPaneEnable(true);
+                view.displayMultipleSelectionWarning(false);
                 view.enableLocationProperties(true);
-                BotPixel pixel = (BotPixel) selectedPixels.toArray()[0];
+                
+                BotPixel pixel = singleSelectedPixel();
                 // Color
                 view.botPixelPresetColor(pixel.getColor());
                 // Location
@@ -73,11 +77,11 @@ public class PropertiesControl {
                 view.setCanvasLocation(pixel.getPixelLocation());
 
             } else {
-                // Multiple botPixel selected
-                // Disable location properties
+                // Multiple BotPixel selected
                 view.enableLocationProperties(false);
-            }
+                view.displayMultipleSelectionWarning(true);
 
+            }
         });
     }
 

@@ -45,7 +45,22 @@
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font></Label>
-                              <ColorPicker fx:id="botPixelColorPicker" onAction="#pixelColorChanged" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label fx:id="multipleSelectionWarning" prefHeight="40.0" prefWidth="152.0" style="-fx-background-color: orange; -fx-border-radius: 2px; -fx-border-width: 1; -fx-border-color: black;" text="This will change color for all selected BotPixels" textFill="WHITE" visible="false" wrapText="true">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="2.0" right="2.0" />
+                                       </padding>
+                                    </Label>
+                                    <ColorPicker fx:id="botPixelColorPicker" onAction="#pixelColorChanged" prefHeight="40.0" prefWidth="100.0" />
+                                 </children>
+                              </HBox>
                               <Label text="Condition to apply" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="System Bold" size="12.0" />

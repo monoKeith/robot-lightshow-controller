@@ -1,13 +1,13 @@
 package com.keith.bot_control.view;
 
 import com.keith.bot_control.BotControlAPP;
-import com.keith.bot_control.controller.BotControl;
 import com.keith.bot_control.controller.PropertiesControl;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -19,6 +19,9 @@ public class PropertiesView {
 
     @FXML
     protected Pane botPixelPropertiesPane;
+
+    @FXML
+    protected Label multipleSelectionWarning;
 
     @FXML
     protected GridPane locationPropertiesPane;
@@ -105,6 +108,10 @@ public class PropertiesView {
 
     public void enableLocationProperties(boolean enable){
         locationPropertiesPane.setDisable(!enable);
+    }
+
+    public void displayMultipleSelectionWarning(boolean enable){
+        multipleSelectionWarning.setVisible(enable);
     }
 
     /* Other ... TODO */
