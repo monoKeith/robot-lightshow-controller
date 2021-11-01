@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -18,6 +19,9 @@ public class PropertiesView {
 
     @FXML
     protected Pane botPixelPropertiesPane;
+
+    @FXML
+    protected GridPane locationPropertiesPane;
 
     @FXML
     protected ColorPicker botPixelColorPicker;
@@ -97,6 +101,10 @@ public class PropertiesView {
         canvasX.setText(String.format("%.1f", location.getX()));
         canvasY.setText(String.format("%.1f", location.getY()));
         applyButtonCanvas.setDisable(true);
+    }
+
+    public void enableLocationProperties(boolean enable){
+        locationPropertiesPane.setDisable(!enable);
     }
 
     /* Other ... TODO */

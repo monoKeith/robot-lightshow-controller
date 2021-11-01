@@ -62,9 +62,9 @@ public class PropertiesControl {
 
             if (selectedPixels.isEmpty()){
                 view.setBotPixelPaneEnable(false);
-
             } else if (selectedPixels.size() == 1){
                 view.setBotPixelPaneEnable(true);
+                view.enableLocationProperties(true);
                 BotPixel pixel = (BotPixel) selectedPixels.toArray()[0];
                 // Color
                 view.botPixelPresetColor(pixel.getColor());
@@ -75,7 +75,7 @@ public class PropertiesControl {
             } else {
                 // Multiple botPixel selected
                 // Disable location properties
-
+                view.enableLocationProperties(false);
             }
 
         });
