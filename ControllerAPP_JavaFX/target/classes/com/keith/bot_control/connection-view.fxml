@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane id="ConnectionPane" prefHeight="393.0" prefWidth="225.0" style="-fx-border-width: 2; -fx-border-color: #1fab49; -fx-border-radius: 5; -fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.ConnectionView">
+<Pane id="ConnectionPane" prefHeight="393.0" prefWidth="225.0" style="-fx-border-width: 2; -fx-border-color: #1fab49; -fx-border-radius: 5; -fx-background-color: linear-gradient(to bottom right, #37bd42, #955acc); -fx-background-insets: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.ConnectionView">
    <children>
-      <GridPane prefHeight="393.0" prefWidth="225.0">
+      <GridPane prefHeight="393.0" prefWidth="225.0" style="-fx-background-color: transparent;">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,7 +25,7 @@
             <RowConstraints maxHeight="313.5" minHeight="10.0" prefHeight="282.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Event Broker">
+            <Label text="Event Broker" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -35,14 +35,20 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Label text="Broker Address" GridPane.rowIndex="1" />
-            <TextField fx:id="brokerIP" alignment="CENTER" disable="true" prefHeight="25.0" prefWidth="88.0" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Connection Logs" GridPane.rowIndex="2">
+            <Label text="Broker Address" textFill="WHITE" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <TextField fx:id="brokerIP" alignment="CENTER" disable="true" prefHeight="25.0" prefWidth="88.0" style="-fx-background-color: rgba(255, 255, 255, 0.35); -fx-text-fill: white;" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></TextField>
+            <Label text="Connection Logs" textFill="WHITE" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <TextArea fx:id="logs" editable="false" prefHeight="267.0" prefWidth="201.0" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-width: 1; -fx-border-radius: 5;" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <TextArea fx:id="logs" editable="false" prefHeight="267.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="3" />
          </children>
          <opaqueInsets>
             <Insets />

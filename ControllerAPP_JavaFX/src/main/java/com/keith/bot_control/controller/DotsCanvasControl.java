@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import static com.keith.bot_control.model.BotPixel.*;
 
@@ -112,6 +113,10 @@ public class DotsCanvasControl {
                     gc.setFill(SELECTION_RING_COLOR);
                     gc.fillOval(x - PIXEL_SELECT_R, y - PIXEL_SELECT_R, PIXEL_SELECT_D, PIXEL_SELECT_D);
                 }
+
+                // Draw a BLACK circle around the pixel
+                gc.setFill(Color.BLACK);
+                gc.fillOval(x - PIXEL_CIRCLE_R, y - PIXEL_CIRCLE_R, PIXEL_CIRCLE_D, PIXEL_CIRCLE_D);
 
                 // Draw center of BotPixel
                 gc.setFill(pixel.getColor());

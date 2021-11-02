@@ -18,11 +18,11 @@
 
 <Pane prefHeight="735.0" prefWidth="450.0" style="-fx-border-color: #eb345e; -fx-border-width: 2; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.PropertiesView">
    <children>
-      <TabPane prefHeight="735.0" prefWidth="450.0" style="-fx-background-color: transparent;" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="735.0" prefWidth="450.0" style="-fx-background-color: transparent; -fx-background-insets: 2; headerAllignment: center;" stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="BotPixel Properties">
+          <Tab style="-fx-pref-width: 150;" text="BotPixel Properties">
                <content>
-                  <Pane fx:id="botPixelPropertiesPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;">
+                  <Pane fx:id="botPixelPropertiesPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #3c3c3c; -fx-border-radius: 5;">
                      <children>
                         <GridPane prefHeight="180.0" prefWidth="440.0">
                           <columnConstraints>
@@ -36,12 +36,12 @@
                               <RowConstraints maxHeight="171.0" minHeight="5.0" prefHeight="40.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Color Settings">
+                              <Label text="Color Settings" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="multipleSelectionWarning" alignment="CENTER" prefHeight="35.0" prefWidth="275.0" style="-fx-background-color: orange; -fx-border-radius: 2px; -fx-border-width: 1; -fx-border-color: black;" text="This will apply to all selected BotPixels" textAlignment="CENTER" textFill="WHITE" visible="false" wrapText="true" GridPane.columnIndex="1">
+                              <Label fx:id="multipleSelectionWarning" alignment="CENTER" prefHeight="35.0" prefWidth="275.0" style="-fx-background-color: orange; -fx-border-radius: 2px; -fx-border-width: 1; -fx-border-color: black;" text="Settings will apply to all selected BotPixels" textAlignment="CENTER" textFill="WHITE" visible="false" wrapText="true" GridPane.columnIndex="1">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
@@ -49,17 +49,17 @@
                                     <Insets left="2.0" right="2.0" />
                                  </padding>
                               </Label>
-                              <Label text="Color" GridPane.rowIndex="1">
+                              <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="54.0" text="Color" textFill="WHITE" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font></Label>
-                              <ColorPicker fx:id="botPixelColorPicker" onAction="#pixelColorChanged" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="Condition to apply" GridPane.rowIndex="2">
+                              <ColorPicker fx:id="botPixelColorPicker" onAction="#pixelColorChanged" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Condition to apply" textFill="WHITE" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="234.0" text="Initializing..." GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <SplitMenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="234.0" style="-fx-background-color: white;" text="Initializing..." GridPane.columnIndex="1" GridPane.rowIndex="2">
                                 <items>
                                   <MenuItem mnemonicParsing="false" text="Start of frame" />
                                   <MenuItem mnemonicParsing="false" text="On arrival" />
@@ -77,19 +77,19 @@
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.5" minWidth="10.0" prefWidth="275.5" />
                           </columnConstraints>
                            <children>
-                              <Label text="Location">
+                              <Label text="Location" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label prefHeight="41.0" prefWidth="117.0" text="Physical [meters]" GridPane.rowIndex="1">
+                              <Label prefHeight="41.0" prefWidth="117.0" text="Physical [meters]" textFill="WHITE" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
-                                    <Label prefHeight="17.0" prefWidth="20.0" text="X:">
+                                    <Label prefHeight="17.0" prefWidth="20.0" text="X:" textFill="WHITE">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
@@ -97,8 +97,11 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="physicsX" onAction="#locationUpdatePhysics" onKeyTyped="#locationTextChangePhysics" prefWidth="60.0" />
-                                    <Label prefHeight="17.0" prefWidth="20.0" text="Y:">
+                                    <TextField fx:id="physicsX" alignment="CENTER" onAction="#locationUpdatePhysics" onKeyTyped="#locationTextChangePhysics" prefWidth="60.0" style="-fx-background-color: rgba(255, 255, 255, 0.35); -fx-text-fill: white;">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></TextField>
+                                    <Label prefHeight="17.0" prefWidth="20.0" text="Y:" textFill="WHITE">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
@@ -106,11 +109,17 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="physicsY" onAction="#locationUpdatePhysics" onKeyTyped="#locationTextChangePhysics" prefWidth="60.0" />
-                                    <Button fx:id="applyButtonPhysical" mnemonicParsing="false" onAction="#locationUpdatePhysics" text="Apply">
+                                    <TextField fx:id="physicsY" alignment="CENTER" onAction="#locationUpdatePhysics" onKeyTyped="#locationTextChangePhysics" prefWidth="60.0" style="-fx-background-color: rgba(255, 255, 255, 0.35); -fx-text-fill: white;">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></TextField>
+                                    <Button fx:id="applyButtonPhysical" mnemonicParsing="false" onAction="#locationUpdatePhysics" style="-fx-background-color: white;" text="Apply">
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
                                     </Button>
                                  </children>
                                  <padding>
@@ -120,14 +129,14 @@
                                     <Insets />
                                  </GridPane.margin>
                               </HBox>
-                              <Label prefHeight="37.0" prefWidth="108.0" text="Canvas [pixels]" wrapText="true" GridPane.rowIndex="2">
+                              <Label prefHeight="37.0" prefWidth="108.0" text="Canvas [pixels]" textFill="WHITE" wrapText="true" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <children>
-                                    <Label prefHeight="17.0" prefWidth="20.0" text="X:">
+                                    <Label prefHeight="17.0" prefWidth="20.0" text="X:" textFill="WHITE">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
@@ -135,8 +144,11 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="canvasX" onAction="#locationUpdateCanvas" onKeyTyped="#locationTextChangeCanvas" prefWidth="60.0" />
-                                    <Label prefHeight="17.0" prefWidth="20.0" text="Y:">
+                                    <TextField fx:id="canvasX" alignment="CENTER" onAction="#locationUpdateCanvas" onKeyTyped="#locationTextChangeCanvas" prefWidth="60.0" style="-fx-background-color: rgba(255, 255, 255, 0.35); -fx-text-fill: white;">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></TextField>
+                                    <Label prefHeight="17.0" prefWidth="20.0" text="Y:" textFill="WHITE">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
@@ -144,11 +156,17 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="canvasY" onAction="#locationUpdateCanvas" onKeyTyped="#locationTextChangeCanvas" prefWidth="60.0" />
-                                    <Button fx:id="applyButtonCanvas" mnemonicParsing="false" onAction="#locationUpdateCanvas" text="Apply">
+                                    <TextField fx:id="canvasY" alignment="CENTER" onAction="#locationUpdateCanvas" onKeyTyped="#locationTextChangeCanvas" prefWidth="60.0" style="-fx-background-color: rgba(255, 255, 255, 0.35); -fx-text-fill: white;">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></TextField>
+                                    <Button fx:id="applyButtonCanvas" mnemonicParsing="false" onAction="#locationUpdateCanvas" style="-fx-background-color: white;" text="Apply">
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
                                     </Button>
                                  </children>
                                  <padding>
@@ -169,11 +187,11 @@
                   </Pane>
                </content>
           </Tab>
-          <Tab text="LightBot-BotPixel Map">
+            <Tab style="-fx-pref-width: 150;" text="LightBot-BotPixel Map">
                <content>
-                  <Pane prefHeight="200.0" prefWidth="200.0" />
+                  <Pane fx:id="botPixelPropertiesPane1" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #3c3c3c;" />
                </content>
-          </Tab>
+            </Tab>
         </tabs>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

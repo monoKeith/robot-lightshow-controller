@@ -10,13 +10,15 @@ public class BotPixel {
     // Constants: drawing pixels on canvas
     public static final int PIXEL_R = 16;
     public static final int PIXEL_D = 2 * PIXEL_R;
+    public static final int PIXEL_CIRCLE_R = PIXEL_R + 2;
+    public static final int PIXEL_CIRCLE_D = 2 * PIXEL_CIRCLE_R;
     public static final int PIXEL_SELECT_R = PIXEL_R + 4;
     public static final int PIXEL_SELECT_D = 2 * PIXEL_SELECT_R;
 
     // Default values
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
     public static final Color DEFAULT_COLOR = Color.ORANGE;
-    public static final Color SELECTION_RING_COLOR = Color.ROSYBROWN;
+    public static final Color SELECTION_RING_COLOR = Color.WHITE;
 
     // Properties
     private Point2D physicalLocation;
