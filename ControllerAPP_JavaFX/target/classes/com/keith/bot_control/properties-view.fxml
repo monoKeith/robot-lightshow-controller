@@ -18,7 +18,7 @@
 
 <Pane prefHeight="735.0" prefWidth="450.0" style="-fx-border-color: #eb345e; -fx-border-width: 2; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.PropertiesView">
    <children>
-      <TabPane prefHeight="735.0" prefWidth="450.0" style="-fx-background-color: transparent; -fx-background-insets: 2; headerAllignment: center;" stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="735.0" prefWidth="450.0" style="-fx-background-color: transparent; -fx-background-insets: 2; headerAllignment: center;" stylesheets="@tab-style.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab style="-fx-pref-width: 150;" text="BotPixel Properties">
                <content>
@@ -113,7 +113,7 @@
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font></TextField>
-                                    <Button fx:id="applyButtonPhysical" mnemonicParsing="false" onAction="#locationUpdatePhysics" style="-fx-background-color: white;" text="Apply">
+                                    <Button fx:id="applyButtonPhysical" mnemonicParsing="false" onAction="#locationUpdatePhysics" prefWidth="60.0" style="-fx-background-color: white;" text="original">
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>
@@ -160,7 +160,7 @@
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font></TextField>
-                                    <Button fx:id="applyButtonCanvas" mnemonicParsing="false" onAction="#locationUpdateCanvas" style="-fx-background-color: white;" text="Apply">
+                                    <Button fx:id="applyButtonCanvas" mnemonicParsing="false" onAction="#locationUpdateCanvas" prefWidth="60.0" style="-fx-background-color: white;" text="original">
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>

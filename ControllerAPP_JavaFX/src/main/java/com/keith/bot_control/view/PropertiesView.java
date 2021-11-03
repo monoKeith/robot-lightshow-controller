@@ -77,11 +77,13 @@ public class PropertiesView {
     @FXML
     protected void locationTextChangePhysics(Event e){
         applyButtonPhysical.setDisable(false);
+        applyButtonPhysical.setText("Apply");
     }
 
     @FXML
     protected void locationTextChangeCanvas(Event e){
         applyButtonCanvas.setDisable(false);
+        applyButtonCanvas.setText("Apply");
     }
 
     @FXML
@@ -98,12 +100,14 @@ public class PropertiesView {
         physicsX.setText(String.format("%.2f", location.getX()));
         physicsY.setText(String.format("%.2f", location.getY()));
         applyButtonPhysical.setDisable(true);
+        applyButtonPhysical.setText("original");
     }
 
     public void setCanvasLocation(Point2D location){
         canvasX.setText(String.format("%.1f", location.getX()));
         canvasY.setText(String.format("%.1f", location.getY()));
         applyButtonCanvas.setDisable(true);
+        applyButtonCanvas.setText("original");
     }
 
     public void enableLocationProperties(boolean enable){
