@@ -16,8 +16,8 @@ public class BotFrame {
         selected = false;
     }
 
-    public static BotFrame sampleFrame(){
-        BotFrame frame = new BotFrame("sample");
+    public static BotFrame sampleFrame(String name){
+        BotFrame frame = new BotFrame(name);
         frame.pixels = testPixels();
         return frame;
     }

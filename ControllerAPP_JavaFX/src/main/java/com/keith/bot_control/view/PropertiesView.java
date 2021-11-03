@@ -16,7 +16,8 @@ import javafx.scene.text.Text;
 
 public class PropertiesView {
 
-    PropertiesControl control = BotControlAPP.getBotControl().getPropertiesControl();
+    private PropertiesControl control = BotControlAPP.getBotControl().getPropertiesControl();
+
 
     /* Bot Pixel properties*/
 

@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-
 <Pane prefHeight="145.0" prefWidth="1430.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.TimelineView">
    <opaqueInsets>
       <Insets />
@@ -16,7 +15,10 @@
             <Insets />
          </opaqueInsets>
          <content>
-            <HBox fx:id="frameCollection" alignment="CENTER_LEFT" prefHeight="125.0" prefWidth="1426.0" spacing="5.0" style="-fx-background-color: transparent;" />
+            <HBox fx:id="frameCollection" alignment="CENTER_LEFT" prefHeight="125.0" spacing="5.0" style="-fx-background-color: transparent;">
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding></HBox>
          </content>
       </ScrollPane>
    </children>

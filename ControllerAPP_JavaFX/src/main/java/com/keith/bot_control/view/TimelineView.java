@@ -14,9 +14,9 @@ public class TimelineView {
 
     private static final String FRAME_VIEW_FXML = "frame-view.fxml";
 
-    TimelineControl control = BotControlAPP.getBotControl().getTimelineControl();
+    private TimelineControl control = BotControlAPP.getBotControl().getTimelineControl();
 
-    ArrayList<FrameView> frames;
+    private ArrayList<FrameView> frames;
     
     @FXML
     protected HBox frameCollection;

@@ -28,7 +28,6 @@ public class BotControl {
     private Set<UUID> connectedBots;
 
     private ArrayList<BotFrame> frames;
-
     private BotFrame currentFrame;
     // Pixels selected in canvas
     private final Set<BotPixel> selectedPixels;
@@ -55,9 +54,27 @@ public class BotControl {
     private void initCurrentFrame(){
         // Testing only
         frames = new ArrayList<>();
-        frames.add(BotFrame.sampleFrame());
-        frames.add(BotFrame.sampleFrame());
-        frames.add(BotFrame.sampleFrame());
+        frames.add(BotFrame.sampleFrame("1"));
+        frames.add(BotFrame.sampleFrame("2"));
+        frames.add(BotFrame.sampleFrame("3"));
+        frames.add(BotFrame.sampleFrame("4"));
+        frames.add(BotFrame.sampleFrame("5"));
+        frames.add(BotFrame.sampleFrame("6"));
+        frames.add(BotFrame.sampleFrame("7"));
+        frames.add(BotFrame.sampleFrame("8"));
+        frames.add(BotFrame.sampleFrame("9"));
+        frames.add(BotFrame.sampleFrame("10"));
+        frames.add(BotFrame.sampleFrame("11"));
+        frames.add(BotFrame.sampleFrame("12"));
+        frames.add(BotFrame.sampleFrame("13"));
+        frames.add(BotFrame.sampleFrame("14"));
+        frames.add(BotFrame.sampleFrame("15"));
+        frames.add(BotFrame.sampleFrame("16"));
+        frames.add(BotFrame.sampleFrame("17"));
+        frames.add(BotFrame.sampleFrame("18"));
+        frames.add(BotFrame.sampleFrame("19"));
+        frames.add(BotFrame.sampleFrame("20"));
+
         setCurrentFrame(frames.get(0));
     }
 
