@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane id="ConnectionPane" prefHeight="393.0" prefWidth="225.0" style="-fx-border-width: 2; -fx-border-color: #1fab49; -fx-border-radius: 5; -fx-background-color: linear-gradient(to bottom right, #37bd42, #955acc); -fx-background-insets: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.ConnectionView">
+<Pane id="ConnectionPane" prefHeight="393.0" prefWidth="225.0" style="-fx-border-width: 2; -fx-border-color: #1fab49; -fx-border-radius: 5; -fx-background-color: linear-gradient(to bottom right, #37bd42, #955acc); -fx-background-insets: 2;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.ConnectionView">
    <children>
       <GridPane prefHeight="393.0" prefWidth="225.0" style="-fx-background-color: transparent;">
         <columnConstraints>

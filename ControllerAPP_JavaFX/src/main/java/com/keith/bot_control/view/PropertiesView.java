@@ -12,19 +12,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class PropertiesView {
 
     PropertiesControl control = BotControlAPP.getBotControl().getPropertiesControl();
 
-    @FXML
-    protected Pane botPixelPropertiesPane;
+    /* Bot Pixel properties*/
 
     @FXML
     protected Label multipleSelectionWarning;
 
     @FXML
-    protected GridPane locationPropertiesPane;
+    protected GridPane colorPropertiesPane, locationPropertiesPane;
 
     @FXML
     protected ColorPicker botPixelColorPicker;
@@ -34,6 +34,13 @@ public class PropertiesView {
 
     @FXML
     protected Button applyButtonPhysical, applyButtonCanvas;
+
+
+    /* Frame properties */
+
+    @FXML
+    protected TextField frameName;
+
 
     public PropertiesView(){
     }
@@ -56,7 +63,8 @@ public class PropertiesView {
     }
 
     public void setBotPixelPaneEnable(boolean enable){
-        botPixelPropertiesPane.setDisable(!enable);
+        colorPropertiesPane.setDisable(!enable);
+        locationPropertiesPane.setDisable(!enable);
     }
 
     private Point2D parseToPoint(String textX, String textY){
@@ -118,6 +126,16 @@ public class PropertiesView {
         multipleSelectionWarning.setVisible(enable);
     }
 
-    /* Other ... TODO */
+
+    /* Frame Properties */
+
+    @FXML
+    protected void frameNameChange(Event e){
+        control.frameNameUpdate(frameName.getText());
+    }
+
+    public void setFrameName(String name){
+        frameName.setText(name);
+    }
 
 }

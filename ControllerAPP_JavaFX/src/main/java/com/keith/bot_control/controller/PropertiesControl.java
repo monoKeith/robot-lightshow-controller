@@ -1,5 +1,6 @@
 package com.keith.bot_control.controller;
 
+import com.keith.bot_control.model.BotFrame;
 import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.view.PropertiesView;
 import javafx.application.Platform;
@@ -22,6 +23,8 @@ public class PropertiesControl {
         this.view = view;
     }
 
+    /* Handlers - BotPixel Properties */
+
     // If only one pixel selected, returns the selected pixel, otherwise null
     private BotPixel singleSelectedPixel(){
         Set<BotPixel> selectedPixels = control.getSelectedPixels();
@@ -31,14 +34,12 @@ public class PropertiesControl {
         return null;
     }
 
-    /* Handlers */
-
     public void pixelColorModified(Color color){
         for (BotPixel pixel: control.getSelectedPixels()){
             pixel.setColor(color);
         }
         // Refresh canvas
-        control.notifyPropertiesUpdate();
+        control.updateBotPixelProperties();
     }
 
     public void locationUpdate(Point2D newLocation, boolean physicalLocation){
@@ -51,12 +52,23 @@ public class PropertiesControl {
         }
         // Refresh
         refreshView();
-        control.notifyPropertiesUpdate();
+        control.updateBotPixelProperties();
     }
+
+
+    /* Handler - Frame Properties*/
+
+    public void frameNameUpdate(String newName){
+        BotFrame frame = control.getCurrentFrame();
+        frame.setName(newName);
+        // Refresh
+        control.updateFrameProperties();
+    }
+
 
     /* Update */
 
-    public void refreshView(){
+    public void refreshBotPixelProperties(){
         Platform.runLater(() -> {
             Set<BotPixel> selectedPixels = control.getSelectedPixels();
 
@@ -83,6 +95,19 @@ public class PropertiesControl {
 
             }
         });
+    }
+
+    public void refreshFrameProperties(){
+        Platform.runLater(() -> {
+            BotFrame frame = control.getCurrentFrame();
+
+            view.setFrameName(frame.getName());
+        });
+    }
+
+    public void refreshView(){
+        refreshBotPixelProperties();
+        refreshFrameProperties();
     }
 
 

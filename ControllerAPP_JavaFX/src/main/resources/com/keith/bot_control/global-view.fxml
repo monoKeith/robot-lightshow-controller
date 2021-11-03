@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.GlobalView">
+<VBox alignment="CENTER" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.GlobalView">
    <children>
       <MenuBar style="-fx-background-color: #eee;">
         <menus>

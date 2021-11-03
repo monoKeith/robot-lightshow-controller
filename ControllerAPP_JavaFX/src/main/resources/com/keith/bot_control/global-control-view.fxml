@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="335.0" prefWidth="225.0" style="-fx-background-color: linear-gradient(to bottom right, #ff7f50, #6a5acd); -fx-background-insets: 2; -fx-border-radius: 5; -fx-border-color: #941fab; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.GlobalControlView">
+<Pane prefHeight="335.0" prefWidth="225.0" style="-fx-background-color: linear-gradient(to bottom right, #ff7f50, #6a5acd); -fx-background-insets: 2; -fx-border-radius: 5; -fx-border-color: #941fab; -fx-border-width: 2;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.GlobalControlView">
    <children>
       <GridPane alignment="CENTER" hgap="5.0" prefHeight="230.0" prefWidth="225.0">
         <columnConstraints>

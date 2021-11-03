@@ -135,18 +135,8 @@ public class BotControl {
         return selectedPixels.contains(pixel);
     }
 
-    // Called by DotsCanvasControl to update properties when BotPixel moved
-    public void notifyLocationUpdate(){
-        propertiesControl.refreshView();
-    }
 
-    // Called by Properties Control when properties of BotPixel changed
-    public void notifyPropertiesUpdate(){
-        dotsCanvasControl.refreshView();
-    }
-
-
-    /* State update */
+    /* State update & Notifiers */
 
     public ConnectionControl.State getConnectionState(){
         return connectionState;
@@ -179,10 +169,29 @@ public class BotControl {
         globalControl.refreshView();
     }
 
+    // Called by DotsCanvasControl to update properties when BotPixel moved
+    public void updateBotPixelLocation(){
+        propertiesControl.refreshView();
+    }
+
+    // Called by Properties Control when properties of BotPixel changed
+    public void updateBotPixelProperties(){
+        dotsCanvasControl.refreshView();
+    }
+
+    // Called by TimelineControl when another frame is selected
     public void updateCurrentFrame(BotFrame frame){
         setCurrentFrame(frame);
+        globalControl.refreshView();
         dotsCanvasControl.refreshView();
         propertiesControl.refreshView();
+    }
+
+    // Called by Properties Control when properties of Frame changed
+    public void updateFrameProperties(){
+        globalControl.refreshView();
+        propertiesControl.refreshFrameProperties();
+        timelineControl.refreshView();
     }
 
 
