@@ -6,10 +6,7 @@ import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.model.TransmitterMQTT;
 import javafx.geometry.Point2D;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class BotControl {
     private final UUID uuid;
@@ -19,6 +16,7 @@ public class BotControl {
     private final DotsCanvasControl dotsCanvasControl;
     private final GlobalOptionControl globalControl;
     private final PropertiesControl propertiesControl;
+    private final TimelineControl timelineControl;
 
     // States
     private ConnectionControl.State connectionState;
@@ -29,7 +27,9 @@ public class BotControl {
     // Set of UUIDs of connected bots
     private Set<UUID> connectedBots;
 
-    private final BotFrame currentFrame;
+    private ArrayList<BotFrame> frames;
+
+    private BotFrame currentFrame;
     // Pixels selected in canvas
     private final Set<BotPixel> selectedPixels;
 
@@ -40,15 +40,23 @@ public class BotControl {
         dotsCanvasControl = new DotsCanvasControl(this);
         globalControl = new GlobalOptionControl(this);
         propertiesControl = new PropertiesControl(this);
+        timelineControl = new TimelineControl(this);
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
         // Init vars
         connectedBots = new HashSet<>();
-        currentFrame = new BotFrame();
         selectedPixels = new HashSet<>();
+        initCurrentFrame();
         // Init message processor
         initMsgProcessor();
+    }
+
+    private void initCurrentFrame(){
+        // Testing only
+        frames = new ArrayList<>();
+        frames.add(BotFrame.sampleFrame());
+        currentFrame = frames.get(0);
     }
 
 
@@ -74,8 +82,22 @@ public class BotControl {
         return propertiesControl;
     }
 
+    public TimelineControl getTimelineControl(){
+        return timelineControl;
+    }
+
     public Set<UUID> getConnectedBots(){
         return connectedBots;
+    }
+
+    public ArrayList<BotFrame> getFrames(){
+        return frames;
+    }
+
+    public void updateCurrentFrame(BotFrame currentFrame){
+        this.currentFrame = currentFrame;
+        dotsCanvasControl.refreshView();
+        propertiesControl.refreshView();
     }
 
     public BotFrame getCurrentFrame(){

@@ -23,9 +23,14 @@ public class BotControlAPP extends Application {
         return initialized ? botControl : null;
     }
 
+    // Load a FXML file
+    public static FXMLLoader loadResource(String filename) {
+        return new FXMLLoader(BotControlAPP.class.getResource(filename));
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(BotControlAPP.class.getResource("global-view.fxml"));
+        FXMLLoader fxmlLoader = loadResource("global-view.fxml");
         Scene scene = new Scene(fxmlLoader.load(), 1440, 925);
         stage.setTitle("WeBots - Robot Light Show Controller");
         stage.setScene(scene);

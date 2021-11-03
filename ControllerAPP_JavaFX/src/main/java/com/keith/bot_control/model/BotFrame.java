@@ -9,17 +9,23 @@ public class BotFrame {
     private String name;
     private Set<BotPixel> pixels;
 
-    public BotFrame(){
-//        pixels = new HashSet<>();
-        name = "default";
-        pixels = testPixels();
+    public BotFrame(String name){
+        this.name = name;
+        pixels = new HashSet<>();
+    }
+
+    public static BotFrame sampleFrame(){
+        BotFrame frame = new BotFrame("sample");
+        frame.pixels = testPixels();
+        return frame;
     }
 
     public static Set<BotPixel> testPixels(){
         Set<BotPixel> pixels = new HashSet<>();
-        pixels.add(new BotPixel(300, 200, Color.ORANGE));
-        pixels.add(new BotPixel(600, 600, Color.BLUE));
-        pixels.add(new BotPixel(420, 100, Color.PINK));
+        pixels.add(new BotPixel(200, 200, Color.ORANGE));
+        pixels.add(new BotPixel(300, 300, Color.GREEN));
+        pixels.add(new BotPixel(400, 400, Color.PINK));
+        pixels.add(new BotPixel(200, 400, Color.AQUA));
         return pixels;
     }
 
@@ -46,6 +52,10 @@ public class BotFrame {
             targetMap.put(uuid, pixel);
         }
         return targetMap;
+    }
+
+    public String toString() {
+        return String.format("BotFrame [%s]", name);
     }
 
 }
