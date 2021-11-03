@@ -18,21 +18,34 @@ public class TimelineControl {
         this.view = view;
     }
 
+    /* Selection */
+
+    public void selectFrame(BotFrame frame){
+        if (frame == control.getCurrentFrame()) return;
+        log("select: " + frame);
+        control.updateCurrentFrame(frame);
+        refreshView();
+    }
+
 
     /* Refresh */
 
+    public void initView(){
+        // Clear current frame?
+
+        // Add all frames
+        for (BotFrame frame: control.getFrames()){
+            view.addFrame(frame);
+        }
+    }
+
     public void refreshView(){
         Platform.runLater(() -> {
-            // Clear current frame?
 
-            // Add all frames
-            for (BotFrame frame: control.getFrames()){
-                view.addFrame(frame);
-            }
+            view.refreshFrames();
 
         });
     }
-
 
     /* Logging */
 

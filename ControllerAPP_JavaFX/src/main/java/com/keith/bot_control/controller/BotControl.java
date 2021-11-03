@@ -56,7 +56,9 @@ public class BotControl {
         // Testing only
         frames = new ArrayList<>();
         frames.add(BotFrame.sampleFrame());
-        currentFrame = frames.get(0);
+        frames.add(BotFrame.sampleFrame());
+        frames.add(BotFrame.sampleFrame());
+        setCurrentFrame(frames.get(0));
     }
 
 
@@ -94,10 +96,10 @@ public class BotControl {
         return frames;
     }
 
-    public void updateCurrentFrame(BotFrame currentFrame){
-        this.currentFrame = currentFrame;
-        dotsCanvasControl.refreshView();
-        propertiesControl.refreshView();
+    private void setCurrentFrame(BotFrame frame){
+        if (currentFrame != null) currentFrame.setSelecte(false);
+        currentFrame = frame;
+        currentFrame.setSelecte(true);
     }
 
     public BotFrame getCurrentFrame(){
@@ -175,6 +177,12 @@ public class BotControl {
         if (globalState == state) return;
         globalState = state;
         globalControl.refreshView();
+    }
+
+    public void updateCurrentFrame(BotFrame frame){
+        setCurrentFrame(frame);
+        dotsCanvasControl.refreshView();
+        propertiesControl.refreshView();
     }
 
 

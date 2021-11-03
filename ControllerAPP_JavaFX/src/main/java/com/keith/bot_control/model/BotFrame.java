@@ -8,10 +8,12 @@ public class BotFrame {
 
     private String name;
     private Set<BotPixel> pixels;
+    private boolean selected;
 
     public BotFrame(String name){
         this.name = name;
         pixels = new HashSet<>();
+        selected = false;
     }
 
     public static BotFrame sampleFrame(){
@@ -29,6 +31,8 @@ public class BotFrame {
         return pixels;
     }
 
+    /* Getter and Setter */
+
     public Set<BotPixel> getPixels(){
         return pixels;
     }
@@ -40,6 +44,16 @@ public class BotFrame {
     public void setName(String name){
         this.name = name;
     }
+
+    public void setSelecte(boolean selected){
+        this.selected = selected;
+    }
+
+    public boolean isSelected(){
+        return selected;
+    }
+
+    /* Render */
 
     public Map<UUID, BotPixel> generateTargetMap(Set<UUID> bots){
         // TODO map closest pixel with bot

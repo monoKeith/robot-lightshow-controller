@@ -8,24 +8,27 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TimelineView {
 
     private static final String FRAME_VIEW_FXML = "frame-view.fxml";
 
     TimelineControl control = BotControlAPP.getBotControl().getTimelineControl();
+
+    ArrayList<FrameView> frames;
     
     @FXML
     protected HBox frameCollection;
 
     public TimelineView(){
-
+        frames = new ArrayList<>();
     }
 
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() {
         control.setView(this);
-        control.refreshView();
+        control.initView();
     }
 
     public void addFrame(BotFrame frame){
@@ -33,19 +36,27 @@ public class TimelineView {
         // Add frame to collection
         try {
             frameCollection.getChildren().add(fxmlLoader.load());
-
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-        // Set frame information
+
+        // Initialize to display frame info
         FrameView view = fxmlLoader.getController();
         view.setController(this);
         view.setFrame(frame);
+        // Store view
+        frames.add(view);
     }
 
     public void selectFrame(BotFrame frame){
-        System.out.println("selected frame: " + frame);
+        control.selectFrame(frame);
+    }
+
+    public void refreshFrames(){
+        for (FrameView frame: frames){
+            frame.refresh();
+        }
     }
 
 }
