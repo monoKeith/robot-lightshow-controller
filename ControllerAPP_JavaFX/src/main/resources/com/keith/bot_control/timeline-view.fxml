@@ -5,21 +5,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="145.0" prefWidth="1430.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.TimelineView">
+<Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="135.0" prefWidth="1430.0" style="-fx-background-color: transparent; -fx-border-color: #43664d; -fx-border-radius: 5; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.TimelineView">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
    <children>
-      <ScrollPane hbarPolicy="ALWAYS" prefHeight="145.0" prefWidth="1430.0" style="-fx-background-color: transparent; -fx-border-color: yellow; -fx-border-width: 2; -fx-border-radius: 5;" stylesheets="@timeline-style.css" vbarPolicy="NEVER">
+      <ScrollPane hbarPolicy="ALWAYS" layoutX="5.0" layoutY="5.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="125.0" prefWidth="1420.0" style="-fx-background-color: transparent;" stylesheets="@timeline-style.css" vbarPolicy="NEVER">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
          <content>
-            <HBox fx:id="frameCollection" alignment="CENTER_LEFT" prefHeight="125.0" spacing="5.0" style="-fx-background-color: transparent;">
+            <HBox fx:id="frameCollection" alignment="CENTER_LEFT" prefHeight="110.0" spacing="5.0" style="-fx-background-color: transparent;">
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding></HBox>
          </content>
       </ScrollPane>
    </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </Pane>
