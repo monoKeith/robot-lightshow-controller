@@ -17,7 +17,7 @@ public class GlobalControlView {
     private Label currentFrameName;
 
     @FXML
-    private Button playButton;
+    private Button previewButton, playButton;
 
     public GlobalControlView(){
 
@@ -34,8 +34,9 @@ public class GlobalControlView {
         control.play();
     }
 
-    public Button getPlayButton(){
-        return playButton;
+    @FXML
+    protected void onPreviewButtonClick(){
+        control.preview();
     }
 
     public void setConnectedBotsCount(int count){
@@ -44,6 +45,37 @@ public class GlobalControlView {
 
     public void setCurrentFrameName(String name){
         currentFrameName.setText(name);
+    }
+
+    /* State update */
+
+    public void updateButtonState(GlobalOptionControl.State globalState){
+        switch (globalState){
+            case PLAYING -> {
+                playButton.setText("Playing");
+                playButton.setDisable(true);
+                previewButton.setText("Preview");
+                previewButton.setDisable(true);
+            }
+            case PREVIEW -> {
+                playButton.setText("Play");
+                playButton.setDisable(true);
+                previewButton.setText("Previewing");
+                previewButton.setDisable(true);
+            }
+            case READY -> {
+                playButton.setText("Play");
+                playButton.setDisable(false);
+                previewButton.setText("Preview");
+                previewButton.setDisable(false);
+            }
+            case IDLE -> {
+                playButton.setText("Play");
+                playButton.setDisable(true);
+                previewButton.setText("Preview");
+                previewButton.setDisable(true);
+            }
+        }
     }
 
 }

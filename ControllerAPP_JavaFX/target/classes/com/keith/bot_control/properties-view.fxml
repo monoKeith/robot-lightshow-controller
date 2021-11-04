@@ -23,7 +23,7 @@
         <tabs>
           <Tab style="-fx-pref-width: 150;" text="Properties">
                <content>
-                  <Pane prefHeight="700.0" prefWidth="440.0" style="-fx-background-color: #3c3c3c; -fx-border-radius: 5;">
+                  <Pane prefHeight="700.0" prefWidth="440.0" style="-fx-background-color: #223036; -fx-border-radius: 5;">
                      <children>
                         <GridPane fx:id="colorPropertiesPane" prefHeight="180.0" prefWidth="440.0">
                           <columnConstraints>
@@ -223,7 +223,7 @@
           </Tab>
             <Tab style="-fx-pref-width: 150;" text="UUID Map">
                <content>
-                  <Pane fx:id="botPixelPropertiesPane1" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #3c3c3c;" />
+                  <Pane fx:id="botPixelPropertiesPane1" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #223036;" />
                </content>
             </Tab>
         </tabs>

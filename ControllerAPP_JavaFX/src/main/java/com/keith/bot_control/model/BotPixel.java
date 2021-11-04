@@ -13,7 +13,7 @@ public class BotPixel {
     public static final int PIXEL_D = 2 * PIXEL_R;
     public static final int PIXEL_CIRCLE_R = PIXEL_R + 2;
     public static final int PIXEL_CIRCLE_D = 2 * PIXEL_CIRCLE_R;
-    public static final int PIXEL_SELECT_R = PIXEL_R + 4;
+    public static final int PIXEL_SELECT_R = PIXEL_R + 5;
     public static final int PIXEL_SELECT_D = 2 * PIXEL_SELECT_R;
     // Constants: drawing pixels on Timeline
     public static final double T_PIXEL_R = 2.5;
@@ -22,7 +22,7 @@ public class BotPixel {
     // Default values
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
     public static final Color DEFAULT_COLOR = Color.ORANGE;
-    public static final Color SELECTION_RING_COLOR = Color.WHITE;
+    public static final Color SELECTION_RING_COLOR = Color.web("#ff007b");
 
     // Properties
     private Point2D physicalLocation;

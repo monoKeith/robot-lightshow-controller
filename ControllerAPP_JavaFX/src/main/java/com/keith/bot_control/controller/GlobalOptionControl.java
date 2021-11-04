@@ -7,6 +7,7 @@ public class GlobalOptionControl {
 
     public enum State{
         PLAYING,
+        PREVIEW,
         READY,
         IDLE
     }
@@ -26,30 +27,25 @@ public class GlobalOptionControl {
     public void play(){
         if (botControl.getGlobalState() != State.READY) return;
         botControl.updateGlobalState(State.PLAYING);
-
         log("Play!");
-        botControl.publishTargets();
+        // TODO Play animation
 
+        botControl.updateGlobalState(State.READY);
+    }
+
+    public void preview(){
+        if (botControl.getGlobalState() != State.READY) return;
+        botControl.updateGlobalState(State.PREVIEW);
+        log("Preview frame");
+        botControl.publishTargets();
         botControl.updateGlobalState(State.READY);
     }
 
     public void refreshView(){
         if (view == null) return;
         Platform.runLater(() -> {
-            switch (botControl.getGlobalState()){
-                case PLAYING -> {
-                    view.getPlayButton().setText("Playing");
-                    view.getPlayButton().setDisable(true);
-                }
-                case READY -> {
-                    view.getPlayButton().setText("Play");
-                    view.getPlayButton().setDisable(false);
-                }
-                case IDLE -> {
-                    view.getPlayButton().setText("Play");
-                    view.getPlayButton().setDisable(true);
-                }
-            }
+            // Button state
+            view.updateButtonState(botControl.getGlobalState());
             // Connected Bot counts
             view.setConnectedBotsCount(botControl.getConnectedBots().size());
             // Current Frame name
