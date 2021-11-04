@@ -1,12 +1,21 @@
 package com.keith.bot_control.view;
 
 import com.keith.bot_control.model.BotFrame;
+import com.keith.bot_control.model.BotPixel;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
+import static com.keith.bot_control.model.BotPixel.T_PIXEL_D;
+import static com.keith.bot_control.model.BotPixel.T_PIXEL_R;
+
 public class FrameView {
 
+    // resolution of the canvas on timeline, default 100x100, must be square for now
+    public static final int T_CANVAS_RESOLUTION = 100;
     private TimelineView controller;
     private BotFrame frame;
 
@@ -31,6 +40,9 @@ public class FrameView {
 
     @FXML
     protected Label frameName;
+
+    @FXML
+    protected Canvas canvas;
 
     @FXML
     protected void initialize(){
@@ -60,5 +72,16 @@ public class FrameView {
         }
         // Frame name
         frameName.setText(frame.getName());
+        // Canvas
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getHeight(), canvas.getHeight());
+        for (BotPixel pixel: frame.getPixels()){
+            Point2D canvasPixel = pixel.getPixelTimelineLocation();
+            double x = canvasPixel.getX();
+            double y = canvasPixel.getY();
+            // Draw center of BotPixel
+            gc.setFill(pixel.getColor());
+            gc.fillOval(x - T_PIXEL_R, y - T_PIXEL_R, T_PIXEL_D, T_PIXEL_D);
+        }
     }
 }

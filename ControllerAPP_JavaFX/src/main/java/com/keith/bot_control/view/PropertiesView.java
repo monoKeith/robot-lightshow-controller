@@ -52,7 +52,7 @@ public class PropertiesView {
         control.refreshView();
     }
 
-    /* BotPixel Properties*/
+    /* BotPixel Properties */
 
     @FXML
     protected void pixelColorChanged(){

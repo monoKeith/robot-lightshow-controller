@@ -56,7 +56,7 @@ public class PropertiesControl {
     }
 
 
-    /* Handler - Frame Properties*/
+    /* Handler - Frame Properties */
 
     public void frameNameUpdate(String newName){
         BotFrame frame = control.getCurrentFrame();

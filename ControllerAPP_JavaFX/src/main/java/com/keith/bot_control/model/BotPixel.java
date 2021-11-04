@@ -1,5 +1,6 @@
 package com.keith.bot_control.model;
 
+import com.keith.bot_control.view.FrameView;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -14,6 +15,9 @@ public class BotPixel {
     public static final int PIXEL_CIRCLE_D = 2 * PIXEL_CIRCLE_R;
     public static final int PIXEL_SELECT_R = PIXEL_R + 4;
     public static final int PIXEL_SELECT_D = 2 * PIXEL_SELECT_R;
+    // Constants: drawing pixels on Timeline
+    public static final double T_PIXEL_R = 2.5;
+    public static final double T_PIXEL_D = 2 * T_PIXEL_R;
 
     // Default values
     public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
@@ -24,6 +28,7 @@ public class BotPixel {
     private Point2D physicalLocation;
     private Point2D pixelLocation;
     private Point2D pixelPreviewLocation;
+    private Point2D pixelTimelineLocation;
     private Color color;
     private Color previewColor;
 
@@ -53,6 +58,12 @@ public class BotPixel {
         return new Point2D(x, y);
     }
 
+    private void updateTimelineLocation(Point2D botLocation){
+        double x = (botLocation.getX() / CANVAS_RESOLUTION) * FrameView.T_CANVAS_RESOLUTION;
+        double y = (botLocation.getY() / CANVAS_RESOLUTION) * FrameView.T_CANVAS_RESOLUTION;
+        pixelTimelineLocation = new Point2D(x, y);
+    }
+
     /* Setters and Getters */
 
     private Point2D limitToCanvas(Point2D pixelLocation){
@@ -74,6 +85,7 @@ public class BotPixel {
         this.pixelLocation = pixelLocation;
         this.pixelPreviewLocation = pixelLocation;
         this.physicalLocation = convertToMeter(pixelLocation);
+        updateTimelineLocation(pixelLocation);
     }
 
     public void setPixelPreviewLocation(Point2D pixelPreviewLocation){
@@ -90,6 +102,10 @@ public class BotPixel {
 
     public Point2D getPixelPreviewLocation() {
         return pixelPreviewLocation;
+    }
+
+    public Point2D getPixelTimelineLocation() {
+        return pixelTimelineLocation;
     }
 
     public void setColor(Color color){

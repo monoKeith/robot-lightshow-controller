@@ -169,11 +169,13 @@ public class BotControl {
     // Called by DotsCanvasControl to update properties when BotPixel moved
     public void updateBotPixelLocation(){
         propertiesControl.refreshView();
+        timelineControl.refreshCurrentFrame();
     }
 
     // Called by Properties Control when properties of BotPixel changed
     public void updateBotPixelProperties(){
         dotsCanvasControl.refreshView();
+        timelineControl.refreshCurrentFrame();
     }
 
     // Called by TimelineControl when another frame is selected
