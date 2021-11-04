@@ -61,8 +61,8 @@ public class PropertiesControl {
     public void frameNameUpdate(String newName){
         BotFrame frame = control.getCurrentFrame();
         frame.setName(newName);
-        // Refresh
-        control.updateFrameProperties();
+        // Refresh ONLY the current frame
+        control.updateCurrentFrameProperties();
     }
 
 

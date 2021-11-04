@@ -21,10 +21,13 @@ public class TimelineControl {
     /* Selection */
 
     public void selectFrame(BotFrame frame){
-        if (frame == control.getCurrentFrame()) return;
+        BotFrame previousFrame = control.getCurrentFrame();
+        if (frame == previousFrame) return;
+
         log("select: " + frame);
         control.updateCurrentFrame(frame);
-        refreshView();
+        refreshFrame(previousFrame);
+        refreshCurrentFrame();
     }
 
 
@@ -42,9 +45,20 @@ public class TimelineControl {
     public void refreshView(){
         Platform.runLater(() -> {
 
-            view.refreshFrames();
+            view.refreshAllFrames();
 
         });
+    }
+
+    // Refresh view of a specific frame on the Timeline
+    // Used when properties of a frame is updated
+    public void refreshFrame(BotFrame frame){
+        Platform.runLater(() -> view.refreshFrame(frame));
+    }
+
+    public void refreshCurrentFrame(){
+        BotFrame selectedFrame = control.getCurrentFrame();
+        Platform.runLater(() -> view.refreshFrame(selectedFrame));
     }
 
     /* Logging */

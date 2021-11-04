@@ -5,10 +5,13 @@ import com.keith.bot_control.controller.TimelineControl;
 import com.keith.bot_control.model.BotFrame;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TimelineView {
 
@@ -16,13 +19,17 @@ public class TimelineView {
 
     private TimelineControl control = BotControlAPP.getBotControl().getTimelineControl();
 
-    private ArrayList<FrameView> frames;
+    private ArrayList<FrameView> frameViews;
+    private Map<FrameView, Node> frameView_Node_Map;
+    private Map<BotFrame, FrameView> botFrame_View_Map;
     
     @FXML
     protected HBox frameCollection;
 
     public TimelineView(){
-        frames = new ArrayList<>();
+        frameViews = new ArrayList<>();
+        frameView_Node_Map = new HashMap<>();
+        botFrame_View_Map = new HashMap<>();
     }
 
     @FXML
@@ -33,30 +40,39 @@ public class TimelineView {
 
     public void addFrame(BotFrame frame){
         FXMLLoader fxmlLoader = BotControlAPP.loadResource(FRAME_VIEW_FXML);
-        // Add frame to collection
+        Node frameNode;
         try {
-            frameCollection.getChildren().add(fxmlLoader.load());
+            frameNode = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-
+        // Append frame to collection for display
+        frameCollection.getChildren().add(frameNode);
         // Initialize to display frame info
         FrameView view = fxmlLoader.getController();
         view.setController(this);
         view.setFrame(frame);
-        // Store view
-        frames.add(view);
+        // Store view, [view -> Node] map, [BotFrame -> view] map
+        frameViews.add(view);
+        frameView_Node_Map.put(view, frameNode);
+        botFrame_View_Map.put(frame, view);
     }
 
+    // Call by FrameView when a view a clicked
     public void selectFrame(BotFrame frame){
         control.selectFrame(frame);
     }
 
-    public void refreshFrames(){
-        for (FrameView frame: frames){
+    public void refreshAllFrames(){
+        for (FrameView frame: frameViews){
             frame.refresh();
         }
+    }
+
+    public void refreshFrame(BotFrame frame){
+        FrameView view = botFrame_View_Map.get(frame);
+        view.refresh();
     }
 
 }
