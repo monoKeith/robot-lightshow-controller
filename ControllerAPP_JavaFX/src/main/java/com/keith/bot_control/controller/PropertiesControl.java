@@ -75,6 +75,7 @@ public class PropertiesControl {
             if (selectedPixels.isEmpty()){
                 view.setBotPixelPaneEnable(false);
                 view.displayMultipleSelectionWarning(false);
+                view.enableLocationProperties(false);
 
             } else if (selectedPixels.size() == 1){
                 view.setBotPixelPaneEnable(true);
@@ -90,8 +91,9 @@ public class PropertiesControl {
 
             } else {
                 // Multiple BotPixel selected
-                view.enableLocationProperties(false);
+                view.setBotPixelPaneEnable(true);
                 view.displayMultipleSelectionWarning(true);
+                view.enableLocationProperties(false);
 
             }
         });

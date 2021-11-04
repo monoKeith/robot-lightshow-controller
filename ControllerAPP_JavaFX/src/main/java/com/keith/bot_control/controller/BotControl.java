@@ -29,8 +29,6 @@ public class BotControl {
 
     private ArrayList<BotFrame> frames;
     private BotFrame currentFrame;
-    // Pixels selected in canvas
-    private final Set<BotPixel> selectedPixels;
 
     public BotControl() {
         uuid = UUID.randomUUID();
@@ -45,7 +43,6 @@ public class BotControl {
         globalState = GlobalOptionControl.State.IDLE;
         // Init vars
         connectedBots = new HashSet<>();
-        selectedPixels = new HashSet<>();
         initCurrentFrame();
         // Init message processor
         initMsgProcessor();
@@ -110,16 +107,16 @@ public class BotControl {
     /* Bot Pixel selection */
 
     public Set<BotPixel> getSelectedPixels() {
-        return selectedPixels;
+        return currentFrame.getSelectedPixels();
     }
 
     public void clearSelectedPixels() {
-        selectedPixels.clear();
+        currentFrame.getSelectedPixels().clear();
         propertiesControl.refreshView();
     }
 
     public boolean selectPixel(BotPixel newSelection) {
-        if (selectedPixels.add(newSelection)){
+        if (currentFrame.getSelectedPixels().add(newSelection)){
             propertiesControl.refreshView();
             return true;
         }
@@ -127,12 +124,12 @@ public class BotControl {
     }
 
     public void deSelectPixel(BotPixel pixel){
-        selectedPixels.remove(pixel);
+        currentFrame.getSelectedPixels().remove(pixel);
         propertiesControl.refreshView();
     }
 
     public boolean pixelIsSelected(BotPixel pixel) {
-        return selectedPixels.contains(pixel);
+        return currentFrame.getSelectedPixels().contains(pixel);
     }
 
 

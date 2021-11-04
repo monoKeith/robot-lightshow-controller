@@ -9,11 +9,14 @@ public class BotFrame {
     private String name;
     private Set<BotPixel> pixels;
     private boolean selected;
+    // Pixels selected in canvas
+    private final Set<BotPixel> selectedPixels;
 
     public BotFrame(String name){
         this.name = name;
         pixels = new HashSet<>();
         selected = false;
+        selectedPixels = new HashSet<>();
     }
 
     public static BotFrame sampleFrame(String name){
@@ -51,6 +54,10 @@ public class BotFrame {
 
     public boolean isSelected(){
         return selected;
+    }
+
+    public Set<BotPixel> getSelectedPixels(){
+        return selectedPixels;
     }
 
     /* Render */

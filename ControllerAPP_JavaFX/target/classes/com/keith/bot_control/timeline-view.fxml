@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="135.0" prefWidth="1430.0" style="-fx-background-color: transparent; -fx-border-color: #43664d; -fx-border-radius: 5; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.TimelineView">
+<Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="135.0" prefWidth="1430.0" style="-fx-background-color: transparent; -fx-border-color: #43664d; -fx-border-radius: 5; -fx-border-width: 2;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.TimelineView">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
