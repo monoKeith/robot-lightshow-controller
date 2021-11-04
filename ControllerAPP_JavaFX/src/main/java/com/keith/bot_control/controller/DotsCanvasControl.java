@@ -112,11 +112,10 @@ public class DotsCanvasControl {
                 if (control.pixelIsSelected(pixel)){
                     gc.setFill(SELECTION_RING_COLOR);
                     gc.fillOval(x - PIXEL_SELECT_R, y - PIXEL_SELECT_R, PIXEL_SELECT_D, PIXEL_SELECT_D);
+                    // BLACK circle around the pixel
+                    gc.setFill(Color.BLACK);
+                    gc.fillOval(x - PIXEL_CIRCLE_R, y - PIXEL_CIRCLE_R, PIXEL_CIRCLE_D, PIXEL_CIRCLE_D);
                 }
-
-                // Draw a BLACK circle around the pixel
-                gc.setFill(Color.BLACK);
-                gc.fillOval(x - PIXEL_CIRCLE_R, y - PIXEL_CIRCLE_R, PIXEL_CIRCLE_D, PIXEL_CIRCLE_D);
 
                 // Draw center of BotPixel
                 gc.setFill(pixel.getColor());

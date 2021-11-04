@@ -20,15 +20,15 @@ public class FrameView {
     private BotFrame frame;
 
     private static final String UNSELECTED_STYLE = """
-        -fx-background-color: #656a8f; 
+        -fx-background-color: #223036; 
         -fx-background-insets: 2; 
-        -fx-border-color: #656a8f; 
+        -fx-border-color: #214352; 
         -fx-border-radius: 5; 
         -fx-border-width: 2;
     """;
 
     private static final String SELECTED_STYLE = """
-        -fx-background-color: #656a8f; 
+        -fx-background-color: #3b4d54; 
         -fx-background-insets: 2; 
         -fx-border-color: white; 
         -fx-border-radius: 5; 

@@ -3,7 +3,7 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane style="-fx-border-color: #eb8634; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-color: #06153d; -fx-background-insets: 2;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.DotsView">
+<Pane style="-fx-border-color: #eb8634; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-color: #223036; -fx-background-insets: 2;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.DotsView">
    <children>
       <Canvas fx:id="canvas" height="730.0" onMouseDragged="#mouseDragUpdate" onMouseReleased="#mouseRelease" width="730.0" />
    </children>
