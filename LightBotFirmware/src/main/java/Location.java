@@ -91,6 +91,14 @@ public class Location {
         return (diff + 180) % 360 - 180;
     }
 
+    public double getX(){
+        return location[2];
+    }
+
+    public double getY(){
+        return location[0];
+    }
+
     /* Log */
 
     public void log(){

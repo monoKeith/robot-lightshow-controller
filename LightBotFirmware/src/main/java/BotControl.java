@@ -1,4 +1,5 @@
 import com.cyberbotics.webots.controller.*;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class BotControl {
     private enum MovementStates{
@@ -36,6 +37,9 @@ public class BotControl {
     // Transmitter
     private Transmitter transmitter;
 
+    // Report location only once upon arrival, not multiple times
+    private boolean locationReported;
+
     // Enable Logging
     private final boolean LOG_ENABLE = false;
 
@@ -63,6 +67,8 @@ public class BotControl {
         location.setTarget(-0.25,-0.25);
         // State
         movementState = MovementStates.STOP;
+        // Flag
+        locationReported = false;
         // Default velocity
         resetSpeed();
 
@@ -103,6 +109,7 @@ public class BotControl {
                     double x = Double.parseDouble(msg[1]);
                     double y = Double.parseDouble(msg[2]);
                     location.setTarget(x, y);
+                    locationReported = false;
                 }
                 default -> System.out.println("Unknown instruction: " + originalMsg);
             }
@@ -202,7 +209,16 @@ public class BotControl {
     }
 
     private void arrived(){
-
+        // Only report once
+        if (locationReported) return;
+        System.out.println("Arrived.");
+        try {
+            transmitter.reportLocation(location);
+            locationReported = true;
+        } catch (MqttException e) {
+            System.out.println("Failed to publish arrival message!");
+            e.printStackTrace();
+        }
     }
 
 }

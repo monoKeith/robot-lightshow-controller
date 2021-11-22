@@ -18,6 +18,9 @@ public class BotControl {
     private final PropertiesControl propertiesControl;
     private final TimelineControl timelineControl;
 
+    // Arrival Manager
+    private final ArrivalManager arrivalManager;
+
     // States
     private ConnectionControl.State connectionState;
     private GlobalOptionControl.State globalState;
@@ -38,6 +41,8 @@ public class BotControl {
         globalControl = new GlobalOptionControl(this);
         propertiesControl = new PropertiesControl(this);
         timelineControl = new TimelineControl(this);
+        // Manager
+        arrivalManager = new ArrivalManager();
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
@@ -154,6 +159,7 @@ public class BotControl {
             case DISCONNECTED -> {
                 // Update global state to IDLE
                 connectedBots = new HashSet<>();
+                arrivalManager.reset();
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
@@ -233,16 +239,40 @@ public class BotControl {
                 connectedBots.add(UUID.fromString(msg.getMessage()));
                 globalControl.refreshView();
             }
+            case TransmitterMQTT.ARRIVAL_TOPIC -> {
+                arrivalManager.arrive(msg.arrivalMsgUUID(), msg.arrivalPoint());
+            }
         }
     }
 
 
     /* Bot Control Functions */
 
+    // Tell all bots to goto location on current frame
+    public void previewLocation(){
+        if (getGlobalState() != GlobalOptionControl.State.READY) return;
+        updateGlobalState(GlobalOptionControl.State.PREVIEW);
+        publishTargets();
+        log("waiting for arrival");
+        arrivalManager.waitForArrival();
+        log("arrival");
+        updateGlobalState(GlobalOptionControl.State.READY);
+    }
+
+    // Start playing animation from current frame.
+    public void playFromCurrentFrame(){
+        if (getGlobalState() != GlobalOptionControl.State.READY) return;
+        updateGlobalState(GlobalOptionControl.State.PLAYING);
+        // TODO Play
+
+        updateGlobalState(GlobalOptionControl.State.READY);
+    }
+
     // Send message to all bots, update target location
-    public void publishTargets(){
+    private void publishTargets(){
         // TODO optimize location for each bot in BotFrame class!!!
         Map<UUID, BotPixel> targetMap = currentFrame.generateTargetMap(connectedBots);
+        arrivalManager.setPending(targetMap);
         // Send target message
         for (Map.Entry<UUID, BotPixel> entry: targetMap.entrySet()){
             UUID uuid = entry.getKey();

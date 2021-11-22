@@ -11,13 +11,13 @@ public class GlobalControlView {
     GlobalOptionControl control = BotControlAPP.getBotControl().getGlobalControl();
 
     @FXML
-    private Label connectedBotsCount;
+    protected Label connectedBotsCount;
 
     @FXML
-    private Label currentFrameName;
+    protected Label currentFrameName;
 
     @FXML
-    private Button previewButton, playButton;
+    protected Button previewButton, playButton;
 
     public GlobalControlView(){
 

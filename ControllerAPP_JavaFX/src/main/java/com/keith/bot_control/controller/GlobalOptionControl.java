@@ -25,20 +25,13 @@ public class GlobalOptionControl {
     }
 
     public void play(){
-        if (botControl.getGlobalState() != State.READY) return;
-        botControl.updateGlobalState(State.PLAYING);
-        log("Play!");
-        // TODO Play animation
-
-        botControl.updateGlobalState(State.READY);
+        log("Play from current frame");
+        new Thread(() -> botControl.playFromCurrentFrame()).start();
     }
 
-    public void preview(){
-        if (botControl.getGlobalState() != State.READY) return;
-        botControl.updateGlobalState(State.PREVIEW);
-        log("Preview frame");
-        botControl.publishTargets();
-        botControl.updateGlobalState(State.READY);
+    public void preview() {
+        log("Preview current frame");
+        new Thread(() -> botControl.previewLocation()).start();
     }
 
     public void refreshView(){

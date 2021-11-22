@@ -15,6 +15,8 @@ public class TransmitterMQTT {
     public static final String UUID_TOPIC = "T/LightBot/UUID";
     // Robot listen to broadcast from this topic:
     public static final String BROADCAST_TOPIC = "T/LightBot/Broadcast";
+    // Robot publish msg once arrived destination
+    public static final String ARRIVAL_TOPIC = "T/LightBot/Arrival";
 
     // MQTT related vars
     private final UUID uuid;
@@ -43,6 +45,7 @@ public class TransmitterMQTT {
 //        mqttClient.subscribe(topic, 0);
         mqttClient.subscribe(UUID_TOPIC, 0);
         mqttClient.subscribe(BROADCAST_TOPIC, 0);
+        mqttClient.subscribe(ARRIVAL_TOPIC, 0);
 
         // Setup msg callback
         mqttClient.setCallback(new MqttCallback() {

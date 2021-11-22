@@ -13,6 +13,8 @@ public class Transmitter {
     public static final String UUID_TOPIC = "T/LightBot/UUID";
     // Robot listen to broadcast from this topic:
     public static final String BROADCAST_TOPIC = "T/LightBot/Broadcast";
+    // Robot publish msg once arrived destination
+    public static final String ARRIVAL_TOPIC = "T/LightBot/Arrival";
 
     // MQTT related vars
     private final UUID uuid;
@@ -91,6 +93,18 @@ public class Transmitter {
         MqttMessage newMessage = new MqttMessage(uuid.toString().getBytes(StandardCharsets.UTF_8));
         newMessage.setQos(0);
         mqttClient.publish(UUID_TOPIC, newMessage);
+    }
+
+    // Report location
+    public void reportLocation(Location location) throws MqttException {
+        String message = String.format("%s %s %s",
+                uuid.toString(),
+                location.getX(),
+                location.getY()
+                );
+        MqttMessage newMessage = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
+        newMessage.setQos(0);
+        mqttClient.publish(ARRIVAL_TOPIC, newMessage);
     }
 
     // Disconnect mqtt client
