@@ -50,10 +50,10 @@ public class Transmitter {
 
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = new String(message.getPayload());
-                System.out.println("\nReceived message:" +
+                System.out.println(
+                        "\nReceived message:" +
                         "\n\tTopic:   " + topic +
-                        "\n\tMessage: " +  msg +
-                        "\n\tQoS:     " + message.getQos() + "\n");
+                        "\n\tMessage: " +  msg + "\n");
 
                 // Save message to queue
                 queueMsg(msg);

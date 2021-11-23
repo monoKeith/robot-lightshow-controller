@@ -141,7 +141,9 @@ public class BotControl {
                 }
             }
             case CURVE -> {
-                if (location.checkSpinAlignment()){
+                if (location.checkPosition()){
+                    movementState = MovementStates.STOP;
+                } else if (location.checkSpinAlignment()){
                     movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
                 } else {
                     movementState = MovementStates.ROTATE;

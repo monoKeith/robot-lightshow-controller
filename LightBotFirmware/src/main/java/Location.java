@@ -59,7 +59,7 @@ public class Location {
 
     // Check if robot in target location
     public synchronized boolean checkPosition(){
-        return Math.abs(deltaX) <= posAccuracy && Math.abs(deltaY) <= posAccuracy;
+        return (Math.abs(deltaX) <= posAccuracy) && (Math.abs(deltaY) <= posAccuracy);
     }
 
     public synchronized void update(){
