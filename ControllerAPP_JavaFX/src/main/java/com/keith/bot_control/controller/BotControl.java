@@ -253,9 +253,8 @@ public class BotControl {
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
         publishTargets();
-        log("waiting for arrival");
         arrivalManager.waitForArrival();
-        log("arrival");
+        log("preview complete");
         updateGlobalState(GlobalOptionControl.State.READY);
     }
 

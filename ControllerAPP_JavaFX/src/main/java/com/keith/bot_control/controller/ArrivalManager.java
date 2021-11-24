@@ -30,11 +30,18 @@ public class ArrivalManager {
     public synchronized void arrive(UUID uuid, Point2D point){
         if (!initialized) return;
         BotPixel pixel = pixelMap.get(uuid);
+        if (pixel == null) {
+            log(String.format("unexpected arrival from: %s", uuid));
+            return;
+        }
         double distance = pixel.getPhysicalLocation().distance(point);
-        if (distance > posAccuracy) return;
+        if (distance > posAccuracy) {
+            log(String.format("WARNING! misaligned LightBot: %s", uuid));
+            return;
+        }
         // Arrived
         pending.remove(uuid);
-        log(String.format("Bot arrived: %s", uuid));
+        log(String.format("LightBot arrived: %s", uuid));
         notifyAll();
     }
 
@@ -47,7 +54,8 @@ public class ArrivalManager {
                 e.printStackTrace();
             }
         }
-
+        // Stop accepting arrive() once complete
+        reset();
         notifyAll();
     }
 
