@@ -70,6 +70,12 @@ public class TimelineView {
         }
     }
 
+    public void refreshSelection(){
+        for (FrameView frame: frameViews){
+            frame.refreshSelection();
+        }
+    }
+
     public void refreshFrame(BotFrame frame){
         FrameView view = botFrame_View_Map.get(frame);
         view.refresh();

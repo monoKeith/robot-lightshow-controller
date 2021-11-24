@@ -31,6 +31,7 @@ public class BotControl {
     private Set<UUID> connectedBots;
 
     private ArrayList<BotFrame> frames;
+    private int currentFrameIndex;
     private BotFrame currentFrame;
 
     public BotControl() {
@@ -58,7 +59,6 @@ public class BotControl {
         frames = new ArrayList<>();
         for (int i = 1; i <= 10; i++){
             frames.add(BotFrame.sampleFrame("Frame_" + i));
-
         }
         setCurrentFrame(frames.get(0));
     }
@@ -100,12 +100,21 @@ public class BotControl {
 
     private void setCurrentFrame(BotFrame frame){
         if (currentFrame != null) currentFrame.setSelecte(false);
+        currentFrameIndex = frames.indexOf(frame);
         currentFrame = frame;
         currentFrame.setSelecte(true);
     }
 
     public BotFrame getCurrentFrame(){
         return currentFrame;
+    }
+
+    // Switch to next frame, return false if there's no next frame
+    public boolean nextFrame(){
+        int nextFrameIndex = currentFrameIndex + 1;
+        if (nextFrameIndex >= frames.size()) return false;
+        updateCurrentFrame(frames.get(nextFrameIndex));
+        return true;
     }
 
 
@@ -190,6 +199,7 @@ public class BotControl {
         globalControl.refreshView();
         dotsCanvasControl.refreshView();
         propertiesControl.refreshView();
+        timelineControl.refreshSelection();
     }
 
     // Called by Properties Control when properties of current Frame changed
@@ -262,8 +272,10 @@ public class BotControl {
     public void playFromCurrentFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PLAYING);
-        // TODO Play
-
+        do {
+            publishTargets();
+            arrivalManager.waitForArrival();
+        } while (nextFrame());
         updateGlobalState(GlobalOptionControl.State.READY);
     }
 

@@ -64,12 +64,7 @@ public class FrameView {
 
     // Update view according to frame
     public void refresh(){
-        // Border style
-        if (frame.isSelected()){
-            pane.setStyle(SELECTED_STYLE);
-        } else {
-            pane.setStyle(UNSELECTED_STYLE);
-        }
+        refreshSelection();
         // Frame name
         frameName.setText(frame.getName());
         // Canvas
@@ -82,6 +77,16 @@ public class FrameView {
             // Draw center of BotPixel
             gc.setFill(pixel.getColor());
             gc.fillOval(x - T_PIXEL_R, y - T_PIXEL_R, T_PIXEL_D, T_PIXEL_D);
+        }
+    }
+
+    // Only refresh the selection (border)
+    public void refreshSelection(){
+        // Border style
+        if (frame.isSelected()){
+            pane.setStyle(SELECTED_STYLE);
+        } else {
+            pane.setStyle(UNSELECTED_STYLE);
         }
     }
 }

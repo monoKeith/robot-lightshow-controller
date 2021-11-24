@@ -42,11 +42,15 @@ public class TimelineControl {
         }
     }
 
-    public void refreshView(){
+    public void refreshEntireView(){
         Platform.runLater(() -> {
-
             view.refreshAllFrames();
+        });
+    }
 
+    public void refreshSelection(){
+        Platform.runLater(() -> {
+            view.refreshSelection();
         });
     }
 

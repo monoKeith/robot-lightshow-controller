@@ -27,10 +27,11 @@ public class BotFrame {
 
     public static Set<BotPixel> testPixels(){
         Set<BotPixel> pixels = new HashSet<>();
-        pixels.add(new BotPixel(200, 200, Color.ORANGE));
-        pixels.add(new BotPixel(300, 300, Color.GREEN));
-        pixels.add(new BotPixel(400, 400, Color.PINK));
-        pixels.add(new BotPixel(200, 400, Color.AQUA));
+        Random random = new Random();
+        pixels.add(new BotPixel(random.nextInt(650) + 50, random.nextInt(650) + 50, Color.ORANGE));
+//        pixels.add(new BotPixel(300, 300, Color.GREEN));
+//        pixels.add(new BotPixel(400, 400, Color.PINK));
+//        pixels.add(new BotPixel(200, 400, Color.AQUA));
         return pixels;
     }
 
