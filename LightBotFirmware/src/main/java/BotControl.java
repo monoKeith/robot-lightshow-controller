@@ -3,6 +3,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class BotControl {
     private enum MovementStates{
+        IDLE,
         STOP,
         CURVE,
         ROTATE,
@@ -60,13 +61,13 @@ public class BotControl {
             leds[curLed++] = robot.getLED(ledName);
         }
         rgb = robot.getLED(rgbName);
-        rgb.set(0xffff00);
+        rgb.set(0xffffff);
         // Location
         location = new Location(robot);
         // Target
         location.setTarget(-0.25,-0.25);
         // State
-        movementState = MovementStates.STOP;
+        movementState = MovementStates.IDLE;
         // Flag
         locationReported = false;
         // Default velocity
@@ -101,17 +102,27 @@ public class BotControl {
                 continue;
             }
 
-            String[] msg = originalMsg.split(" ");
+            String[] commands = originalMsg.split("\\|");
 
-            switch (msg[0]){
-                case "TARGET" -> {
-                    // TARGET X Y
-                    double x = Double.parseDouble(msg[1]);
-                    double y = Double.parseDouble(msg[2]);
-                    location.setTarget(x, y);
-                    locationReported = false;
+            for (String command: commands){
+                if (command.isEmpty()) continue;
+                String[] msg = command.split(" ");
+                switch (msg[0]){
+                    case "TARGET" -> {
+                        // TARGET X Y
+                        double x = Double.parseDouble(msg[1]);
+                        double y = Double.parseDouble(msg[2]);
+                        location.setTarget(x, y);
+                        locationReported = false;
+                        movementState = MovementStates.STOP;
+                    }
+                    case "COLOR" -> {
+                        // COLOR <integer-color-code-256^3>
+                        int val = Integer.parseInt(msg[1]);
+                        rgb.set(val);
+                    }
+                    default -> System.out.println("Unknown command: " + originalMsg);
                 }
-                default -> System.out.println("Unknown instruction: " + originalMsg);
             }
         }
         System.out.println("Connection thread terminated");
@@ -127,6 +138,9 @@ public class BotControl {
         }
         // Update state according to current state
         switch (movementState) {
+            case IDLE -> {
+                // Do nothing
+            }
             case STOP -> {
                 // Check position
                 if (!location.checkPosition()){

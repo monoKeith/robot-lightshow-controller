@@ -259,7 +259,7 @@ public class BotControl {
     /* Bot Control Functions */
 
     // Tell all bots to goto location on current frame
-    public void previewLocation(){
+    public void previewFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
         publishTargets();
@@ -289,7 +289,10 @@ public class BotControl {
             UUID uuid = entry.getKey();
             BotPixel pixel = entry.getValue();
             Point2D target = pixel.getPhysicalLocation();
-            BotMessage message = BotMessage.newTarget(uuid, target.getX(), target.getY());
+            // Generate and send message
+            BotMessage message = new BotMessage(uuid);
+            message.newTarget(target.getX(), target.getY());
+            message.setColor(pixel.getColor());
             connectionControl.publishMessage(message);
         }
     }

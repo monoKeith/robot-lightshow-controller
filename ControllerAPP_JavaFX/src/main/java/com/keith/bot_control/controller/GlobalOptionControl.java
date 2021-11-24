@@ -31,7 +31,7 @@ public class GlobalOptionControl {
 
     public void preview() {
         log("Preview current frame");
-        new Thread(() -> botControl.previewLocation()).start();
+        new Thread(() -> botControl.previewFrame()).start();
     }
 
     public void refreshView(){

@@ -53,11 +53,9 @@ public class ConnectionControl {
             case CONNECTED -> {
                 // To Disconnect
                 resetTransmitter();
-                refreshView();
             }
             case DISCONNECTED -> {
                 // To Connect
-                botControl.updateConnectionState(State.CONNECTING);
                 brokerAddress = view.getBrokerIP().getText();
                 initTransmitter(brokerAddress);
             }
@@ -66,6 +64,7 @@ public class ConnectionControl {
 
     public synchronized void initTransmitter(String brokerAddress){
         if (transmitter != null) return;
+        botControl.updateConnectionState(State.CONNECTING);
         try {
             transmitter = new TransmitterMQTT(botControl.getUuid(), brokerAddress, this);
             botControl.updateConnectionState(State.CONNECTED);
