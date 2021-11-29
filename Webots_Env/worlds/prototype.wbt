@@ -5,7 +5,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.5785932844182152 0.5822040288190671 0.5711989846393193 4.190896807317476
-  position -0.02089523902726307 2.313463863814763 -0.04096516887091574
+  position -0.01537649340015877 1.743459514965745 -0.03562505652757977
 }
 TexturedBackground {
 }
@@ -22,4 +22,20 @@ RectangleArena {
   }
 }
 LightBot {
+}
+LightBot {
+  translation 0.1 0 0.1
+  name "LightBot(1)"
+}
+LightBot {
+  translation 0.2 0 0.2
+  name "LightBot(2)"
+}
+LightBot {
+  translation 0.30000000000000004 0 0.30000000000000004
+  name "LightBot(3)"
+}
+LightBot {
+  translation 0.4 0 0.4
+  name "LightBot(4)"
 }

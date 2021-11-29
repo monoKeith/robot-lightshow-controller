@@ -20,12 +20,14 @@ public class DotsCanvasControl {
 
     private final BotControl control;
     private DotsView view;
-    private Boolean showPreviewPixels;
+    private boolean showPreviewPixels;
+    private boolean showPixelId;
 
     public DotsCanvasControl(BotControl botControl){
         this.control = botControl;
         this.view = null;
         this.showPreviewPixels = false;
+        this.showPixelId = true;
     }
 
     /* Getter and Setter */
@@ -129,6 +131,12 @@ public class DotsCanvasControl {
                     double preview_y = previewLocation.getY();
                     gc.setFill(pixel.getPreviewColor());
                     gc.fillOval(preview_x - PIXEL_R, preview_y - PIXEL_R, PIXEL_D, PIXEL_D);
+                }
+
+                // Show pixelId when not dragging
+                if (!showPreviewPixels && showPixelId){
+                    gc.setFill(Color.WHITE);
+                    gc.fillText(pixel.getPixelId()+"", x + PIXEL_CIRCLE_R, y + PIXEL_CIRCLE_R);
                 }
             }
         });

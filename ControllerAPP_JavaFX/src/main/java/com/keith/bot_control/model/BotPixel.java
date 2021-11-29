@@ -24,22 +24,20 @@ public class BotPixel {
     public static final Color DEFAULT_COLOR = Color.ORANGE;
     public static final Color SELECTION_RING_COLOR = Color.web("#ff007b");
 
-    // Properties
+    // Pixel Properties
     private Point2D physicalLocation;
     private Point2D pixelLocation;
     private Point2D pixelPreviewLocation;
     private Point2D pixelTimelineLocation;
     private Color color;
     private Color previewColor;
+    // Mapping related
+    private int pixelId;
 
-    public BotPixel(){
-        setPhysicalLocation(DEFAULT_LOCATION);
-        setColor(DEFAULT_COLOR);
-    }
-
-    public BotPixel(double x, double y, Color color){
+    public BotPixel(double x, double y, Color color, int Id){
         setPixelLocation(new Point2D(x, y));
         setColor(color);
+        this.pixelId = Id;
     }
 
     /* Unit Converters */
@@ -106,6 +104,10 @@ public class BotPixel {
 
     public Point2D getPixelTimelineLocation() {
         return pixelTimelineLocation;
+    }
+
+    public int getPixelId() {
+        return pixelId;
     }
 
     public void setColor(Color color){
