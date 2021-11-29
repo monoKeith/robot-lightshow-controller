@@ -26,11 +26,12 @@ public class BotControl {
     private GlobalOptionControl.State globalState;
     private boolean showPixelId;
 
+    // Message processor
     private Thread msgProcessor;
     private Boolean msgProcessorStopSignal;
+
     // Set of UUIDs of connected bots
     private Set<UUID> connectedBots;
-
     private ArrayList<BotFrame> frames;
     private int currentFrameIndex;
     private BotFrame currentFrame;
@@ -273,6 +274,7 @@ public class BotControl {
     public void previewFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
+        BotFrame.updatePixelIdMap(connectedBots);
         publishTargets();
         arrivalManager.waitForArrival();
         log("preview complete");
@@ -283,6 +285,7 @@ public class BotControl {
     public void playFromCurrentFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PLAYING);
+        BotFrame.updatePixelIdMap(connectedBots);
         do {
             publishTargets();
             arrivalManager.waitForArrival();
@@ -293,12 +296,13 @@ public class BotControl {
     // Send message to all bots, update target location
     private void publishTargets(){
         // TODO optimize location for each bot in BotFrame class!!!
-        Map<UUID, BotPixel> targetMap = currentFrame.generateTargetMap(connectedBots);
+        Map<BotPixel, UUID> targetMap = currentFrame.getTargetMap();
+
         arrivalManager.setPending(targetMap);
         // Send target message
-        for (Map.Entry<UUID, BotPixel> entry: targetMap.entrySet()){
-            UUID uuid = entry.getKey();
-            BotPixel pixel = entry.getValue();
+        for (Map.Entry<BotPixel, UUID> entry: targetMap.entrySet()){
+            BotPixel pixel = entry.getKey();
+            UUID uuid = entry.getValue();
             Point2D target = pixel.getPhysicalLocation();
             // Generate and send message
             BotMessage message = new BotMessage(uuid);

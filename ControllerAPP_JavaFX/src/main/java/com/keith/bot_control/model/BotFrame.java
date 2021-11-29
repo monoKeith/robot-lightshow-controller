@@ -12,6 +12,9 @@ public class BotFrame {
     // Pixels selected in canvas
     private final Set<BotPixel> selectedPixels;
 
+    // Map UUID of connected bots -> BotPixel ID
+    private static Map<Integer, UUID> pixelIdMap;
+
     public BotFrame(String name){
         this.name = name;
         pixels = new HashSet<>();
@@ -32,6 +35,15 @@ public class BotFrame {
             pixels.add(new BotPixel(random.nextInt(650) + 50, random.nextInt(650) + 50, Color.ORANGE, id));
         }
         return pixels;
+    }
+
+    public static void updatePixelIdMap(Set<UUID> connectedBots){
+        // TODO optimize base on location of bots
+        pixelIdMap = new HashMap<>();
+        int pixelId = 0;
+        for (UUID uuid: connectedBots){
+            pixelIdMap.put(pixelId++, uuid);
+        }
     }
 
     /* Getter and Setter */
@@ -62,15 +74,14 @@ public class BotFrame {
 
     /* Render */
 
-    public Map<UUID, BotPixel> generateTargetMap(Set<UUID> bots){
-        // TODO map closest pixel with bot
-
-        // Currently, it only maps 1st bot with 1st pixel
-        Map<UUID, BotPixel> targetMap = new HashMap<>();
-        if (pixels.size() > 0 && bots.size() > 0){
-            UUID uuid = (UUID) bots.toArray()[0];
-            BotPixel pixel = (BotPixel) pixels.toArray()[0];
-            targetMap.put(uuid, pixel);
+    public Map<BotPixel, UUID> getTargetMap(){
+        // Generate BotPixel -> UUID mapping
+        Map<BotPixel, UUID> targetMap = new HashMap<>();
+        for (BotPixel pixel: pixels){
+            int id = pixel.getPixelId();
+            UUID uuid = pixelIdMap.get(id);
+            if (uuid == null) continue;
+            targetMap.put(pixel, uuid);
         }
         return targetMap;
     }
