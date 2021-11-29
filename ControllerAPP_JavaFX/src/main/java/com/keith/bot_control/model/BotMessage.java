@@ -23,12 +23,12 @@ public class BotMessage {
 
     // Create new target message to bot with provided UUID
     public void newTarget(double x, double y){
-        String msg = String.format("TARGET %f %f|", x, y);
+        String msg = String.format("|TARGET %f %f|", x, y);
         message.append(msg);
     }
 
     public void setColor(Color color){
-        String msg = String.format("COLOR %d|", getRGB(color));
+        String msg = String.format("|COLOR %d|", getRGB(color));
         message.append(msg);
     }
 
