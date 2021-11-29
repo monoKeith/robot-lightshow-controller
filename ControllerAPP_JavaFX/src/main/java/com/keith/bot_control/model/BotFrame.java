@@ -13,7 +13,7 @@ public class BotFrame {
     private final Set<BotPixel> selectedPixels;
 
     // Map UUID of connected bots -> BotPixel ID
-    private static Map<Integer, UUID> pixelIdMap;
+    public static Map<Integer, UUID> pixelIdMap = new HashMap<>();;
 
     public BotFrame(String name){
         this.name = name;

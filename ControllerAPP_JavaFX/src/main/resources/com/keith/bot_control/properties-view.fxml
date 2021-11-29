@@ -9,6 +9,8 @@
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -232,9 +234,17 @@
                   </Pane>
                </content>
           </Tab>
-            <Tab style="-fx-pref-width: 150;" text="UUID Map">
+            <Tab style="-fx-pref-width: 150;" text="LightBots">
                <content>
-                  <Pane fx:id="botPixelPropertiesPane1" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #223036;" />
+                  <Pane fx:id="botPixelPropertiesPane1" style="-fx-background-color: #223036;">
+                     <children>
+                        <TableView fx:id="botTable" layoutX="14.0" layoutY="14.0" prefHeight="668.0" prefWidth="412.0">
+                          <columns>
+                            <TableColumn fx:id="pixelIdColumn" prefWidth="78.0" text="BotPixel ID" />
+                            <TableColumn fx:id="botUUIDColumn" prefWidth="331.0" text="LightBot UUID" />
+                          </columns>
+                        </TableView>
+                     </children></Pane>
                </content>
             </Tab>
         </tabs>

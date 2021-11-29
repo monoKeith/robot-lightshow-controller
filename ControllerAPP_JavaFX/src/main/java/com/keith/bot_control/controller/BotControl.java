@@ -181,6 +181,8 @@ public class BotControl {
                 // Update global state to IDLE
                 connectedBots = new HashSet<>();
                 arrivalManager.reset();
+                BotFrame.updatePixelIdMap(connectedBots);
+                propertiesControl.refreshConnectedBots();
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
@@ -260,6 +262,9 @@ public class BotControl {
             case TransmitterMQTT.UUID_TOPIC -> {
                 connectedBots.add(UUID.fromString(msg.getMessage()));
                 globalControl.refreshView();
+                // TODO optimize this, make it more efficient
+                BotFrame.updatePixelIdMap(connectedBots);
+                propertiesControl.refreshConnectedBots();
             }
             case TransmitterMQTT.ARRIVAL_TOPIC -> {
                 arrivalManager.arrive(msg.arrivalMsgUUID(), msg.arrivalPoint());
@@ -274,7 +279,6 @@ public class BotControl {
     public void previewFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
-        BotFrame.updatePixelIdMap(connectedBots);
         publishTargets();
         arrivalManager.waitForArrival();
         log("preview complete");
@@ -285,7 +289,6 @@ public class BotControl {
     public void playFromCurrentFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PLAYING);
-        BotFrame.updatePixelIdMap(connectedBots);
         do {
             publishTargets();
             arrivalManager.waitForArrival();

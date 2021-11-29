@@ -2,12 +2,23 @@ package com.keith.bot_control.view;
 
 import com.keith.bot_control.BotControlAPP;
 import com.keith.bot_control.controller.PropertiesControl;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
+import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class PropertiesView {
 
@@ -41,6 +52,20 @@ public class PropertiesView {
     protected CheckBox displayLightBotID;
 
 
+    /* Connected Bots */
+
+    @FXML
+    protected TableView<Map.Entry<Integer, UUID>> botTable;
+
+    @FXML
+    protected TableColumn<Map.Entry<Integer, UUID>, String> pixelIdColumn;
+
+    @FXML
+    protected TableColumn<Map.Entry<Integer, UUID>, String> botUUIDColumn;
+
+
+
+
     public PropertiesView(){
     }
 
@@ -48,6 +73,8 @@ public class PropertiesView {
     public void initialize(){
         control.setView(this);
         control.refreshView();
+        botUUIDColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().toString()));
+        pixelIdColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getKey().toString()));
     }
 
     /* BotPixel Properties */
@@ -139,6 +166,14 @@ public class PropertiesView {
 
     public void displayLightBotIdUpdate(){
         control.showPixelIdUpdate(displayLightBotID.isSelected());
+    }
+
+
+    /* UUID map */
+
+    public void updateConnectedBots(Map<Integer, UUID> pixelIdMap){
+        ObservableList<Map.Entry<Integer, UUID>> list = FXCollections.observableList(pixelIdMap.entrySet().stream().toList());
+        botTable.setItems(list);
     }
 
 }

@@ -116,6 +116,10 @@ public class PropertiesControl {
         refreshFrameProperties();
     }
 
+    public void refreshConnectedBots(){
+        Platform.runLater(() -> view.updateConnectedBots(BotFrame.pixelIdMap));
+    }
+
 
     /* Logging */
 
