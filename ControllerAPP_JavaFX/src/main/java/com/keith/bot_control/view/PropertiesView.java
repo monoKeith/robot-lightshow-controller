@@ -5,10 +5,7 @@ import com.keith.bot_control.controller.PropertiesControl;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -41,6 +38,9 @@ public class PropertiesView {
 
     @FXML
     protected TextField frameName;
+
+    @FXML
+    protected CheckBox displayLightBotID;
 
 
     public PropertiesView(){
@@ -137,6 +137,10 @@ public class PropertiesView {
 
     public void setFrameName(String name){
         frameName.setText(name);
+    }
+
+    public void displayLightBotIdUpdate(){
+        control.showPixelIdUpdate(displayLightBotID.isSelected());
     }
 
 }

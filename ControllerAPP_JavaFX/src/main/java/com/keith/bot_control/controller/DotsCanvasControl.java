@@ -21,13 +21,11 @@ public class DotsCanvasControl {
     private final BotControl control;
     private DotsView view;
     private boolean showPreviewPixels;
-    private boolean showPixelId;
 
     public DotsCanvasControl(BotControl botControl){
         this.control = botControl;
         this.view = null;
         this.showPreviewPixels = false;
-        this.showPixelId = true;
     }
 
     /* Getter and Setter */
@@ -103,6 +101,7 @@ public class DotsCanvasControl {
             // Canvas
             view.clearCanvas();
             GraphicsContext gc = view.getCanvas().getGraphicsContext2D();
+            boolean showPixelId = control.getShowPixelId();
 
             // Each BotPixel
             for (BotPixel pixel: control.getCurrentFrame().getPixels()){

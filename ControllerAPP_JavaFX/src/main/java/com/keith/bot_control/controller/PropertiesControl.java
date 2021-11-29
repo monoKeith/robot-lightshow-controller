@@ -65,6 +65,10 @@ public class PropertiesControl {
         control.updateCurrentFrameProperties();
     }
 
+    public void showPixelIdUpdate(boolean val){
+        control.setShowPixelId(val);
+    }
+
 
     /* Update */
 

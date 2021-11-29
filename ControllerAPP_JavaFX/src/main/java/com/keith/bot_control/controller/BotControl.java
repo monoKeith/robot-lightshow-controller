@@ -24,6 +24,7 @@ public class BotControl {
     // States
     private ConnectionControl.State connectionState;
     private GlobalOptionControl.State globalState;
+    private boolean showPixelId;
 
     private Thread msgProcessor;
     private Boolean msgProcessorStopSignal;
@@ -50,6 +51,7 @@ public class BotControl {
         // Init vars
         connectedBots = new HashSet<>();
         initCurrentFrame();
+        showPixelId = true;
         // Init message processor
         initMsgProcessor();
     }
@@ -96,6 +98,15 @@ public class BotControl {
 
     public ArrayList<BotFrame> getFrames(){
         return frames;
+    }
+
+    public boolean getShowPixelId(){
+        return showPixelId;
+    }
+
+    public void setShowPixelId(boolean val){
+        showPixelId = val;
+        dotsCanvasControl.refreshView();
     }
 
     private void setCurrentFrame(BotFrame frame){
