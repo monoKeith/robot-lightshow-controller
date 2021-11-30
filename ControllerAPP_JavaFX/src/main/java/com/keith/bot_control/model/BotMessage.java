@@ -7,6 +7,9 @@ import java.util.UUID;
 
 public class BotMessage {
 
+    // Robot listen to broadcast from this topic:
+    public static final String BROADCAST_TOPIC = "T/LightBot/Broadcast";
+
     private String topic;
     private StringBuilder message;
 
@@ -19,6 +22,10 @@ public class BotMessage {
         this.topic = topic;
         this.message = new StringBuilder();
         this.message.append(message);
+    }
+
+    public static BotMessage reportUUID(){
+        return new BotMessage(BROADCAST_TOPIC, "|UUID|");
     }
 
     // Create new target message to bot with provided UUID

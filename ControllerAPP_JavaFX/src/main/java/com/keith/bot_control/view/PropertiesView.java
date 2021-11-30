@@ -73,6 +73,7 @@ public class PropertiesView {
     public void initialize(){
         control.setView(this);
         control.refreshView();
+        // Initialize connected LightBot table properties
         botUUIDColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().toString()));
         pixelIdColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getKey().toString()));
     }

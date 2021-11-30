@@ -34,6 +34,10 @@ public class GlobalOptionControl {
         new Thread(() -> botControl.previewFrame()).start();
     }
 
+    public void refreshConnections(){
+        botControl.refreshConnections();
+    }
+
     public void refreshView(){
         if (view == null) return;
         Platform.runLater(() -> {

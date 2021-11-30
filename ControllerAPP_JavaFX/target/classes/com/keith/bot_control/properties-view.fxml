@@ -20,7 +20,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="735.0" prefWidth="450.0" style="-fx-border-color: #eb345e; -fx-border-width: 2; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.keith.bot_control.view.PropertiesView">
+<Pane prefHeight="735.0" prefWidth="450.0" style="-fx-border-color: #eb345e; -fx-border-width: 2; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.keith.bot_control.view.PropertiesView">
    <children>
       <TabPane prefHeight="735.0" prefWidth="450.0" style="-fx-background-color: transparent; -fx-background-insets: 2; headerAllignment: center;" stylesheets="@tab-style.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -238,11 +238,14 @@
                <content>
                   <Pane fx:id="botPixelPropertiesPane1" style="-fx-background-color: #223036;">
                      <children>
-                        <TableView fx:id="botTable" layoutX="14.0" layoutY="14.0" prefHeight="668.0" prefWidth="412.0">
+                        <TableView fx:id="botTable" layoutX="14.0" layoutY="14.0" prefHeight="668.0" prefWidth="412.0" style="-fx-border-radius: 5; -fx-border-color: white; -fx-border-width: 2; -fx-background-insets: 2;">
                           <columns>
-                            <TableColumn fx:id="pixelIdColumn" prefWidth="78.0" text="BotPixel ID" />
-                            <TableColumn fx:id="botUUIDColumn" prefWidth="331.0" text="LightBot UUID" />
+                            <TableColumn fx:id="pixelIdColumn" editable="false" prefWidth="93.0" text="BotPixel ID" />
+                            <TableColumn fx:id="botUUIDColumn" editable="false" prefWidth="316.0" sortable="false" text="LightBot UUID" />
                           </columns>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
                         </TableView>
                      </children></Pane>
                </content>

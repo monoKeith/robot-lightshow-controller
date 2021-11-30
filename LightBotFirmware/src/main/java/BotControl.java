@@ -121,6 +121,15 @@ public class BotControl {
                         int val = Integer.parseInt(msg[1]);
                         rgb.set(val);
                     }
+                    case "UUID" -> {
+                        // Report UUID
+                        try {
+                            transmitter.reportUUID();
+                        } catch (MqttException e) {
+                            System.out.println("Failed to report UUID!");
+                            e.printStackTrace();
+                        }
+                    }
                     default -> System.out.println("Unknown command: " + originalMsg);
                 }
             }

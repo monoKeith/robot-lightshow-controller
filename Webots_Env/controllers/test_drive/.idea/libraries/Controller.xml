@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Controller">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../../../../../../Program Files/Webots/lib/controller/java/Controller.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -275,6 +275,17 @@ public class BotControl {
 
     /* Bot Control Functions */
 
+    // Reset connected bots, ask all bots to report UUID
+    public void refreshConnections(){
+        if (getGlobalState() != GlobalOptionControl.State.READY) return;
+        log("refresh LightBot connections");
+        connectedBots.clear();
+        globalControl.refreshView();
+        propertiesControl.refreshConnectedBots();
+        BotMessage msg = BotMessage.reportUUID();
+        connectionControl.publishMessage(msg);
+    }
+
     // Tell all bots to goto location on current frame
     public void previewFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
