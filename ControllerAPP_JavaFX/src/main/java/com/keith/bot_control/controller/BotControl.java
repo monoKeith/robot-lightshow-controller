@@ -224,6 +224,20 @@ public class BotControl {
     }
 
 
+    /* Bot Frame related */
+
+    // Copy current frame, add to next index of current frame.
+    // Change selected frame to the new frame
+    public void duplicateCurrentFrame(){
+        BotFrame newFrame = currentFrame.clone();
+        frames.add(currentFrameIndex + 1, newFrame);
+        // Update timeline to include new frame
+
+        // Done
+        nextFrame();
+    }
+
+
     /* Message processor - Receives message from transmitter and process */
 
     // Spawn a new thread to receive message

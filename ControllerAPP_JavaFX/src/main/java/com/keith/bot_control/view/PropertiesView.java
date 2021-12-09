@@ -169,6 +169,11 @@ public class PropertiesView {
         control.showPixelIdUpdate(displayLightBotID.isSelected());
     }
 
+    @FXML
+    public void duplicateCurrentFrame(){
+        control.duplicateCurrentFrame();
+    }
+
 
     /* UUID map */
 

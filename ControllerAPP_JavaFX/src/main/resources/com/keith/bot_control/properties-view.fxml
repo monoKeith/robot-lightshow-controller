@@ -182,25 +182,29 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                            <rowConstraints>
-                              <RowConstraints maxHeight="64.5" minHeight="30.0" prefHeight="40.0" />
-                              <RowConstraints maxHeight="91.5" minHeight="46.5" prefHeight="40.0" />
-                              <RowConstraints maxHeight="92.5" minHeight="47.0" prefHeight="40.0" />
+                              <RowConstraints maxHeight="50.0" minHeight="40.0" prefHeight="40.0" />
+                              <RowConstraints maxHeight="50.0" minHeight="40.0" prefHeight="40.0" />
+                              <RowConstraints maxHeight="50.0" minHeight="47.0" prefHeight="40.0" />
                            </rowConstraints>
                         </GridPane>
                         <Line endX="440.0" endY="360.0" startY="360.0" stroke="WHITE" />
-                        <GridPane alignment="CENTER_LEFT" layoutY="360.0" prefHeight="180.0" prefWidth="440.0">
+                        <GridPane alignment="TOP_RIGHT" layoutY="360.0" prefHeight="336.0" prefWidth="440.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.5" minWidth="10.0" prefWidth="126.0" />
-                            <ColumnConstraints maxWidth="294.0" minWidth="10.0" prefWidth="294.0" />
+                            <ColumnConstraints halignment="RIGHT" maxWidth="294.0" minWidth="10.0" prefWidth="294.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Frame" textFill="WHITE">
+                              <Label text="Selected Frame" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -225,6 +229,16 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </CheckBox>
+                              <Label text="Operations" textFill="WHITE" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button mnemonicParsing="false" onAction="#duplicateCurrentFrame" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #4e43b5; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="Duplicate" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

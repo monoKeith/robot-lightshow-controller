@@ -69,6 +69,10 @@ public class PropertiesControl {
         control.setShowPixelId(val);
     }
 
+    public void duplicateCurrentFrame(){
+        control.duplicateCurrentFrame();
+    }
+
 
     /* Update */
 

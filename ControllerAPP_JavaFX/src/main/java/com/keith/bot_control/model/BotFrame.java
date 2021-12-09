@@ -22,6 +22,15 @@ public class BotFrame {
         selectedPixels = new HashSet<>();
     }
 
+    public BotFrame clone(){
+        BotFrame newFrame = new BotFrame(this.getName());
+        // Copy pixels
+        for (BotPixel pixel: this.pixels){
+            newFrame.pixels.add(pixel.clone());
+        }
+        return newFrame;
+    }
+
     public static BotFrame sampleFrame(String name){
         BotFrame frame = new BotFrame(name);
         frame.pixels = testPixels();

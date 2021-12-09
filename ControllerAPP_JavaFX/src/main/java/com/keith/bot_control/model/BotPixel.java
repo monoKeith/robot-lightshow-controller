@@ -40,6 +40,11 @@ public class BotPixel {
         this.pixelId = Id;
     }
 
+    public BotPixel clone(){
+        Color color = Color.color(this.color.getRed(), this.color.getGreen(), this.color.getBlue());
+        return new BotPixel(this.pixelLocation.getX(), this.pixelLocation.getY(), color, this.pixelId);
+    }
+
     /* Unit Converters */
 
     private static Point2D convertToPixel(Point2D botLocation){
