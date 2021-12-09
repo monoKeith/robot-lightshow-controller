@@ -38,38 +38,16 @@ public class TimelineView {
         control.initView();
     }
 
-    public void addNewFrame(BotFrame frame){
+    // ONLY apply new frame to data structures, does NOT apply new frame to view
+    private Node initNewFrame(BotFrame frame, int index){
         FXMLLoader fxmlLoader = BotControlAPP.loadResource(FRAME_VIEW_FXML);
         Node frameNode;
         try {
             frameNode = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
-            return;
+            return null;
         }
-        // Append frame to collection for display
-        frameCollection.getChildren().add(frameNode);
-        // Initialize to display frame info
-        FrameView view = fxmlLoader.getController();
-        view.setController(this);
-        view.setFrame(frame);
-        // Store view, [view -> Node] map, [BotFrame -> view] map
-        frameViews.add(view);
-        frameView_Node_Map.put(view, frameNode);
-        botFrame_View_Map.put(frame, view);
-    }
-
-    public void insertNewFrame(BotFrame frame, int index){
-        FXMLLoader fxmlLoader = BotControlAPP.loadResource(FRAME_VIEW_FXML);
-        Node frameNode;
-        try {
-            frameNode = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        // Append frame to collection for display
-        frameCollection.getChildren().add(frameNode);
         // Initialize to display frame info
         FrameView view = fxmlLoader.getController();
         view.setController(this);
@@ -78,14 +56,24 @@ public class TimelineView {
         frameViews.add(index, view);
         frameView_Node_Map.put(view, frameNode);
         botFrame_View_Map.put(frame, view);
+        // Done, ready to update view
+        return frameNode;
+    }
 
+    public void appendNewFrame(BotFrame frame){
+        // Append frame to collection for display
+        frameCollection.getChildren().add(initNewFrame(frame, frameViews.size()));
+    }
+
+    public void insertNewFrame(BotFrame frame, int index){
+        initNewFrame(frame, index);
         alignFrameViewOrder();
     }
 
     public void alignFrameViewOrder(){
-        // Clear
+        // Clear all currently displayed frames from view
         frameCollection.getChildren().clear();
-        // Refresh
+        // Add all frames to display
         for (FrameView frameView: frameViews){
             Node frameNode = frameView_Node_Map.get(frameView);
             frameCollection.getChildren().add(frameNode);

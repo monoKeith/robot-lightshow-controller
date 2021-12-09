@@ -38,7 +38,7 @@ public class TimelineControl {
 
         // Add all frames
         for (BotFrame frame: control.getFrames()){
-            view.addNewFrame(frame);
+            view.appendNewFrame(frame);
         }
     }
 
