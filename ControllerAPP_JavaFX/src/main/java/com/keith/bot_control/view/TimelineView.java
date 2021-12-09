@@ -38,7 +38,7 @@ public class TimelineView {
         control.initView();
     }
 
-    public void addFrame(BotFrame frame){
+    public void addNewFrame(BotFrame frame){
         FXMLLoader fxmlLoader = BotControlAPP.loadResource(FRAME_VIEW_FXML);
         Node frameNode;
         try {
@@ -57,6 +57,43 @@ public class TimelineView {
         frameViews.add(view);
         frameView_Node_Map.put(view, frameNode);
         botFrame_View_Map.put(frame, view);
+    }
+
+    public void insertNewFrame(BotFrame frame, int index){
+        FXMLLoader fxmlLoader = BotControlAPP.loadResource(FRAME_VIEW_FXML);
+        Node frameNode;
+        try {
+            frameNode = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        // Append frame to collection for display
+        frameCollection.getChildren().add(frameNode);
+        // Initialize to display frame info
+        FrameView view = fxmlLoader.getController();
+        view.setController(this);
+        view.setFrame(frame);
+        // Store view, [view -> Node] map, [BotFrame -> view] map
+        frameViews.add(index, view);
+        frameView_Node_Map.put(view, frameNode);
+        botFrame_View_Map.put(frame, view);
+
+        alignFrameViewOrder();
+    }
+
+    public void alignFrameViewOrder(){
+        // Clear
+        frameCollection.getChildren().clear();
+        // Refresh
+        for (FrameView frameView: frameViews){
+            Node frameNode = frameView_Node_Map.get(frameView);
+            frameCollection.getChildren().add(frameNode);
+        }
+    }
+
+    public boolean frameExist(BotFrame frame){
+        return botFrame_View_Map.containsKey(frame);
     }
 
     // Call by FrameView when a view a clicked

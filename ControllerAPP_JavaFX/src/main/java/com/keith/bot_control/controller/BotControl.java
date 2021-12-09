@@ -232,7 +232,7 @@ public class BotControl {
         BotFrame newFrame = currentFrame.clone();
         frames.add(currentFrameIndex + 1, newFrame);
         // Update timeline to include new frame
-
+        timelineControl.syncFrames();
         // Done
         nextFrame();
     }
