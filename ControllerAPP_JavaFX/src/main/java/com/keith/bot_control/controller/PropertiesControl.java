@@ -73,6 +73,10 @@ public class PropertiesControl {
         control.duplicateCurrentFrame();
     }
 
+    public void deleteCurrentFrame(){
+        control.deleteCurrentFrame();
+    }
+
 
     /* Update */
 

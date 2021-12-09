@@ -174,6 +174,11 @@ public class PropertiesView {
         control.duplicateCurrentFrame();
     }
 
+    @FXML
+    public void deleteCurrentFrame(){
+        control.deleteCurrentFrame();
+    }
+
 
     /* UUID map */
 

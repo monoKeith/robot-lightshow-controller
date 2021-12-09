@@ -76,6 +76,10 @@ public class TimelineControl {
         }
     }
 
+    public void removeFrame(BotFrame frame){
+        view.removeFrame(frame);
+    }
+
     /* Logging */
 
     private void log(String msg){

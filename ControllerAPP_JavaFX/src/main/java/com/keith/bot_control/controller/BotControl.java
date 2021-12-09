@@ -237,6 +237,17 @@ public class BotControl {
         nextFrame();
     }
 
+    // Delete current frame and set selected frame?
+    public void deleteCurrentFrame(){
+        // Abort if only one frame left
+        if (frames.size() <= 1) return;
+        timelineControl.removeFrame(currentFrame);
+        frames.remove(currentFrame);
+        // New current frame
+        int newIndex = Math.min(currentFrameIndex, (frames.size() - 1));
+        updateCurrentFrame(frames.get(newIndex));
+    }
+
 
     /* Message processor - Receives message from transmitter and process */
 

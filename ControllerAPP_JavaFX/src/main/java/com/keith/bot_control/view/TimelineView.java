@@ -17,11 +17,11 @@ public class TimelineView {
 
     private static final String FRAME_VIEW_FXML = "frame-view.fxml";
 
-    private TimelineControl control = BotControlAPP.getBotControl().getTimelineControl();
+    private final TimelineControl control = BotControlAPP.getBotControl().getTimelineControl();
 
-    private ArrayList<FrameView> frameViews;
-    private Map<FrameView, Node> frameView_Node_Map;
-    private Map<BotFrame, FrameView> botFrame_View_Map;
+    private final ArrayList<FrameView> frameViews;
+    private final Map<FrameView, Node> frameView_Node_Map;
+    private final Map<BotFrame, FrameView> botFrame_View_Map;
     
     @FXML
     protected HBox frameCollection;
@@ -78,6 +78,16 @@ public class TimelineView {
             Node frameNode = frameView_Node_Map.get(frameView);
             frameCollection.getChildren().add(frameNode);
         }
+    }
+
+    // Cleanup data structure accordingly and refresh
+    public void removeFrame(BotFrame frame){
+        FrameView view = botFrame_View_Map.get(frame);
+        botFrame_View_Map.remove(frame);
+        frameViews.remove(view);
+        frameView_Node_Map.remove(view);
+        // Done
+        alignFrameViewOrder();
     }
 
     public boolean frameExist(BotFrame frame){

@@ -234,11 +234,20 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Button mnemonicParsing="false" onAction="#duplicateCurrentFrame" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #4e43b5; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="Duplicate" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Button>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#deleteCurrentFrame" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #f54287; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="Delete" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#duplicateCurrentFrame" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #4e43b5; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="Duplicate" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
