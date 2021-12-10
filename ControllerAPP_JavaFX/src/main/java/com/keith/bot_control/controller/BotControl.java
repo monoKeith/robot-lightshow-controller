@@ -229,7 +229,7 @@ public class BotControl {
     // Copy current frame, add to next index of current frame.
     // Change selected frame to the new frame
     public void duplicateCurrentFrame(){
-        log("duplicate selected frame");
+        log("duplicate selected BotFrame");
         BotFrame newFrame = currentFrame.clone();
         frames.add(currentFrameIndex + 1, newFrame);
         // Update timeline to include new frame
@@ -242,23 +242,22 @@ public class BotControl {
     public void deleteCurrentFrame(){
         // Abort if only one frame left
         if (frames.size() <= 1) return;
-        log("delete selected frame");
+        log("delete selected BotFrame");
         timelineControl.removeFrame(currentFrame);
         frames.remove(currentFrame);
         // Update selected frame
-        // Done
         updateCurrentFrame(frames.get(Math.min(currentFrameIndex, (frames.size() - 1))));
     }
 
     public void rearrangeCurrentFrame(boolean toLeft){
         // Abort if the frame is already at the end of desired direction
         if ((toLeft && currentFrameIndex <= 0) || (!toLeft && currentFrameIndex >= frames.size() - 1)) return;
-        log("rearrange selected frame");
+        log("rearrange selected BotFrame");
         // Rearrange
         frames.remove(currentFrame);
         currentFrameIndex = toLeft ? currentFrameIndex - 1 : currentFrameIndex + 1;
         frames.add(currentFrameIndex, currentFrame);
-        // Done
+        // Apply changes to view
         timelineControl.syncFramesOrder();
     }
 
