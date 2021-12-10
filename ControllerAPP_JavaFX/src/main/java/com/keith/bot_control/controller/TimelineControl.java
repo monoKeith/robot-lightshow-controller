@@ -25,7 +25,7 @@ public class TimelineControl {
         if (frame == previousFrame) return;
 
         log("select: " + frame);
-        control.updateCurrentFrame(frame);
+        control.setCurrentFrame(frame);
         refreshFrame(previousFrame);
         refreshCurrentFrame();
     }

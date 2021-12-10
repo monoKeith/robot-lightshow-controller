@@ -18,8 +18,9 @@ public class BotControl {
     private final PropertiesControl propertiesControl;
     private final TimelineControl timelineControl;
 
-    // Arrival Manager
+    // Managers
     private final ArrivalManager arrivalManager;
+    private final FramesManager framesManager;
 
     // States
     private ConnectionControl.State connectionState;
@@ -30,11 +31,9 @@ public class BotControl {
     private Thread msgProcessor;
     private Boolean msgProcessorStopSignal;
 
-    // Set of UUIDs of connected bots
+    // UUIDs of connected bots
     private Set<UUID> connectedBots;
-    private ArrayList<BotFrame> frames;
-    private int currentFrameIndex;
-    private BotFrame currentFrame;
+
 
     public BotControl() {
         uuid = UUID.randomUUID();
@@ -46,24 +45,16 @@ public class BotControl {
         timelineControl = new TimelineControl(this);
         // Manager
         arrivalManager = new ArrivalManager();
+        framesManager = new FramesManager();
+        framesManager.initCurrentFrame();
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
         // Init vars
         connectedBots = new HashSet<>();
-        initCurrentFrame();
         showPixelId = true;
         // Init message processor
         initMsgProcessor();
-    }
-
-    private void initCurrentFrame(){
-        // Testing only
-        frames = new ArrayList<>();
-        for (int i = 1; i <= 10; i++){
-            frames.add(BotFrame.sampleFrame("Frame_" + i));
-        }
-        setCurrentFrame(frames.get(0));
     }
 
 
@@ -98,7 +89,7 @@ public class BotControl {
     }
 
     public ArrayList<BotFrame> getFrames(){
-        return frames;
+        return framesManager.getFrames();
     }
 
     public boolean getShowPixelId(){
@@ -110,39 +101,33 @@ public class BotControl {
         dotsCanvasControl.refreshView();
     }
 
-    private void setCurrentFrame(BotFrame frame){
-        if (currentFrame != null) currentFrame.setSelecte(false);
-        currentFrameIndex = frames.indexOf(frame);
-        currentFrame = frame;
-        currentFrame.setSelecte(true);
-    }
-
     public BotFrame getCurrentFrame(){
-        return currentFrame;
+        return framesManager.getCurrentFrame();
     }
 
     // Switch to next frame, return false if there's no next frame
     public boolean nextFrame(){
-        int nextFrameIndex = currentFrameIndex + 1;
-        if (nextFrameIndex >= frames.size()) return false;
-        updateCurrentFrame(frames.get(nextFrameIndex));
-        return true;
+        if (framesManager.nextFrame()){
+            selectedFrameChanged();
+            return true;
+        }
+        return false;
     }
 
 
     /* Bot Pixel selection */
 
     public Set<BotPixel> getSelectedPixels() {
-        return currentFrame.getSelectedPixels();
+        return getCurrentFrame().getSelectedPixels();
     }
 
     public void clearSelectedPixels() {
-        currentFrame.getSelectedPixels().clear();
+        getCurrentFrame().getSelectedPixels().clear();
         propertiesControl.refreshView();
     }
 
     public boolean selectPixel(BotPixel newSelection) {
-        if (currentFrame.getSelectedPixels().add(newSelection)){
+        if (getCurrentFrame().getSelectedPixels().add(newSelection)){
             propertiesControl.refreshView();
             return true;
         }
@@ -150,12 +135,12 @@ public class BotControl {
     }
 
     public void deSelectPixel(BotPixel pixel){
-        currentFrame.getSelectedPixels().remove(pixel);
+        getCurrentFrame().getSelectedPixels().remove(pixel);
         propertiesControl.refreshView();
     }
 
     public boolean pixelIsSelected(BotPixel pixel) {
-        return currentFrame.getSelectedPixels().contains(pixel);
+        return getCurrentFrame().getSelectedPixels().contains(pixel);
     }
 
 
@@ -208,8 +193,13 @@ public class BotControl {
     }
 
     // Called by TimelineControl when another frame is selected
-    public void updateCurrentFrame(BotFrame frame){
-        setCurrentFrame(frame);
+    public void setCurrentFrame(BotFrame frame){
+        framesManager.setCurrentFrame(frame);
+        selectedFrameChanged();
+    }
+
+    // Refresh related views when selected frame changed
+    private void selectedFrameChanged(){
         globalControl.refreshView();
         dotsCanvasControl.refreshView();
         propertiesControl.refreshView();
@@ -229,9 +219,7 @@ public class BotControl {
     // Copy current frame, add to next index of current frame.
     // Change selected frame to the new frame
     public void duplicateCurrentFrame(){
-        log("duplicate selected BotFrame");
-        BotFrame newFrame = currentFrame.clone();
-        frames.add(currentFrameIndex + 1, newFrame);
+        framesManager.duplicateCurrentFrame();
         // Update timeline to include new frame
         timelineControl.addMissingFrames();
         // Done
@@ -240,23 +228,17 @@ public class BotControl {
 
     // Delete current frame and update selected frame
     public void deleteCurrentFrame(){
-        // Abort if only one frame left
-        if (frames.size() <= 1) return;
-        log("delete selected BotFrame");
+        BotFrame currentFrame = framesManager.getCurrentFrame();
+        // Abort if frameManager reject
+        if (!framesManager.deleteCurrentFrame()) return;
         timelineControl.removeFrame(currentFrame);
-        frames.remove(currentFrame);
-        // Update selected frame
-        updateCurrentFrame(frames.get(Math.min(currentFrameIndex, (frames.size() - 1))));
+        // Done
+        selectedFrameChanged();
     }
 
     public void rearrangeCurrentFrame(boolean toLeft){
-        // Abort if the frame is already at the end of desired direction
-        if ((toLeft && currentFrameIndex <= 0) || (!toLeft && currentFrameIndex >= frames.size() - 1)) return;
-        log("rearrange selected BotFrame");
-        // Rearrange
-        frames.remove(currentFrame);
-        currentFrameIndex = toLeft ? currentFrameIndex - 1 : currentFrameIndex + 1;
-        frames.add(currentFrameIndex, currentFrame);
+        // Abort if frameManager reject
+        if (!framesManager.rearrangeCurrentFrame(toLeft)) return;
         // Apply changes to view
         timelineControl.syncFramesOrder();
     }
@@ -348,7 +330,7 @@ public class BotControl {
     // Send message to all bots, update target location
     private void publishTargets(){
         // TODO optimize location for each bot in BotFrame class!!!
-        Map<BotPixel, UUID> targetMap = currentFrame.getTargetMap();
+        Map<BotPixel, UUID> targetMap = getCurrentFrame().getTargetMap();
 
         arrivalManager.setPending(targetMap);
         // Send target message

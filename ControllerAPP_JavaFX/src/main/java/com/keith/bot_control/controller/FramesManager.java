@@ -1,0 +1,92 @@
+package com.keith.bot_control.controller;
+
+import com.keith.bot_control.model.BotFrame;
+
+import java.util.ArrayList;
+
+public class FramesManager {
+    private ArrayList<BotFrame> frames;
+    private int currentFrameIndex;
+    private BotFrame currentFrame;
+
+    public FramesManager(){
+
+    }
+
+    public void initCurrentFrame(){
+        // Testing only
+        frames = new ArrayList<>();
+        for (int i = 1; i <= 10; i++){
+            frames.add(BotFrame.sampleFrame("Frame_" + i));
+        }
+        setCurrentFrame(frames.get(0));
+    }
+
+    /* Getter and setters */
+
+    public ArrayList<BotFrame> getFrames(){
+        return frames;
+    }
+
+    public int getCurrentFrameIndex(){
+        return currentFrameIndex;
+    }
+
+    public BotFrame getCurrentFrame(){
+        return currentFrame;
+    }
+
+
+    /* Frame Controls */
+
+    public void setCurrentFrame(BotFrame frame){
+        if (currentFrame != null) currentFrame.setSelecte(false);
+        currentFrameIndex = frames.indexOf(frame);
+        currentFrame = frame;
+        currentFrame.setSelecte(true);
+    }
+
+    // set current frame to next frame, return false if there's no next frame
+    public boolean nextFrame(){
+        int nextFrameIndex = currentFrameIndex + 1;
+        if (nextFrameIndex >= getFrames().size()) return false;
+        setCurrentFrame(frames.get(nextFrameIndex));
+        return true;
+    }
+
+    public void duplicateCurrentFrame(){
+        log("duplicate selected BotFrame");
+        BotFrame newFrame = currentFrame.clone();
+        frames.add(currentFrameIndex + 1, newFrame);
+    }
+
+    // delete selected frame, reject (false) when only 1 frame left
+    public boolean deleteCurrentFrame(){
+        // Abort if only one frame left
+        if (frames.size() <= 1) return false;
+        log("delete selected BotFrame");
+        frames.remove(currentFrame);
+        setCurrentFrame(frames.get(Math.min(currentFrameIndex, (frames.size() - 1))));
+        return true;
+    }
+
+    // Shift current frame to left or right by 1 position
+    // Abort if the frame is already at the end of desired direction
+    public boolean rearrangeCurrentFrame(boolean toLeft){
+        // Abort if the frame is already at the end of desired direction
+        if ((toLeft && currentFrameIndex <= 0) || (!toLeft && currentFrameIndex >= frames.size() - 1)) return false;
+        log("rearrange selected BotFrame");
+        // Rearrange
+        frames.remove(currentFrame);
+        currentFrameIndex = toLeft ? currentFrameIndex - 1 : currentFrameIndex + 1;
+        frames.add(currentFrameIndex, currentFrame);
+        return true;
+    }
+
+
+    /* Logging */
+
+    private void log(String msg){
+        System.out.printf("[%s] %s%n", getClass().getSimpleName(), msg);
+    }
+}
