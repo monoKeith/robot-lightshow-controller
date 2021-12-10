@@ -179,6 +179,15 @@ public class PropertiesView {
         control.deleteCurrentFrame();
     }
 
+    @FXML
+    public void moveToLeft(){
+        control.rearrangeSelectedFrame(true);
+    }
+
+    @FXML
+    public void moveToRight(){
+        control.rearrangeSelectedFrame(false);
+    }
 
     /* UUID map */
 

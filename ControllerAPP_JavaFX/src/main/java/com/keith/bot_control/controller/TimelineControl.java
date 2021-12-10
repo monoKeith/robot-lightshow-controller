@@ -67,7 +67,7 @@ public class TimelineControl {
 
     // sync frames on timeline with control
     // called when a new frame added (maybe add to middle of frames)
-    public void syncFrames(){
+    public void addMissingFrames(){
         // Add frames that are missing in view
         for (BotFrame frame: control.getFrames()){
             if (view.frameExist(frame)) continue;
@@ -78,6 +78,11 @@ public class TimelineControl {
 
     public void removeFrame(BotFrame frame){
         view.removeFrame(frame);
+    }
+
+    // sync the order of frames on timeline
+    public void syncFramesOrder(){
+        view.synchronizeFramesOrder(control.getFrames());
     }
 
     /* Logging */

@@ -209,32 +209,12 @@
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label text="Name" textFill="WHITE" GridPane.rowIndex="1">
+                              <Label text="Operations" textFill="WHITE" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="frameName" alignment="CENTER" maxWidth="-Infinity" onAction="#frameNameChange" prefHeight="25.0" prefWidth="100.0" style="-fx-text-fill: white; -fx-background-color: rgba(255, 255, 255, 0.35);" text="unknown" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label text="LightBot ID" textFill="WHITE" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <CheckBox fx:id="displayLightBotID" mnemonicParsing="false" onAction="#displayLightBotIdUpdate" selected="true" text="Show ID" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </CheckBox>
-                              <Label text="Operations" textFill="WHITE" GridPane.rowIndex="7">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#deleteCurrentFrame" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #f54287; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="Delete" textFill="WHITE">
                                        <font>
@@ -242,6 +222,45 @@
                                        </font>
                                     </Button>
                                     <Button mnemonicParsing="false" onAction="#duplicateCurrentFrame" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #4e43b5; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="Duplicate" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <Label text="Name" textFill="WHITE" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="frameName" alignment="CENTER" maxWidth="-Infinity" onAction="#frameNameChange" prefHeight="25.0" prefWidth="100.0" style="-fx-text-fill: white; -fx-background-color: rgba(255, 255, 255, 0.35);" text="unknown" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="LightBot ID" textFill="WHITE" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <CheckBox fx:id="displayLightBotID" mnemonicParsing="false" onAction="#displayLightBotIdUpdate" selected="true" text="Show ID" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </CheckBox>
+                              <Label text="Rearrange" textFill="WHITE" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#moveToLeft" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #1671a6; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="To Left" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#moveToRight" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #1671a6; -fx-border-color: #f5d0e5; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-insets: 2;" text="To Right" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>

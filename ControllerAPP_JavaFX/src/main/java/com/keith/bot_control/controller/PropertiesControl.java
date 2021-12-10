@@ -77,6 +77,10 @@ public class PropertiesControl {
         control.deleteCurrentFrame();
     }
 
+    public void rearrangeSelectedFrame(boolean toLeft){
+        control.rearrangeCurrentFrame(toLeft);
+    }
+
 
     /* Update */
 

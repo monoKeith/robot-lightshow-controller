@@ -70,7 +70,8 @@ public class TimelineView {
         alignFrameViewOrder();
     }
 
-    public void alignFrameViewOrder(){
+    // Used internally to update order of frames displayed in view
+    private void alignFrameViewOrder(){
         // Clear all currently displayed frames from view
         frameCollection.getChildren().clear();
         // Add all frames to display
@@ -78,6 +79,15 @@ public class TimelineView {
             Node frameNode = frameView_Node_Map.get(frameView);
             frameCollection.getChildren().add(frameNode);
         }
+    }
+
+    // Synchronize order of frames to required order, only works when all frames already exist in timeline
+    public void synchronizeFramesOrder(ArrayList<BotFrame> frames){
+        frameViews.clear();
+        for (BotFrame frame: frames){
+            frameViews.add(botFrame_View_Map.get(frame));
+        }
+        alignFrameViewOrder();
     }
 
     // Cleanup data structure accordingly and refresh
