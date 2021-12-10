@@ -10,19 +10,16 @@ public class FramesManager {
     private BotFrame currentFrame;
 
     public FramesManager(){
-
-    }
-
-    public void initCurrentFrame(){
-        // Testing only
         frames = new ArrayList<>();
+        // Only for testing, create random frames
         for (int i = 1; i <= 10; i++){
             frames.add(BotFrame.sampleFrame("Frame_" + i));
         }
-        setCurrentFrame(frames.get(0));
+        setCurrentFrame(0);
     }
 
-    /* Getter and setters */
+
+    /* Getters */
 
     public ArrayList<BotFrame> getFrames(){
         return frames;
@@ -46,11 +43,18 @@ public class FramesManager {
         currentFrame.setSelecte(true);
     }
 
+    public void setCurrentFrame(int index){
+        if (currentFrame != null) currentFrame.setSelecte(false);
+        currentFrameIndex = index;
+        currentFrame = frames.get(index);
+        currentFrame.setSelecte(true);
+    }
+
     // set current frame to next frame, return false if there's no next frame
     public boolean nextFrame(){
         int nextFrameIndex = currentFrameIndex + 1;
         if (nextFrameIndex >= getFrames().size()) return false;
-        setCurrentFrame(frames.get(nextFrameIndex));
+        setCurrentFrame(nextFrameIndex);
         return true;
     }
 
@@ -66,7 +70,7 @@ public class FramesManager {
         if (frames.size() <= 1) return false;
         log("delete selected BotFrame");
         frames.remove(currentFrame);
-        setCurrentFrame(frames.get(Math.min(currentFrameIndex, (frames.size() - 1))));
+        setCurrentFrame(Math.min(currentFrameIndex, (frames.size() - 1)));
         return true;
     }
 
