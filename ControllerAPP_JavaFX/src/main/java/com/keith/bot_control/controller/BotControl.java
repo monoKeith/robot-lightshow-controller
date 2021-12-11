@@ -209,8 +209,10 @@ public class BotControl {
 
     // Refresh related views when selected frame changed
     private void selectedFrameChanged(){
+        globalControl.refreshView();
         dotsCanvasControl.refreshView();
-        updateCurrentFrameProperties();
+        propertiesControl.refreshView();
+        timelineControl.refreshSelection();
     }
 
     // Called by Properties Control when properties of current Frame changed
@@ -231,7 +233,7 @@ public class BotControl {
     }
 
     public void save(){
-        framesManager.save();
+        framesManager.save(stage);
     }
 
 

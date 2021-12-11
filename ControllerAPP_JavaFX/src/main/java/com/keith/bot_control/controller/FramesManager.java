@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -41,32 +41,53 @@ public class FramesManager {
 
     /* Save & Load */
 
-    public void save(){
-        String json = parseToJSON();
-        log(json);
-        // TODO save as file
+    public void save(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open BotFrames file (json)");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("BotFrames file", "*.json"));
 
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile == null || !selectedFile.canWrite()){
+            log("invalid file, abort");
+            return;
+        }
+
+        try {
+            FileWriter writer = new FileWriter(selectedFile);
+            parseToJSON(writer);
+            writer.close();
+        } catch (IOException e) {
+            log("failed to save to file, abort");
+            e.printStackTrace();
+        }
     }
 
     public void load(Stage stage){
         // Open file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open BotFrames file (json)");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("BotFrames file", "*.json")
-        );
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("BotFrames file", "*.json"));
         File selectedFile = fileChooser.showOpenDialog(stage);
-        // load from JSON
-        
+        // Load from JSON
+        try {
+            FileReader reader = new FileReader(selectedFile);
+            loadFromJSON(reader);
+            reader.close();
+        } catch (FileNotFoundException e) {
+            log("failed to read file, abort");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private String parseToJSON(){
-        return gson.toJson(frames);
+    private void parseToJSON(FileWriter writer){
+        gson.toJson(frames, writer);
     }
 
-    private void loadFromJSON(String jsonString){
+    private void loadFromJSON(FileReader reader){
         Type framesType = new TypeToken<ArrayList<BotFrame>>(){}.getType();
-        frames = gson.fromJson(jsonString, framesType);
+        frames = gson.fromJson(reader, framesType);
         currentFrame = frames.get(0);
         currentFrameIndex = 0;
     }
