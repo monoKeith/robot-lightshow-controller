@@ -40,6 +40,8 @@ public class BotControlAPP extends Application {
             botControl.terminate();
         });
 
+        botControl.setStage(stage);
+
         // Start application
         stage.show();
     }

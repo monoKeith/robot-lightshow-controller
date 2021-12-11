@@ -8,7 +8,10 @@ import com.keith.bot_control.model.ColorAdapter;
 import com.keith.bot_control.model.PointAdapter;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -39,13 +42,22 @@ public class FramesManager {
     /* Save & Load */
 
     public void save(){
+        String json = parseToJSON();
+        log(json);
+        // TODO save as file
 
     }
 
-    public void load(){
-        String json = parseToJSON();
-        log(json);
-        loadFromJSON(json);
+    public void load(Stage stage){
+        // Open file chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open BotFrames file (json)");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("BotFrames file", "*.json")
+        );
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        // load from JSON
+        
     }
 
     private String parseToJSON(){

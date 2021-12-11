@@ -5,11 +5,15 @@ import com.keith.bot_control.model.BotMessage;
 import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.model.TransmitterMQTT;
 import javafx.geometry.Point2D;
+import javafx.stage.Stage;
 
 import java.util.*;
 
 public class BotControl {
     private final UUID uuid;
+
+    // Stage for opening new dialog
+    Stage stage;
 
     // Controllers
     private final ConnectionControl connectionControl;
@@ -46,8 +50,6 @@ public class BotControl {
         // Manager
         arrivalManager = new ArrivalManager();
         framesManager = new FramesManager();
-        framesManager.load();
-
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
@@ -113,6 +115,12 @@ public class BotControl {
             return true;
         }
         return false;
+    }
+
+    /* Setter */
+
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
 
 
@@ -201,10 +209,8 @@ public class BotControl {
 
     // Refresh related views when selected frame changed
     private void selectedFrameChanged(){
-        globalControl.refreshView();
         dotsCanvasControl.refreshView();
-        propertiesControl.refreshView();
-        timelineControl.refreshSelection();
+        updateCurrentFrameProperties();
     }
 
     // Called by Properties Control when properties of current Frame changed
@@ -212,6 +218,20 @@ public class BotControl {
         globalControl.refreshView();
         propertiesControl.refreshFrameProperties();
         timelineControl.refreshCurrentFrame();
+    }
+
+
+    /* Save & Load */
+
+    public void load(){
+        framesManager.load(stage);
+        // Update view
+        timelineControl.initView();
+        selectedFrameChanged();
+    }
+
+    public void save(){
+        framesManager.save();
     }
 
 

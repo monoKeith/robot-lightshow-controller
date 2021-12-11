@@ -18,6 +18,7 @@ public class TimelineControl {
         this.view = view;
     }
 
+
     /* Selection */
 
     public void selectFrame(BotFrame frame){
@@ -34,8 +35,8 @@ public class TimelineControl {
     /* Refresh */
 
     public void initView(){
-        // Clear current frame?
-
+        // Clear current frame
+        view.removeAllFrames();
         // Add all frames
         for (BotFrame frame: control.getFrames()){
             view.appendNewFrame(frame);

@@ -126,4 +126,12 @@ public class TimelineView {
         view.refresh();
     }
 
+    public void removeAllFrames(){
+        frameViews.clear();
+        frameView_Node_Map.clear();
+        botFrame_View_Map.clear();
+        // Clear all currently displayed frames from view
+        frameCollection.getChildren().clear();
+    }
+
 }
