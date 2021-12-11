@@ -1,14 +1,18 @@
 package com.keith.bot_control.model;
 
+import com.google.gson.annotations.Expose;
 import javafx.scene.paint.Color;
 
 import java.util.*;
 
 public class BotFrame {
 
-    private String name;
-    private Set<BotPixel> pixels;
-    private boolean selected;
+    @Expose(serialize = true)
+    public String name;
+    @Expose(serialize = true)
+    public Set<BotPixel> pixels;
+    @Expose(serialize = true)
+    public boolean selected;
     // Pixels selected in canvas
     private final Set<BotPixel> selectedPixels;
 

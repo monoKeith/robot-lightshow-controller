@@ -1,8 +1,14 @@
 package com.keith.bot_control.model;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
 import com.keith.bot_control.view.FrameView;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
+
+import java.lang.reflect.Type;
 
 import static com.keith.bot_control.controller.DotsCanvasControl.*;
 
@@ -25,14 +31,17 @@ public class BotPixel {
     public static final Color SELECTION_RING_COLOR = Color.web("#ff007b");
 
     // Pixel Properties
+    @Expose(serialize = true)
+    public Point2D pixelLocation;
     private Point2D physicalLocation;
-    private Point2D pixelLocation;
     private Point2D pixelPreviewLocation;
     private Point2D pixelTimelineLocation;
-    private Color color;
+    @Expose(serialize = true)
+    public Color color;
     private Color previewColor;
     // Mapping related
-    private int pixelId;
+    @Expose(serialize = true)
+    public int pixelId;
 
     public BotPixel(double x, double y, Color color, int Id){
         setPixelLocation(new Point2D(x, y));

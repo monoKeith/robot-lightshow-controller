@@ -1,21 +1,36 @@
 package com.keith.bot_control.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.keith.bot_control.model.BotFrame;
+import com.keith.bot_control.model.ColorAdapter;
+import com.keith.bot_control.model.PointAdapter;
+import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public class FramesManager {
-    private ArrayList<BotFrame> frames;
+    private final ArrayList<BotFrame> frames;
     private int currentFrameIndex;
     private BotFrame currentFrame;
 
     public FramesManager(){
         frames = new ArrayList<>();
         // Only for testing, create random frames
-        for (int i = 1; i <= 10; i++){
+        for (int i = 1; i <= 3; i++){
             frames.add(BotFrame.sampleFrame("Frame_" + i));
         }
         setCurrentFrame(0);
+
+        // Test serialize
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Point2D.class, new PointAdapter());
+        builder.registerTypeAdapter(Color.class, new ColorAdapter());
+        builder.excludeFieldsWithoutExposeAnnotation();
+        Gson gson = builder.setPrettyPrinting().create();
+        String aFrame = gson.toJson(frames);
+        log(aFrame);
     }
 
 
