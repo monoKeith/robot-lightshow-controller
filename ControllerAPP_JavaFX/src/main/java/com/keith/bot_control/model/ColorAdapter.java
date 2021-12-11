@@ -1,26 +1,20 @@
 package com.keith.bot_control.model;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.*;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
 
-public class ColorAdapter extends TypeAdapter<Color> {
-
-    private static final String COLOR = "color";
+public class ColorAdapter implements JsonSerializer<Color>, JsonDeserializer<Color> {
 
     @Override
-    public void write(JsonWriter jsonWriter, Color color) throws IOException {
-        jsonWriter.beginObject();
-        jsonWriter.name(COLOR);
-        jsonWriter.value(color.toString());
-        jsonWriter.endObject();
+    public JsonElement serialize(Color color, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(color.toString());
     }
 
     @Override
-    public Color read(JsonReader jsonReader) throws IOException {
-        return null;
+    public Color deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        String colorCode = jsonElement.toString();
+        return Color.web(colorCode);
     }
 }

@@ -31,16 +31,13 @@ public class BotPixel {
     public static final Color SELECTION_RING_COLOR = Color.web("#ff007b");
 
     // Pixel Properties
-    @Expose(serialize = true)
     public Point2D pixelLocation;
-    private Point2D physicalLocation;
-    private Point2D pixelPreviewLocation;
-    private Point2D pixelTimelineLocation;
-    @Expose(serialize = true)
+    public Point2D physicalLocation;
+    public Point2D pixelPreviewLocation;
+    public Point2D pixelTimelineLocation;
     public Color color;
-    private Color previewColor;
+    public Color previewColor;
     // Mapping related
-    @Expose(serialize = true)
     public int pixelId;
 
     public BotPixel(double x, double y, Color color, int Id){

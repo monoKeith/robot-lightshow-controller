@@ -7,17 +7,16 @@ import java.util.*;
 
 public class BotFrame {
 
-    @Expose(serialize = true)
     public String name;
-    @Expose(serialize = true)
     public Set<BotPixel> pixels;
-    @Expose(serialize = true)
     public boolean selected;
     // Pixels selected in canvas
-    private final Set<BotPixel> selectedPixels;
+    @Expose(serialize = false, deserialize = false)
+    public final Set<BotPixel> selectedPixels;
 
     // Map UUID of connected bots -> BotPixel ID
-    public static Map<Integer, UUID> pixelIdMap = new HashMap<>();;
+    @Expose(serialize = false, deserialize = false)
+    public static Map<Integer, UUID> pixelIdMap = new HashMap<>();
 
     public BotFrame(String name){
         this.name = name;

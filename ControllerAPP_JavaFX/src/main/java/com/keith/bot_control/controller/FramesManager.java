@@ -23,16 +23,25 @@ public class FramesManager {
         }
         setCurrentFrame(0);
 
-        // Test serialize
+        save();
+
+        // Test deserialize
+
+    }
+
+
+    /* Save & Load */
+
+    public void save(){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Point2D.class, new PointAdapter());
         builder.registerTypeAdapter(Color.class, new ColorAdapter());
-        builder.excludeFieldsWithoutExposeAnnotation();
-        Gson gson = builder.setPrettyPrinting().create();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
         String aFrame = gson.toJson(frames);
+        // Save to file
         log(aFrame);
     }
-
 
     /* Getters */
 
