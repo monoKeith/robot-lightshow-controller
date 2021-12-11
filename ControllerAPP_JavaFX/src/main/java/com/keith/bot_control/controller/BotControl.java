@@ -46,6 +46,8 @@ public class BotControl {
         // Manager
         arrivalManager = new ArrivalManager();
         framesManager = new FramesManager();
+        framesManager.load();
+
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;

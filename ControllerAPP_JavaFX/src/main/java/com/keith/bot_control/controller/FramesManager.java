@@ -2,45 +2,61 @@ package com.keith.bot_control.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.keith.bot_control.model.BotFrame;
 import com.keith.bot_control.model.ColorAdapter;
 import com.keith.bot_control.model.PointAdapter;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class FramesManager {
-    private final ArrayList<BotFrame> frames;
+    private ArrayList<BotFrame> frames;
     private int currentFrameIndex;
     private BotFrame currentFrame;
 
+    // Gson related
+    private final Gson gson;
+
     public FramesManager(){
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Point2D.class, new PointAdapter());
+        builder.registerTypeAdapter(Color.class, new ColorAdapter());
+        builder.setPrettyPrinting();
+        gson = builder.create();
+
         frames = new ArrayList<>();
         // Only for testing, create random frames
         for (int i = 1; i <= 3; i++){
             frames.add(BotFrame.sampleFrame("Frame_" + i));
         }
         setCurrentFrame(0);
-
-        save();
-
-        // Test deserialize
-
     }
 
 
     /* Save & Load */
 
     public void save(){
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Point2D.class, new PointAdapter());
-        builder.registerTypeAdapter(Color.class, new ColorAdapter());
-        builder.setPrettyPrinting();
-        Gson gson = builder.create();
-        String aFrame = gson.toJson(frames);
-        // Save to file
-        log(aFrame);
+
+    }
+
+    public void load(){
+        String json = parseToJSON();
+        log(json);
+        loadFromJSON(json);
+    }
+
+    private String parseToJSON(){
+        return gson.toJson(frames);
+    }
+
+    private void loadFromJSON(String jsonString){
+        Type framesType = new TypeToken<ArrayList<BotFrame>>(){}.getType();
+        frames = gson.fromJson(jsonString, framesType);
+        currentFrame = frames.get(0);
+        currentFrameIndex = 0;
     }
 
     /* Getters */

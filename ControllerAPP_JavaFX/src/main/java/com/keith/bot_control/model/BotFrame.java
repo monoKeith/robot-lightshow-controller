@@ -11,7 +11,7 @@ public class BotFrame {
     public Set<BotPixel> pixels;
     public boolean selected;
     // Pixels selected in canvas
-    @Expose(serialize = false, deserialize = false)
+//    @Expose(serialize = false, deserialize = false)
     public final Set<BotPixel> selectedPixels;
 
     // Map UUID of connected bots -> BotPixel ID
