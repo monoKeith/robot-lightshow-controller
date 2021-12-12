@@ -23,6 +23,7 @@ public class PropertiesControl {
         this.view = view;
     }
 
+
     /* Handlers - BotPixel Properties */
 
     // If only one pixel selected, returns the selected pixel, otherwise null

@@ -1,6 +1,5 @@
 package com.keith.bot_control.model;
 
-import com.google.gson.annotations.Expose;
 import com.keith.bot_control.view.FrameView;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;

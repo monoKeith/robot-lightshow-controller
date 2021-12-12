@@ -31,8 +31,8 @@ public class FramesManager {
         gson = builder.create();
 
         frames = new ArrayList<>();
-        // Only for testing, create random frames
-        for (int i = 1; i <= 3; i++){
+        // Create one frames
+        for (int i = 1; i <= 1; i++){
             frames.add(BotFrame.sampleFrame("Frame_" + i));
         }
         setCurrentFrame(0);

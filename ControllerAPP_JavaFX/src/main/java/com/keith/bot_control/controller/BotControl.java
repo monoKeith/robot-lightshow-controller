@@ -13,7 +13,7 @@ public class BotControl {
     private final UUID uuid;
 
     // Stage for opening new dialog
-    Stage stage;
+    private Stage stage;
 
     // Controllers
     private final ConnectionControl connectionControl;
