@@ -73,6 +73,14 @@ public class BotControl {
         // Default velocity
         resetSpeed();
 
+        // Power on pulse
+        location.update();
+        try {
+            transmitter.powerOnMessage(location);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
         // Start connection handler thread
         new Thread(this::connectionThread).start();
     }

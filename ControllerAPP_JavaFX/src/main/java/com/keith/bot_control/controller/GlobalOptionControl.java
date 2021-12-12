@@ -44,7 +44,7 @@ public class GlobalOptionControl {
             // Button state
             view.updateButtonState(botControl.getGlobalState());
             // Connected Bot counts
-            view.setConnectedBotsCount(botControl.getConnectedBots().size());
+            view.setConnectedBotsCount(botControl.getConnectedBotsCount());
             // Current Frame name
             view.setCurrentFrameName(botControl.getCurrentFrame().getName());
         });

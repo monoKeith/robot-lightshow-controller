@@ -70,13 +70,12 @@ public class BotFrame {
     }
 
     public static void recordConnection(UUID uuid, Point2D location){
-        // Fast workaround assign ID based on x-coordinate
+        // Fast workaround: assign ID based on x-coordinate
         xOrigins.add(location.getX());
         botLocations.put(location.getX(), uuid);
         // When all bots connected
         if (xOrigins.size() == TOTAL_PIXEL_COUNT){
             int pixelId = 0;
-
             while (!xOrigins.isEmpty()){
                 double xCoordinate = xOrigins.poll();
                 uuid = botLocations.get(xCoordinate);

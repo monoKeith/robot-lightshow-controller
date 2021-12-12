@@ -36,7 +36,7 @@ public class BotControl {
     private Boolean msgProcessorStopSignal;
 
     // UUIDs of connected bots
-    private Set<UUID> connectedBots;
+    private int connectedBotsCount;
 
 
     public BotControl() {
@@ -54,7 +54,7 @@ public class BotControl {
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
         // Init vars
-        connectedBots = new HashSet<>();
+        connectedBotsCount = 0;
         showPixelId = true;
         // Init message processor
         initMsgProcessor();
@@ -87,8 +87,8 @@ public class BotControl {
         return timelineControl;
     }
 
-    public Set<UUID> getConnectedBots(){
-        return connectedBots;
+    public int getConnectedBotsCount(){
+        return connectedBotsCount;
     }
 
     public ArrayList<BotFrame> getFrames(){
@@ -173,7 +173,7 @@ public class BotControl {
             }
             case DISCONNECTED -> {
                 // Update global state to IDLE
-                connectedBots.clear();
+                connectedBotsCount = 0;
                 arrivalManager.reset();
                 BotFrame.clearConnectedBots();
                 propertiesControl.refreshConnectedBots();
@@ -304,7 +304,7 @@ public class BotControl {
         switch (msg.getTopic()){
             case TransmitterMQTT.UUID_TOPIC -> {
                 BotFrame.recordConnection(msg.msgUUID(), msg.botLocation());
-                connectedBots.add(uuid);
+                connectedBotsCount += 1;
                 globalControl.refreshView();
                 propertiesControl.refreshConnectedBots();
             }
@@ -321,7 +321,7 @@ public class BotControl {
     public void refreshConnections(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         log("refresh LightBot connections");
-        connectedBots.clear();
+        connectedBotsCount = 0;
         globalControl.refreshView();
         propertiesControl.refreshConnectedBots();
         BotMessage msg = BotMessage.reportUUID();
@@ -351,7 +351,6 @@ public class BotControl {
 
     // Send message to all bots, update target location
     private void publishTargets(){
-        // TODO optimize location for each bot in BotFrame class!!!
         Map<BotPixel, UUID> targetMap = getCurrentFrame().getTargetMap();
 
         arrivalManager.setPending(targetMap);
