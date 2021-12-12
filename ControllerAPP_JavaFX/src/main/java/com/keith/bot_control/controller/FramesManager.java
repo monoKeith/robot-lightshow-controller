@@ -28,6 +28,7 @@ public class FramesManager {
         builder.registerTypeAdapter(Point2D.class, new PointAdapter());
         builder.registerTypeAdapter(Color.class, new ColorAdapter());
         builder.setPrettyPrinting();
+        builder.setExclusionStrategies();
         gson = builder.create();
 
         frames = new ArrayList<>();
@@ -45,13 +46,21 @@ public class FramesManager {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open BotFrames file (json)");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("BotFrames file", "*.json"));
-
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile == null || !selectedFile.canWrite()){
+        // Choose location
+        File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile == null) {
             log("invalid file, abort");
             return;
+        } else {
+            try {
+                selectedFile.createNewFile();
+            } catch (IOException e) {
+                log("failed to create new file");
+                e.printStackTrace();
+                return;
+            }
         }
-
+        // Save tile
         try {
             FileWriter writer = new FileWriter(selectedFile);
             parseToJSON(writer);
@@ -60,10 +69,12 @@ public class FramesManager {
             log("failed to save to file, abort");
             e.printStackTrace();
         }
+        // Done
+        log("successfully saved frames to file");
     }
 
     public void load(Stage stage){
-        // Open file chooser
+        // Chooser location
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open BotFrames file (json)");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("BotFrames file", "*.json"));
@@ -79,6 +90,8 @@ public class FramesManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // Done
+        log("successfully loaded frames from file");
     }
 
     private void parseToJSON(FileWriter writer){
@@ -88,8 +101,17 @@ public class FramesManager {
     private void loadFromJSON(FileReader reader){
         Type framesType = new TypeToken<ArrayList<BotFrame>>(){}.getType();
         frames = gson.fromJson(reader, framesType);
-        currentFrame = frames.get(0);
+        // Which frame is selected?
+        for (BotFrame frame: frames){
+            if (frame.isSelected()){
+                currentFrame = frame;
+                currentFrameIndex = frames.indexOf(frame);
+                return;
+            }
+        }
+        // No selected frame
         currentFrameIndex = 0;
+        currentFrame = frames.get(currentFrameIndex);
     }
 
     /* Getters */

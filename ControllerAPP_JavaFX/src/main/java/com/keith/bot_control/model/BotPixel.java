@@ -1,8 +1,5 @@
 package com.keith.bot_control.model;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.keith.bot_control.view.FrameView;
 import javafx.geometry.Point2D;
@@ -36,6 +33,7 @@ public class BotPixel {
     public Point2D pixelPreviewLocation;
     public Point2D pixelTimelineLocation;
     public Color color;
+    @Expose(serialize = false, deserialize = false)
     public Color previewColor;
     // Mapping related
     public int pixelId;
