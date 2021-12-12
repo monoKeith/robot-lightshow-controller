@@ -15,8 +15,6 @@ public class DotsCanvasControl {
 
     // resolution of the canvas, default 720x720, must be square for now
     public static int CANVAS_RESOLUTION = 720;
-    // size of playground in Webots, must be square for now (unit: meter)
-    public static int PLAYGROUND_SIZE = 3;
 
     private final BotControl control;
     private DotsView view;

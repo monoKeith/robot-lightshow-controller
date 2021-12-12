@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import static com.keith.bot_control.controller.DotsCanvasControl.*;
 
 public class BotPixel {
+    // size of playground in Webots, must be square for now (unit: meter)
+    public static final int PLAYGROUND_SIZE = 3;
 
     // Constants: drawing pixels on canvas
     public static final int PIXEL_R = 16;
@@ -20,8 +22,6 @@ public class BotPixel {
     public static final double T_PIXEL_D = 2 * T_PIXEL_R;
 
     // Default values
-    public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
-    public static final Color DEFAULT_COLOR = Color.ORANGE;
     public static final Color SELECTION_RING_COLOR = Color.web("#ff007b");
 
     // Pixel Properties

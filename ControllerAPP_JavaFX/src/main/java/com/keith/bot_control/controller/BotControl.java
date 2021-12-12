@@ -173,9 +173,9 @@ public class BotControl {
             }
             case DISCONNECTED -> {
                 // Update global state to IDLE
-                connectedBots = new HashSet<>();
+                connectedBots.clear();
                 arrivalManager.reset();
-                BotFrame.updatePixelIdMap(connectedBots);
+                BotFrame.clearConnectedBots();
                 propertiesControl.refreshConnectedBots();
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
@@ -303,14 +303,13 @@ public class BotControl {
         log("processing message: " + msg);
         switch (msg.getTopic()){
             case TransmitterMQTT.UUID_TOPIC -> {
-                connectedBots.add(UUID.fromString(msg.getMessage()));
+                BotFrame.recordConnection(msg.msgUUID(), msg.botLocation());
+                connectedBots.add(uuid);
                 globalControl.refreshView();
-                // TODO optimize this, make it more efficient
-                BotFrame.updatePixelIdMap(connectedBots);
                 propertiesControl.refreshConnectedBots();
             }
             case TransmitterMQTT.ARRIVAL_TOPIC -> {
-                arrivalManager.arrive(msg.arrivalMsgUUID(), msg.arrivalPoint());
+                arrivalManager.arrive(msg.msgUUID(), msg.botLocation());
             }
         }
     }

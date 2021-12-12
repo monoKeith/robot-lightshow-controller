@@ -124,7 +124,7 @@ public class BotControl {
                     case "UUID" -> {
                         // Report UUID
                         try {
-                            transmitter.reportUUID();
+                            transmitter.powerOnMessage(location);
                         } catch (MqttException e) {
                             System.out.println("Failed to report UUID!");
                             e.printStackTrace();
@@ -238,7 +238,7 @@ public class BotControl {
         if (locationReported) return;
         System.out.println("Arrived.");
         try {
-            transmitter.reportLocation(location);
+            transmitter.arrivalMessage(location);
             locationReported = true;
         } catch (MqttException e) {
             System.out.println("Failed to publish arrival message!");

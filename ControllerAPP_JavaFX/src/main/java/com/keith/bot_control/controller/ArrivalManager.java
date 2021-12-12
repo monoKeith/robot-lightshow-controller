@@ -6,13 +6,14 @@ import javafx.geometry.Point2D;
 import java.util.*;
 
 public class ArrivalManager {
-    private static final double posAccuracy = 0.02;
+    private static final double posAccuracy = 0.05;
     // Async class to manage LightBots arrival conditions
+    private final Map<UUID, Point2D> locationMap;
     private Set<UUID> pending;
-    private Map<UUID, Point2D> locationMap;
     private boolean initialized;
 
     public ArrivalManager(){
+        locationMap = new HashMap<>();
         reset();
     }
 
@@ -21,7 +22,7 @@ public class ArrivalManager {
     }
 
     public synchronized void setPending(Map<BotPixel, UUID> pixelMap) {
-        this.locationMap = new HashMap<UUID, Point2D>();
+        this.locationMap.clear();
         for (Map.Entry<BotPixel, UUID> entry: pixelMap.entrySet()){
             Point2D location = entry.getKey().getPhysicalLocation();
             UUID uuid = entry.getValue();

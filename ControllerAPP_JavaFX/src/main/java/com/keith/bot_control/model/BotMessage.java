@@ -51,15 +51,16 @@ public class BotMessage {
         return String.format("Topic: %s Message: %s", topic, message);
     }
 
-    // Try to extract UUID from an arrival message
-    public UUID arrivalMsgUUID(){
-        if (!topic.equals(TransmitterMQTT.ARRIVAL_TOPIC)) return null;
+    // Try to extract UUID from an arrival or uuid message
+    public UUID msgUUID(){
+        if (!(topic.equals(TransmitterMQTT.ARRIVAL_TOPIC) || topic.equals(TransmitterMQTT.UUID_TOPIC))) return null;
         String uuidString = message.toString().split(" ")[0];
         return UUID.fromString(uuidString);
     }
 
-    public Point2D arrivalPoint(){
-        if (!topic.equals(TransmitterMQTT.ARRIVAL_TOPIC)) return null;
+    // arrival_topic and uuid_topic report location in same format
+    public Point2D botLocation(){
+        if (!(topic.equals(TransmitterMQTT.ARRIVAL_TOPIC) || topic.equals(TransmitterMQTT.UUID_TOPIC))) return null;
         String[] msg = message.toString().split(" ");
         return new Point2D(Double.parseDouble(msg[1]), Double.parseDouble(msg[2]));
     }

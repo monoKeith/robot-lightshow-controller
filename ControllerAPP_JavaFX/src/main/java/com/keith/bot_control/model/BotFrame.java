@@ -2,24 +2,28 @@ package com.keith.bot_control.model;
 
 import com.google.gson.annotations.Expose;
 import com.keith.bot_control.controller.DotsCanvasControl;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
 import java.util.*;
 
 public class BotFrame {
 
-    public static final int PIXEL_PER_LINE = 30;
+    public static final int TOTAL_PIXEL_COUNT = 30;
+    public static final Color DEFAULT_COLOR = Color.ORANGE;
 
     public String name;
     public Set<BotPixel> pixels;
     public boolean selected;
     // Pixels selected in canvas
-//    @Expose(serialize = false, deserialize = false)
-    public final Set<BotPixel> selectedPixels;
+    public Set<BotPixel> selectedPixels;
 
     // Map UUID of connected bots -> BotPixel ID
     @Expose(serialize = false, deserialize = false)
     public static Map<Integer, UUID> pixelIdMap = new HashMap<>();
+    // ONLY for assigning pixel ID during startup
+    public static Map<Double, UUID> botLocations = new HashMap<>();
+    public static PriorityQueue<Double> xOrigins = new PriorityQueue<>();
 
     public BotFrame(String name){
         this.name = name;
@@ -40,7 +44,8 @@ public class BotFrame {
     public static BotFrame sampleFrame(String name){
         BotFrame frame = new BotFrame(name);
 //        frame.pixels = randomPixels(5);
-        frame.pixels = pixelsInLine();
+        // Create a line of pixels at y=50
+        frame.pixels = pixelsInLine(50);
         return frame;
     }
 
@@ -48,30 +53,43 @@ public class BotFrame {
         Set<BotPixel> pixels = new HashSet<>();
         Random random = new Random();
         for (int id = 0; id < size; id ++){
-            pixels.add(new BotPixel(random.nextInt(650) + 50, random.nextInt(650) + 50, Color.ORANGE, id));
+            pixels.add(new BotPixel(random.nextInt(650) + 50, random.nextInt(650) + 50, DEFAULT_COLOR, id));
         }
         return pixels;
     }
 
-    public static Set<BotPixel> pixelsInLine(){
+    public static Set<BotPixel> pixelsInLine(int y){
         Set<BotPixel> pixels = new HashSet<>();
-        int spacing = (DotsCanvasControl.CANVAS_RESOLUTION - 50) / PIXEL_PER_LINE;
-        int y = 50;
+        int spacing = (DotsCanvasControl.CANVAS_RESOLUTION - 50) / TOTAL_PIXEL_COUNT;
         // Generate one line of pixels
-        for (int id = 0; id < PIXEL_PER_LINE; id ++){
+        for (int id = 0; id < TOTAL_PIXEL_COUNT; id ++){
             BotPixel newPixel = new BotPixel(spacing * id + 50, y, Color.ORANGE, id);
             pixels.add(newPixel);
         }
         return pixels;
     }
 
-    public static void updatePixelIdMap(Set<UUID> connectedBots){
-        // TODO optimize base on location of bots
-        pixelIdMap = new HashMap<>();
-        int pixelId = 0;
-        for (UUID uuid: connectedBots){
-            pixelIdMap.put(pixelId++, uuid);
+    public static void recordConnection(UUID uuid, Point2D location){
+        // Fast workaround assign ID based on x-coordinate
+        xOrigins.add(location.getX());
+        botLocations.put(location.getX(), uuid);
+        // When all bots connected
+        if (xOrigins.size() == TOTAL_PIXEL_COUNT){
+            int pixelId = 0;
+
+            while (!xOrigins.isEmpty()){
+                double xCoordinate = xOrigins.poll();
+                uuid = botLocations.get(xCoordinate);
+                pixelIdMap.put(pixelId++, uuid);
+            }
         }
+    }
+
+    // Gets call when disconnect from msg broker
+    public static void clearConnectedBots(){
+        pixelIdMap.clear();
+        xOrigins.clear();
+        botLocations.clear();
     }
 
     /* Getter and Setter */

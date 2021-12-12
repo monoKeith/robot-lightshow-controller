@@ -68,9 +68,6 @@ public class Transmitter {
             }
 
         });
-
-        // Report UUID once during startup
-        reportUUID();
     }
 
     private synchronized void queueMsg(String newMsg){
@@ -89,14 +86,19 @@ public class Transmitter {
         return newMsg;
     }
 
-    public void reportUUID() throws MqttException {
-        MqttMessage newMessage = new MqttMessage(uuid.toString().getBytes(StandardCharsets.UTF_8));
+    public void powerOnMessage(Location location) throws MqttException {
+        String message = String.format("%s %s %s",
+                uuid.toString(),
+                location.getX(),
+                location.getY()
+        );
+        MqttMessage newMessage = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
         newMessage.setQos(0);
         mqttClient.publish(UUID_TOPIC, newMessage);
     }
 
     // Report location
-    public void reportLocation(Location location) throws MqttException {
+    public void arrivalMessage(Location location) throws MqttException {
         String message = String.format("%s %s %s",
                 uuid.toString(),
                 location.getX(),
