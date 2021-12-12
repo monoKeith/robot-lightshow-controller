@@ -28,7 +28,6 @@ public class FramesManager {
         builder.registerTypeAdapter(Point2D.class, new PointAdapter());
         builder.registerTypeAdapter(Color.class, new ColorAdapter());
         builder.setPrettyPrinting();
-        builder.setExclusionStrategies();
         gson = builder.create();
 
         frames = new ArrayList<>();
@@ -106,8 +105,9 @@ public class FramesManager {
             if (frame.isSelected()){
                 currentFrame = frame;
                 currentFrameIndex = frames.indexOf(frame);
-                return;
             }
+            // A workaround to remove unnecessary data from file
+            frame.selectedPixels.clear();
         }
         // No selected frame
         currentFrameIndex = 0;

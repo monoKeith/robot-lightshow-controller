@@ -5,8 +5,6 @@ import com.keith.bot_control.view.FrameView;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
-import java.lang.reflect.Type;
-
 import static com.keith.bot_control.controller.DotsCanvasControl.*;
 
 public class BotPixel {
@@ -33,7 +31,6 @@ public class BotPixel {
     public Point2D pixelPreviewLocation;
     public Point2D pixelTimelineLocation;
     public Color color;
-    @Expose(serialize = false, deserialize = false)
     public Color previewColor;
     // Mapping related
     public int pixelId;
