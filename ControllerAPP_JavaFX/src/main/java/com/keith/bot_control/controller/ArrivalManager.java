@@ -19,6 +19,7 @@ public class ArrivalManager {
 
     public synchronized void reset(){
         initialized = false;
+        notifyAll();
     }
 
     public synchronized void setPending(Map<BotPixel, UUID> pixelMap) {

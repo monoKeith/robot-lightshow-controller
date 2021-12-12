@@ -351,12 +351,14 @@ public class BotControl {
             publishTargets();
             arrivalManager.waitForArrival();
             // Wait airtime
-//            try {
-//                Thread.sleep((long) (getCurrentFrame().getAirTime() * 1000));
-//            } catch (InterruptedException e) {
-//                log("interrupted when waiting for airtime");
-//                e.printStackTrace();
-//            }
+            double airTime = getCurrentFrame().getAirTime();
+            if (airTime <= 0) continue;
+            try {
+                Thread.sleep((long) (getCurrentFrame().getAirTime() * 1000));
+            } catch (InterruptedException e) {
+                log("interrupted when waiting for airtime");
+                e.printStackTrace();
+            }
         } while (nextFrame());
         updateGlobalState(GlobalOptionControl.State.READY);
     }
