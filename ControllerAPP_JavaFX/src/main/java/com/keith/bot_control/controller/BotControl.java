@@ -104,6 +104,11 @@ public class BotControl {
         dotsCanvasControl.refreshView();
     }
 
+    public void airTimeUpdate(double time){
+        getCurrentFrame().setAirTime(time);
+        propertiesControl.refreshFrameProperties();
+    }
+
     public BotFrame getCurrentFrame(){
         return framesManager.getCurrentFrame();
     }
@@ -345,6 +350,13 @@ public class BotControl {
         do {
             publishTargets();
             arrivalManager.waitForArrival();
+            // Wait airtime
+//            try {
+//                Thread.sleep((long) (getCurrentFrame().getAirTime() * 1000));
+//            } catch (InterruptedException e) {
+//                log("interrupted when waiting for airtime");
+//                e.printStackTrace();
+//            }
         } while (nextFrame());
         updateGlobalState(GlobalOptionControl.State.READY);
     }

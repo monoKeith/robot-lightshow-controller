@@ -70,6 +70,16 @@ public class PropertiesControl {
         control.setShowPixelId(val);
     }
 
+    public void airTimeUpdate(String airTime){
+        double time = 0;
+        try{
+            time = Double.parseDouble(airTime);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        control.airTimeUpdate(time);
+    }
+
     public void duplicateCurrentFrame(){
         control.duplicateCurrentFrame();
     }
@@ -121,6 +131,7 @@ public class PropertiesControl {
             BotFrame frame = control.getCurrentFrame();
 
             view.setFrameName(frame.getName());
+            view.setAirTime(frame.getAirTime());
         });
     }
 

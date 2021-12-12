@@ -46,7 +46,7 @@ public class PropertiesView {
     /* Frame properties */
 
     @FXML
-    protected TextField frameName;
+    protected TextField frameName, airTime;
 
     @FXML
     protected CheckBox displayLightBotID;
@@ -62,8 +62,6 @@ public class PropertiesView {
 
     @FXML
     protected TableColumn<Map.Entry<Integer, UUID>, String> botUUIDColumn;
-
-
 
 
     public PropertiesView(){
@@ -165,6 +163,10 @@ public class PropertiesView {
         frameName.setText(name);
     }
 
+    public void setAirTime(double time){
+        airTime.setText(time + "");
+    }
+
     public void displayLightBotIdUpdate(){
         control.showPixelIdUpdate(displayLightBotID.isSelected());
     }
@@ -180,6 +182,11 @@ public class PropertiesView {
     }
 
     @FXML
+    public void airTimeChange(Event e){
+        control.airTimeUpdate(airTime.getText());
+    }
+
+    @FXML
     public void moveToLeft(){
         control.rearrangeSelectedFrame(true);
     }
@@ -188,6 +195,7 @@ public class PropertiesView {
     public void moveToRight(){
         control.rearrangeSelectedFrame(false);
     }
+
 
     /* UUID map */
 

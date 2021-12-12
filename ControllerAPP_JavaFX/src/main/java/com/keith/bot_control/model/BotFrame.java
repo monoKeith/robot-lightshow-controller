@@ -15,11 +15,11 @@ public class BotFrame {
     public String name;
     public Set<BotPixel> pixels;
     public boolean selected;
+    public double airTime;
     // Pixels selected in canvas
     public Set<BotPixel> selectedPixels;
 
     // Map UUID of connected bots -> BotPixel ID
-    @Expose(serialize = false, deserialize = false)
     public static Map<Integer, UUID> pixelIdMap = new HashMap<>();
     // ONLY for assigning pixel ID during startup
     public static Map<Double, UUID> botLocations = new HashMap<>();
@@ -29,6 +29,7 @@ public class BotFrame {
         this.name = name;
         pixels = new HashSet<>();
         selected = false;
+        airTime = 0;
         selectedPixels = new HashSet<>();
     }
 
@@ -38,6 +39,8 @@ public class BotFrame {
         for (BotPixel pixel: this.pixels){
             newFrame.pixels.add(pixel.clone());
         }
+        // Copy airtime
+        newFrame.setAirTime(getAirTime());
         return newFrame;
     }
 
@@ -115,6 +118,14 @@ public class BotFrame {
 
     public Set<BotPixel> getSelectedPixels(){
         return selectedPixels;
+    }
+
+    public double getAirTime(){
+        return airTime;
+    }
+
+    public void setAirTime(double time){
+        this.airTime = time;
     }
 
     /* Render */
