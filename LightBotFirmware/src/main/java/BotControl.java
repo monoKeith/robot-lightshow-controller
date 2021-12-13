@@ -45,7 +45,7 @@ public class BotControl {
     private boolean locationReported;
 
     // Enable Logging
-    private final boolean LOG_ENABLE = false;
+    public static final boolean LOG_ENABLE = false;
 
     public BotControl(Transmitter transmitter) {
         robot = new Robot();
@@ -74,7 +74,7 @@ public class BotControl {
         // Flag
         locationReported = false;
         // Default velocity
-        resetSpeed();
+        resetVelocity();
 
         // Power on pulse
         location.update();
@@ -152,10 +152,14 @@ public class BotControl {
     // Mostly corresponds to movements of the robot
     public void controlThread(){
         location.update();
+        boolean arrived = location.arrived();
+
         if (LOG_ENABLE) {
             location.log();
+            System.out.println("arrived?" + arrived);
             System.out.println("State: " + movementState.toString());
         }
+
         // Update state according to current state
         switch (movementState) {
             case IDLE -> {
@@ -163,7 +167,7 @@ public class BotControl {
             }
             case STOP -> {
                 // Check position
-                if (!location.arrived()) {
+                if (!arrived) {
                     // Update state according to alignment
                     movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
                     movementState = location.noNeedToSpin() ? movementState : MovementStates.ROTATE;
@@ -174,8 +178,8 @@ public class BotControl {
                     movementState = MovementStates.FORWARD;
                 }
             }
-            case CURVE -> {
-                if (location.arrived()) {
+            case CURVE, FORWARD -> {
+                if (arrived) {
                     movementState = MovementStates.STOP;
                 } else if (location.noNeedToSpin()) {
                     movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
@@ -183,15 +187,8 @@ public class BotControl {
                     movementState = MovementStates.ROTATE;
                 }
             }
-            case FORWARD -> {
-                if (location.arrived()) {
-                    // Arrived
-                    movementState = MovementStates.STOP;
-                } else {
-                    // Not arrived yet, update state according to alignment
-                    movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
-                }
-            }
+            // Arrived
+            // Not arrived yet, update state according to alignment
             default -> {
                 System.out.println(
                         String.format("Unknown state: %s, abort.", movementState));
@@ -210,7 +207,7 @@ public class BotControl {
     }
 
     // Set wheel velocity to default value
-    private void resetSpeed(){
+    private void resetVelocity(){
         leftWheel.setVelocity(defaultV);
         rightWheel.setVelocity(defaultV);
     }
@@ -218,39 +215,55 @@ public class BotControl {
     // Adjust speed of motor according target direction
     // Sensitivity - One side reach stop when angle offset is 45 degrees
     private void curve(){
+        resetVelocity();
+
+//        double distanceToGo = location.getDistance() * moveConst;
+        double curLPosition = leftPosition.getValue();
+        double curRPosition = rightPosition.getValue();
+
         double speedOffset = (location.directionDiff() / 45) * defaultV;
-        speedOffset = max(0, speedOffset);
+        speedOffset = max(-defaultV, speedOffset);
         speedOffset = min(speedOffset, defaultV);
+
         leftWheel.setVelocity(defaultV - speedOffset);
         rightWheel.setVelocity(defaultV + speedOffset);
+        // Workaround to not set position to infinite
+        leftWheel.setPosition(curLPosition - speedOffset);
+        rightWheel.setPosition(curRPosition + speedOffset);
     }
 
     // Spin robot to point to a target direction
     private void spin(){
+        resetVelocity();
         double curLPosition = leftPosition.getValue();
         double curRPosition = rightPosition.getValue();
         double degreesToTurn = location.directionDiff() * spinConst;
         // Spin wheels in opposite direction
-        resetSpeed();
         leftWheel.setPosition(curLPosition - degreesToTurn);
         rightWheel.setPosition(curRPosition + degreesToTurn);
     }
 
     // Move forward, should be called only when aligned to target
     private void forward(){
+        resetVelocity();
         double curLPosition = leftPosition.getValue();
         double curRPosition = rightPosition.getValue();
         double distanceToGo = location.getDistance() * moveConst;
         // Spin wheels in same direction
-        resetSpeed();
         leftWheel.setPosition(curLPosition + distanceToGo);
         rightWheel.setPosition(curRPosition + distanceToGo);
     }
 
     private void arrived(){
+        // Stop robot
+        resetVelocity();
+        double curLPosition = leftPosition.getValue();
+        double curRPosition = rightPosition.getValue();
+        leftWheel.setPosition(curLPosition);
+        rightWheel.setPosition(curRPosition);
         // Only report once
         if (locationReported) return;
-        System.out.println("Arrived.");
+        if (LOG_ENABLE) System.out.println("Arrived.");
         try {
             transmitter.arrivalMessage(location);
             locationReported = true;

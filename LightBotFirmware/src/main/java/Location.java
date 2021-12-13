@@ -8,11 +8,12 @@ public class Location {
     // sampleRateMs - GPS and Compass sample rate (in ms)
     private static final int sampleRateMs   = BotControl.sampleRateMs;
     // posAccuracy - accuracy for detecting if target position is reached (in meter)
-    private static final double posAccuracy = 0.01;
+    private static final double posAccuracy = 0.02;
+    private static final double notVeryAccurate = 0.03;
     // spinAccuracy - accuracy for spinning towards target position (in degrees)
-    private static final double spinAccuracy = 5;
+    private static final double spinAccuracy = 10;
     // curveAccuracy - accuracy for curving towards target position (in degrees)
-    private static final double curveAccuracy = 0.1;
+    private static final double curveAccuracy = 2;
     // Sensors
     private GPS gps;
     private Compass compass;
@@ -50,16 +51,21 @@ public class Location {
     // True  - head pointing to correct direction
     // False - Need alignment
     public synchronized boolean noNeedToSpin(){
-        return Math.abs(curAngle - targetAngle) <= spinAccuracy;
+        return Math.abs(directionDiff()) <= spinAccuracy;
     }
 
     public synchronized boolean noNeedToCurve(){
-        return Math.abs(curAngle - targetAngle) <= curveAccuracy;
+        if (arrived()) return false;
+        return Math.abs(directionDiff()) <= curveAccuracy;
     }
 
     // Check if robot in target location
     public synchronized boolean arrived(){
         return (Math.abs(deltaX) <= posAccuracy) && (Math.abs(deltaY) <= posAccuracy);
+    }
+
+    public synchronized boolean notVeryAccurate(){
+        return (Math.abs(deltaX) <= notVeryAccurate) && (Math.abs(deltaY) <= notVeryAccurate);
     }
 
     public synchronized void update(){

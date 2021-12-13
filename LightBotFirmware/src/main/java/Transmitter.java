@@ -50,10 +50,12 @@ public class Transmitter {
 
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String msg = new String(message.getPayload());
-                System.out.println(
+                if (BotControl.LOG_ENABLE){
+                    System.out.println(
                         "\nReceived message:" +
                         "\n\tTopic:   " + topic +
                         "\n\tMessage: " +  msg + "\n");
+                }
 
                 // Save message to queue
                 queueMsg(msg);
