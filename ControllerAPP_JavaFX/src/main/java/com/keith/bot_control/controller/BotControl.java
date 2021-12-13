@@ -360,6 +360,8 @@ public class BotControl {
         do {
             publishTargets();
             arrivalManager.waitForArrival();
+            // Quit signal
+            if (getGlobalState() != GlobalOptionControl.State.PLAYING) continue;
             // Wait airtime
             double airTime = getCurrentFrame().getAirTime();
             if (airTime <= 0) continue;
@@ -370,11 +372,12 @@ public class BotControl {
                 log("interrupted when waiting for airtime");
                 e.printStackTrace();
             }
-            // Quit signal
-            if (getGlobalState() != GlobalOptionControl.State.PLAYING){
-                return;
-            }
-        } while (nextFrame());
+        } while ((getGlobalState() == GlobalOptionControl.State.PLAYING) && nextFrame());
+        // Loop exited but not with state PLAYING
+        if (getGlobalState() != GlobalOptionControl.State.PLAYING) {
+            log("play thread aborted");
+            return;
+        }
         updateGlobalState(GlobalOptionControl.State.READY);
     }
 
@@ -384,17 +387,14 @@ public class BotControl {
         arrivalManager.setPending(targetMap);
         log("publish targets count: " + targetMap.size());
         // Send target message
-        for (Map.Entry<BotPixel, UUID> entry: targetMap.entrySet()){
-            BotPixel pixel = entry.getKey();
-            UUID uuid = entry.getValue();
+        targetMap.forEach((pixel, uuid) -> {
             Point2D target = pixel.getPhysicalLocation();
             // Generate and send message
             BotMessage message = new BotMessage(uuid);
             message.newTarget(target.getX(), target.getY());
             message.setColor(pixel.getColor());
-            log("calling publish message queue: " + message);
             connectionControl.publishMessage(message);
-        }
+        });
     }
 
     public void terminate(){

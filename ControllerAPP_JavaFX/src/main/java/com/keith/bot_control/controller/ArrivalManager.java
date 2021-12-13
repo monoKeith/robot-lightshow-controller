@@ -27,13 +27,9 @@ public class ArrivalManager {
     }
 
     public synchronized void setPending(Map<BotPixel, UUID> pixelMap) {
-        this.locationMap.clear();
-        for (Map.Entry<BotPixel, UUID> entry: pixelMap.entrySet()){
-            Point2D location = entry.getKey().getPhysicalLocation();
-            UUID uuid = entry.getValue();
-            locationMap.put(uuid, location);
-        }
-        this.pending = this.locationMap.keySet();
+        locationMap.clear();
+        pixelMap.forEach((pixel, uuid) -> locationMap.put(uuid, pixel.getPixelLocation()));
+        this.pending = locationMap.keySet();
         initialized = true;
         quitWaiting = false;
         notifyAll();
@@ -43,14 +39,14 @@ public class ArrivalManager {
         if (!initialized) return;
         Point2D targetLocation = locationMap.get(uuid);
         if (targetLocation == null) {
-            log(String.format("unexpected arrival from: %s", uuid));
+            log(String.format("UNEXPECTED arrival from: %s", uuid));
             return;
         }
-        double distance = targetLocation.distance(curLocation);
-        if (distance > posAccuracy) {
-            log(String.format("WARNING! misaligned LightBot: %s", uuid));
-            return;
-        }
+//        double distance = targetLocation.distance(curLocation);
+//        if (distance > posAccuracy) {
+//            log(String.format("WARNING! misaligned LightBot: %s", uuid));
+//            return;
+//        }
         // Arrived
         pending.remove(uuid);
         log(String.format("LightBot arrived: %s", uuid));
@@ -66,13 +62,12 @@ public class ArrivalManager {
                 e.printStackTrace();
             }
             if (quitWaiting){
-                log("abort");
-                return;
+                log("wait for arrival aborted");
+                break;
             }
         }
         // Stop accepting arrive() once complete
         reset();
-        notifyAll();
     }
 
     /* Logging */
