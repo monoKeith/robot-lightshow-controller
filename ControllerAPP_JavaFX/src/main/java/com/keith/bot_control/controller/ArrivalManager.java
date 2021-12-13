@@ -59,13 +59,16 @@ public class ArrivalManager {
 
     // Wait for ALL pending UUIDs to arrive
     public synchronized void waitForArrival(){
-        while(!initialized || !pending.isEmpty()){
+        while(!pending.isEmpty()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (quitWaiting) return;
+            if (quitWaiting){
+                log("abort");
+                return;
+            }
         }
         // Stop accepting arrive() once complete
         reset();

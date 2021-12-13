@@ -346,7 +346,6 @@ public class BotControl {
     public void previewFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
-        log("publish targets");
         publishTargets();
         log("preview wait for arrival");
         arrivalManager.waitForArrival();
@@ -364,6 +363,7 @@ public class BotControl {
             // Wait airtime
             double airTime = getCurrentFrame().getAirTime();
             if (airTime <= 0) continue;
+            log("waiting airtime");
             try {
                 Thread.sleep((long) (getCurrentFrame().getAirTime() * 1000));
             } catch (InterruptedException e) {
@@ -381,8 +381,8 @@ public class BotControl {
     // Send message to all bots, update target location
     private void publishTargets(){
         Map<BotPixel, UUID> targetMap = getCurrentFrame().getTargetMap();
-
         arrivalManager.setPending(targetMap);
+        log("publish targets count: " + targetMap.size());
         // Send target message
         for (Map.Entry<BotPixel, UUID> entry: targetMap.entrySet()){
             BotPixel pixel = entry.getKey();
@@ -392,6 +392,7 @@ public class BotControl {
             BotMessage message = new BotMessage(uuid);
             message.newTarget(target.getX(), target.getY());
             message.setColor(pixel.getColor());
+            log("calling publish message queue: " + message);
             connectionControl.publishMessage(message);
         }
     }

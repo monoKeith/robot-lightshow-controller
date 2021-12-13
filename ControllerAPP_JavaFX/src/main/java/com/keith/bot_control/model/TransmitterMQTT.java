@@ -36,6 +36,7 @@ public class TransmitterMQTT {
         connOpts.setCleanSession(true);
         connOpts.setUserName(USERNAME);
         connOpts.setPassword(PASSWORD.toCharArray());
+        connOpts.setMaxInflight(1000);
         mqttClient.connect(connOpts);
 
         log("Connected");
