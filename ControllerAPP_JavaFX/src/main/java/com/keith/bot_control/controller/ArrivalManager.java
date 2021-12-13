@@ -11,14 +11,18 @@ public class ArrivalManager {
     private final Map<UUID, Point2D> locationMap;
     private Set<UUID> pending;
     private boolean initialized;
+    private boolean quitWaiting;
 
     public ArrivalManager(){
         locationMap = new HashMap<>();
+        pending = new HashSet<>();
         reset();
     }
 
     public synchronized void reset(){
+        quitWaiting = true;
         initialized = false;
+        pending.clear();
         notifyAll();
     }
 
@@ -31,6 +35,7 @@ public class ArrivalManager {
         }
         this.pending = this.locationMap.keySet();
         initialized = true;
+        quitWaiting = false;
         notifyAll();
     }
 
@@ -60,6 +65,7 @@ public class ArrivalManager {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if (quitWaiting) return;
         }
         // Stop accepting arrive() once complete
         reset();

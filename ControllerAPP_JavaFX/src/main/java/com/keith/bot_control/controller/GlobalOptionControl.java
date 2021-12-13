@@ -38,6 +38,10 @@ public class GlobalOptionControl {
         botControl.refreshConnections();
     }
 
+    public void abort(){
+        botControl.abort();
+    }
+
     public void refreshView(){
         if (view == null) return;
         Platform.runLater(() -> {

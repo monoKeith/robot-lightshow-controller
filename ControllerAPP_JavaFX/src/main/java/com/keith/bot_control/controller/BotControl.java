@@ -178,20 +178,22 @@ public class BotControl {
             }
             case DISCONNECTED -> {
                 // Update global state to IDLE
-                connectedBotsCount = 0;
                 arrivalManager.reset();
+                connectedBotsCount = 0;
                 BotFrame.clearConnectedBots();
                 propertiesControl.refreshConnectedBots();
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
         connectionControl.refreshView();
+        log("connection state updated:" + getConnectionState());
     }
 
     public void updateGlobalState(GlobalOptionControl.State state){
         if (globalState == state) return;
         globalState = state;
         globalControl.refreshView();
+        log("global state updated: " + getGlobalState());
     }
 
     // Called by DotsCanvasControl to update properties when BotPixel moved
@@ -322,6 +324,13 @@ public class BotControl {
 
     /* Bot Control Functions */
 
+    // When playing animation or previewing frame
+    public void abort(){
+        log("play/preview abort");
+        arrivalManager.reset();
+        updateGlobalState(GlobalOptionControl.State.READY);
+    }
+
     // Reset connected bots, ask all bots to report UUID
     public void refreshConnections(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
@@ -337,7 +346,9 @@ public class BotControl {
     public void previewFrame(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
+        log("publish targets");
         publishTargets();
+        log("preview wait for arrival");
         arrivalManager.waitForArrival();
         log("preview complete");
         updateGlobalState(GlobalOptionControl.State.READY);
@@ -358,6 +369,10 @@ public class BotControl {
             } catch (InterruptedException e) {
                 log("interrupted when waiting for airtime");
                 e.printStackTrace();
+            }
+            // Quit signal
+            if (getGlobalState() != GlobalOptionControl.State.PLAYING){
+                return;
             }
         } while (nextFrame());
         updateGlobalState(GlobalOptionControl.State.READY);
