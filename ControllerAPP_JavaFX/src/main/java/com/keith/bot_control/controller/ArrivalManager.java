@@ -49,7 +49,7 @@ public class ArrivalManager {
 //        }
         // Arrived
         pending.remove(uuid);
-        log(String.format("LightBot arrived: %s", uuid));
+        log(String.format("remaining: %d, just arrived: %s", pending.size(), uuid));
         notifyAll();
     }
 

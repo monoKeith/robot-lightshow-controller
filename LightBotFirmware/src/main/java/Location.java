@@ -49,16 +49,16 @@ public class Location {
 
     // True  - head pointing to correct direction
     // False - Need alignment
-    public synchronized boolean checkSpinAlignment(){
+    public synchronized boolean noNeedToSpin(){
         return Math.abs(curAngle - targetAngle) <= spinAccuracy;
     }
 
-    public synchronized boolean checkCurveAlignment(){
+    public synchronized boolean noNeedToCurve(){
         return Math.abs(curAngle - targetAngle) <= curveAccuracy;
     }
 
     // Check if robot in target location
-    public synchronized boolean checkPosition(){
+    public synchronized boolean arrived(){
         return (Math.abs(deltaX) <= posAccuracy) && (Math.abs(deltaY) <= posAccuracy);
     }
 
@@ -88,7 +88,9 @@ public class Location {
     // https://stackoverflow.com/questions/1878907/how-can-i-find-the-difference-between-two-angles
     public synchronized double directionDiff(){
         double diff = targetAngle - curAngle;
-        return (diff + 180) % 360 - 180;
+        if (diff > 180) return diff - 360;
+        if (diff < -180) return diff + 360;
+        return diff;
     }
 
     public double getX(){

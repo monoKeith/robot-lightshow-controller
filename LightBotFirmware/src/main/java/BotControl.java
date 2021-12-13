@@ -1,6 +1,9 @@
 import com.cyberbotics.webots.controller.*;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class BotControl {
     private enum MovementStates{
         IDLE,
@@ -32,7 +35,7 @@ public class BotControl {
     private LED[] leds;
     private LED rgb;
     // Location management
-    private Location location;
+    private final Location location;
     // State
     private MovementStates movementState;
     // Transmitter
@@ -121,8 +124,8 @@ public class BotControl {
                         double x = Double.parseDouble(msg[1]);
                         double y = Double.parseDouble(msg[2]);
                         location.setTarget(x, y);
-                        locationReported = false;
                         movementState = MovementStates.STOP;
+                        locationReported = false;
                     }
                     case "COLOR" -> {
                         // COLOR <integer-color-code-256^3>
@@ -149,7 +152,7 @@ public class BotControl {
     // Mostly corresponds to movements of the robot
     public void controlThread(){
         location.update();
-        if (LOG_ENABLE){
+        if (LOG_ENABLE) {
             location.log();
             System.out.println("State: " + movementState.toString());
         }
@@ -160,33 +163,33 @@ public class BotControl {
             }
             case STOP -> {
                 // Check position
-                if (!location.checkPosition()){
+                if (!location.arrived()) {
                     // Update state according to alignment
-                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
-                    movementState = location.checkSpinAlignment() ? movementState : MovementStates.ROTATE;
+                    movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
+                    movementState = location.noNeedToSpin() ? movementState : MovementStates.ROTATE;
                 }
             }
             case ROTATE -> {
-                if (location.checkSpinAlignment()){
+                if (location.noNeedToSpin()) {
                     movementState = MovementStates.FORWARD;
                 }
             }
             case CURVE -> {
-                if (location.checkPosition()){
+                if (location.arrived()) {
                     movementState = MovementStates.STOP;
-                } else if (location.checkSpinAlignment()){
-                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
+                } else if (location.noNeedToSpin()) {
+                    movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
                 } else {
                     movementState = MovementStates.ROTATE;
                 }
             }
             case FORWARD -> {
-                if (location.checkPosition()){
+                if (location.arrived()) {
                     // Arrived
                     movementState = MovementStates.STOP;
                 } else {
                     // Not arrived yet, update state according to alignment
-                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
+                    movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
                 }
             }
             default -> {
@@ -197,12 +200,13 @@ public class BotControl {
         }
 
         // Action
-        switch(movementState) {
-            case STOP       -> arrived();
-            case ROTATE     -> spin();
-            case CURVE      -> curve();
-            case FORWARD    -> forward();
+        switch (movementState) {
+            case STOP -> arrived();
+            case ROTATE -> spin();
+            case CURVE -> curve();
+            case FORWARD -> forward();
         }
+
     }
 
     // Set wheel velocity to default value
@@ -215,6 +219,8 @@ public class BotControl {
     // Sensitivity - One side reach stop when angle offset is 45 degrees
     private void curve(){
         double speedOffset = (location.directionDiff() / 45) * defaultV;
+        speedOffset = max(0, speedOffset);
+        speedOffset = min(speedOffset, defaultV);
         leftWheel.setVelocity(defaultV - speedOffset);
         rightWheel.setVelocity(defaultV + speedOffset);
     }
