@@ -36,7 +36,7 @@ The user interface of the controller software should have:
 
 
 ## Demo Video
-[YouTube](https://youtu.be/IKU5-_eqqHQ)
+[YouTube](https://youtu.be/m3dJQ_ByKjo)
 
 
 ## Project structure
