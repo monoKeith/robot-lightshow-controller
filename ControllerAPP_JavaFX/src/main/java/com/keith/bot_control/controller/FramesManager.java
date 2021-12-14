@@ -27,7 +27,7 @@ public class FramesManager {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Point2D.class, new PointAdapter());
         builder.registerTypeAdapter(Color.class, new ColorAdapter());
-        builder.setPrettyPrinting();
+//        builder.setPrettyPrinting();
         gson = builder.create();
 
         frames = new ArrayList<>();
