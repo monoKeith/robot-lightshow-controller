@@ -34,6 +34,22 @@ The user interface of the controller software should have:
 - A scrollable timeline representing an array of frames, also work as frame selector
 - Options to configure behavior (e.g. color) for each robot
 
+
 ## Project structure
 - `Controller` directory containes source code of the controller software
 - `Webots_Env` directory containes webots world file and robot design file
+
+
+## How to run?
+
+### Startup Solace PubSub+ Event Broker as Docker container
+
+`docker run -d -p 8080:8080 -p 55555:55555 -p 8008:8008 -p 1883:1883 -p 8000:8000 -p 5672:5672 -p 9000:9000 -p 2222:2222 --shm-size=2g --env username_admin_globalaccesslevel=admin --env username_admin_password=admin --name=solace solace/solace-pubsub-standard`
+
+### Run Webots
+
+Open `Webots_Env/world/testField_30.wbt`
+
+### Run Controller
+
+In project `ControllerAPP_JavaFX`, run main function in `BotControllAPP` class.
