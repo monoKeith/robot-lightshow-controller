@@ -23,6 +23,7 @@ public class PropertiesControl {
         this.view = view;
     }
 
+
     /* Handlers - BotPixel Properties */
 
     // If only one pixel selected, returns the selected pixel, otherwise null
@@ -69,6 +70,28 @@ public class PropertiesControl {
         control.setShowPixelId(val);
     }
 
+    public void airTimeUpdate(String airTime){
+        double time = 0;
+        try{
+            time = Double.parseDouble(airTime);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        control.airTimeUpdate(time);
+    }
+
+    public void duplicateCurrentFrame(){
+        control.duplicateCurrentFrame();
+    }
+
+    public void deleteCurrentFrame(){
+        control.deleteCurrentFrame();
+    }
+
+    public void rearrangeSelectedFrame(boolean toLeft){
+        control.rearrangeCurrentFrame(toLeft);
+    }
+
 
     /* Update */
 
@@ -108,6 +131,7 @@ public class PropertiesControl {
             BotFrame frame = control.getCurrentFrame();
 
             view.setFrameName(frame.getName());
+            view.setAirTime(frame.getAirTime());
         });
     }
 

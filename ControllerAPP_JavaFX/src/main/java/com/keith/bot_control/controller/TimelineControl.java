@@ -18,6 +18,7 @@ public class TimelineControl {
         this.view = view;
     }
 
+
     /* Selection */
 
     public void selectFrame(BotFrame frame){
@@ -25,7 +26,7 @@ public class TimelineControl {
         if (frame == previousFrame) return;
 
         log("select: " + frame);
-        control.updateCurrentFrame(frame);
+        control.setCurrentFrame(frame);
         refreshFrame(previousFrame);
         refreshCurrentFrame();
     }
@@ -34,11 +35,11 @@ public class TimelineControl {
     /* Refresh */
 
     public void initView(){
-        // Clear current frame?
-
+        // Clear current frame
+        view.removeAllFrames();
         // Add all frames
         for (BotFrame frame: control.getFrames()){
-            view.addFrame(frame);
+            view.appendNewFrame(frame);
         }
     }
 
@@ -63,6 +64,26 @@ public class TimelineControl {
     public void refreshCurrentFrame(){
         BotFrame selectedFrame = control.getCurrentFrame();
         Platform.runLater(() -> view.refreshFrame(selectedFrame));
+    }
+
+    // sync frames on timeline with control
+    // called when a new frame added (maybe add to middle of frames)
+    public void addMissingFrames(){
+        // Add frames that are missing in view
+        for (BotFrame frame: control.getFrames()){
+            if (view.frameExist(frame)) continue;
+
+            view.insertNewFrame(frame, control.getFrames().indexOf(frame));
+        }
+    }
+
+    public void removeFrame(BotFrame frame){
+        view.removeFrame(frame);
+    }
+
+    // sync the order of frames on timeline
+    public void syncFramesOrder(){
+        view.synchronizeFramesOrder(control.getFrames());
     }
 
     /* Logging */

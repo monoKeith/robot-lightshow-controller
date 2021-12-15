@@ -17,7 +17,7 @@ public class GlobalControlView {
     protected Label currentFrameName;
 
     @FXML
-    protected Button previewButton, playButton, refreshButton;
+    protected Button abortButton, previewButton, playButton, refreshButton;
 
     public GlobalControlView(){
 
@@ -44,6 +44,11 @@ public class GlobalControlView {
         control.refreshConnections();
     }
 
+    @FXML
+    public void abort(){
+        control.abort();
+    }
+
     public void setConnectedBotsCount(int count){
         connectedBotsCount.setText("" + count);
     }
@@ -62,6 +67,7 @@ public class GlobalControlView {
                 previewButton.setText("Preview");
                 previewButton.setDisable(true);
                 refreshButton.setDisable(true);
+                abortButton.setDisable(false);
             }
             case PREVIEW -> {
                 playButton.setText("Play");
@@ -69,6 +75,7 @@ public class GlobalControlView {
                 previewButton.setText("Previewing");
                 previewButton.setDisable(true);
                 refreshButton.setDisable(true);
+                abortButton.setDisable(false);
             }
             case READY -> {
                 playButton.setText("Play");
@@ -76,6 +83,7 @@ public class GlobalControlView {
                 previewButton.setText("Preview");
                 previewButton.setDisable(false);
                 refreshButton.setDisable(false);
+                abortButton.setDisable(true);
             }
             case IDLE -> {
                 playButton.setText("Play");
@@ -83,6 +91,7 @@ public class GlobalControlView {
                 previewButton.setText("Preview");
                 previewButton.setDisable(true);
                 refreshButton.setDisable(true);
+                abortButton.setDisable(true);
             }
         }
     }

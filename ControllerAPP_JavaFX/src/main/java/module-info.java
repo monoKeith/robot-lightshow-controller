@@ -3,6 +3,7 @@ module com.keith.controllerapp_javafx {
     requires javafx.fxml;
     requires javafx.graphics;
     requires org.eclipse.paho.client.mqttv3;
+    requires com.google.gson;
 
 
     opens com.keith.bot_control to javafx.fxml;

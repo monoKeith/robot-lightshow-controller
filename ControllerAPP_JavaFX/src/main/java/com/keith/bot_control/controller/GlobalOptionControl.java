@@ -38,13 +38,17 @@ public class GlobalOptionControl {
         botControl.refreshConnections();
     }
 
+    public void abort(){
+        botControl.abort();
+    }
+
     public void refreshView(){
         if (view == null) return;
         Platform.runLater(() -> {
             // Button state
             view.updateButtonState(botControl.getGlobalState());
             // Connected Bot counts
-            view.setConnectedBotsCount(botControl.getConnectedBots().size());
+            view.setConnectedBotsCount(botControl.getConnectedBotsCount());
             // Current Frame name
             view.setCurrentFrameName(botControl.getCurrentFrame().getName());
         });

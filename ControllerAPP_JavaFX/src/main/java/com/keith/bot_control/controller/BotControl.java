@@ -5,11 +5,15 @@ import com.keith.bot_control.model.BotMessage;
 import com.keith.bot_control.model.BotPixel;
 import com.keith.bot_control.model.TransmitterMQTT;
 import javafx.geometry.Point2D;
+import javafx.stage.Stage;
 
 import java.util.*;
 
 public class BotControl {
     private final UUID uuid;
+
+    // Stage for opening new dialog
+    private Stage stage;
 
     // Controllers
     private final ConnectionControl connectionControl;
@@ -18,8 +22,9 @@ public class BotControl {
     private final PropertiesControl propertiesControl;
     private final TimelineControl timelineControl;
 
-    // Arrival Manager
+    // Managers
     private final ArrivalManager arrivalManager;
+    private final FramesManager framesManager;
 
     // States
     private ConnectionControl.State connectionState;
@@ -30,11 +35,9 @@ public class BotControl {
     private Thread msgProcessor;
     private Boolean msgProcessorStopSignal;
 
-    // Set of UUIDs of connected bots
-    private Set<UUID> connectedBots;
-    private ArrayList<BotFrame> frames;
-    private int currentFrameIndex;
-    private BotFrame currentFrame;
+    // UUIDs of connected bots
+    private int connectedBotsCount;
+
 
     public BotControl() {
         uuid = UUID.randomUUID();
@@ -46,24 +49,15 @@ public class BotControl {
         timelineControl = new TimelineControl(this);
         // Manager
         arrivalManager = new ArrivalManager();
+        framesManager = new FramesManager();
         // Initial states
         connectionState = ConnectionControl.State.DISCONNECTED;
         globalState = GlobalOptionControl.State.IDLE;
         // Init vars
-        connectedBots = new HashSet<>();
-        initCurrentFrame();
+        connectedBotsCount = 0;
         showPixelId = true;
         // Init message processor
         initMsgProcessor();
-    }
-
-    private void initCurrentFrame(){
-        // Testing only
-        frames = new ArrayList<>();
-        for (int i = 1; i <= 10; i++){
-            frames.add(BotFrame.sampleFrame("Frame_" + i));
-        }
-        setCurrentFrame(frames.get(0));
     }
 
 
@@ -93,12 +87,12 @@ public class BotControl {
         return timelineControl;
     }
 
-    public Set<UUID> getConnectedBots(){
-        return connectedBots;
+    public int getConnectedBotsCount(){
+        return connectedBotsCount;
     }
 
     public ArrayList<BotFrame> getFrames(){
-        return frames;
+        return framesManager.getFrames();
     }
 
     public boolean getShowPixelId(){
@@ -110,39 +104,44 @@ public class BotControl {
         dotsCanvasControl.refreshView();
     }
 
-    private void setCurrentFrame(BotFrame frame){
-        if (currentFrame != null) currentFrame.setSelecte(false);
-        currentFrameIndex = frames.indexOf(frame);
-        currentFrame = frame;
-        currentFrame.setSelecte(true);
+    public void airTimeUpdate(double time){
+        getCurrentFrame().setAirTime(time);
+        propertiesControl.refreshFrameProperties();
     }
 
     public BotFrame getCurrentFrame(){
-        return currentFrame;
+        return framesManager.getCurrentFrame();
     }
 
     // Switch to next frame, return false if there's no next frame
     public boolean nextFrame(){
-        int nextFrameIndex = currentFrameIndex + 1;
-        if (nextFrameIndex >= frames.size()) return false;
-        updateCurrentFrame(frames.get(nextFrameIndex));
-        return true;
+        if (framesManager.nextFrame()){
+            selectedFrameChanged();
+            return true;
+        }
+        return false;
+    }
+
+    /* Setter */
+
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
 
 
     /* Bot Pixel selection */
 
     public Set<BotPixel> getSelectedPixels() {
-        return currentFrame.getSelectedPixels();
+        return getCurrentFrame().getSelectedPixels();
     }
 
     public void clearSelectedPixels() {
-        currentFrame.getSelectedPixels().clear();
+        getCurrentFrame().getSelectedPixels().clear();
         propertiesControl.refreshView();
     }
 
     public boolean selectPixel(BotPixel newSelection) {
-        if (currentFrame.getSelectedPixels().add(newSelection)){
+        if (getCurrentFrame().getSelectedPixels().add(newSelection)){
             propertiesControl.refreshView();
             return true;
         }
@@ -150,12 +149,12 @@ public class BotControl {
     }
 
     public void deSelectPixel(BotPixel pixel){
-        currentFrame.getSelectedPixels().remove(pixel);
+        getCurrentFrame().getSelectedPixels().remove(pixel);
         propertiesControl.refreshView();
     }
 
     public boolean pixelIsSelected(BotPixel pixel) {
-        return currentFrame.getSelectedPixels().contains(pixel);
+        return getCurrentFrame().getSelectedPixels().contains(pixel);
     }
 
 
@@ -179,20 +178,22 @@ public class BotControl {
             }
             case DISCONNECTED -> {
                 // Update global state to IDLE
-                connectedBots = new HashSet<>();
                 arrivalManager.reset();
-                BotFrame.updatePixelIdMap(connectedBots);
+                connectedBotsCount = 0;
+                BotFrame.clearConnectedBots();
                 propertiesControl.refreshConnectedBots();
                 updateGlobalState(GlobalOptionControl.State.IDLE);
             }
         }
         connectionControl.refreshView();
+        log("connection state updated:" + getConnectionState());
     }
 
     public void updateGlobalState(GlobalOptionControl.State state){
         if (globalState == state) return;
         globalState = state;
         globalControl.refreshView();
+        log("global state updated: " + getGlobalState());
     }
 
     // Called by DotsCanvasControl to update properties when BotPixel moved
@@ -208,8 +209,13 @@ public class BotControl {
     }
 
     // Called by TimelineControl when another frame is selected
-    public void updateCurrentFrame(BotFrame frame){
-        setCurrentFrame(frame);
+    public void setCurrentFrame(BotFrame frame){
+        framesManager.setCurrentFrame(frame);
+        selectedFrameChanged();
+    }
+
+    // Refresh related views when selected frame changed
+    private void selectedFrameChanged(){
         globalControl.refreshView();
         dotsCanvasControl.refreshView();
         propertiesControl.refreshView();
@@ -221,6 +227,50 @@ public class BotControl {
         globalControl.refreshView();
         propertiesControl.refreshFrameProperties();
         timelineControl.refreshCurrentFrame();
+    }
+
+
+    /* Save & Load */
+
+    public void load(){
+        framesManager.load(stage);
+        // Update view
+        timelineControl.initView();
+        selectedFrameChanged();
+    }
+
+    public void save(){
+        framesManager.save(stage);
+    }
+
+
+    /* Bot Frame related */
+
+    // Copy current frame, add to next index of current frame.
+    // Change selected frame to the new frame
+    public void duplicateCurrentFrame(){
+        framesManager.duplicateCurrentFrame();
+        // Update timeline to include new frame
+        timelineControl.addMissingFrames();
+        // Done
+        nextFrame();
+    }
+
+    // Delete current frame and update selected frame
+    public void deleteCurrentFrame(){
+        BotFrame currentFrame = framesManager.getCurrentFrame();
+        // Abort if frameManager reject
+        if (!framesManager.deleteCurrentFrame()) return;
+        timelineControl.removeFrame(currentFrame);
+        // Done
+        selectedFrameChanged();
+    }
+
+    public void rearrangeCurrentFrame(boolean toLeft){
+        // Abort if frameManager reject
+        if (!framesManager.rearrangeCurrentFrame(toLeft)) return;
+        // Apply changes to view
+        timelineControl.syncFramesOrder();
     }
 
 
@@ -260,14 +310,13 @@ public class BotControl {
         log("processing message: " + msg);
         switch (msg.getTopic()){
             case TransmitterMQTT.UUID_TOPIC -> {
-                connectedBots.add(UUID.fromString(msg.getMessage()));
+                BotFrame.recordConnection(msg.msgUUID(), msg.botLocation());
+                connectedBotsCount += 1;
                 globalControl.refreshView();
-                // TODO optimize this, make it more efficient
-                BotFrame.updatePixelIdMap(connectedBots);
                 propertiesControl.refreshConnectedBots();
             }
             case TransmitterMQTT.ARRIVAL_TOPIC -> {
-                arrivalManager.arrive(msg.arrivalMsgUUID(), msg.arrivalPoint());
+                arrivalManager.arrive(msg.msgUUID(), msg.botLocation());
             }
         }
     }
@@ -275,11 +324,18 @@ public class BotControl {
 
     /* Bot Control Functions */
 
+    // When playing animation or previewing frame
+    public void abort(){
+        log("play/preview abort");
+        arrivalManager.reset();
+        updateGlobalState(GlobalOptionControl.State.READY);
+    }
+
     // Reset connected bots, ask all bots to report UUID
     public void refreshConnections(){
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         log("refresh LightBot connections");
-        connectedBots.clear();
+        connectedBotsCount = 0;
         globalControl.refreshView();
         propertiesControl.refreshConnectedBots();
         BotMessage msg = BotMessage.reportUUID();
@@ -291,6 +347,7 @@ public class BotControl {
         if (getGlobalState() != GlobalOptionControl.State.READY) return;
         updateGlobalState(GlobalOptionControl.State.PREVIEW);
         publishTargets();
+        log("preview wait for arrival");
         arrivalManager.waitForArrival();
         log("preview complete");
         updateGlobalState(GlobalOptionControl.State.READY);
@@ -303,27 +360,41 @@ public class BotControl {
         do {
             publishTargets();
             arrivalManager.waitForArrival();
-        } while (nextFrame());
+            // Quit signal
+            if (getGlobalState() != GlobalOptionControl.State.PLAYING) continue;
+            // Wait airtime
+            double airTime = getCurrentFrame().getAirTime();
+            if (airTime <= 0) continue;
+            log("waiting airtime");
+            try {
+                Thread.sleep((long) (getCurrentFrame().getAirTime() * 1000));
+            } catch (InterruptedException e) {
+                log("interrupted when waiting for airtime");
+                e.printStackTrace();
+            }
+        } while ((getGlobalState() == GlobalOptionControl.State.PLAYING) && nextFrame());
+        // Loop exited but not with state PLAYING
+        if (getGlobalState() != GlobalOptionControl.State.PLAYING) {
+            log("play thread aborted");
+            return;
+        }
         updateGlobalState(GlobalOptionControl.State.READY);
     }
 
     // Send message to all bots, update target location
     private void publishTargets(){
-        // TODO optimize location for each bot in BotFrame class!!!
-        Map<BotPixel, UUID> targetMap = currentFrame.getTargetMap();
-
+        Map<BotPixel, UUID> targetMap = getCurrentFrame().getTargetMap();
         arrivalManager.setPending(targetMap);
+        log("publish targets count: " + targetMap.size());
         // Send target message
-        for (Map.Entry<BotPixel, UUID> entry: targetMap.entrySet()){
-            BotPixel pixel = entry.getKey();
-            UUID uuid = entry.getValue();
+        targetMap.forEach((pixel, uuid) -> {
             Point2D target = pixel.getPhysicalLocation();
             // Generate and send message
             BotMessage message = new BotMessage(uuid);
             message.newTarget(target.getX(), target.getY());
             message.setColor(pixel.getColor());
             connectionControl.publishMessage(message);
-        }
+        });
     }
 
     public void terminate(){

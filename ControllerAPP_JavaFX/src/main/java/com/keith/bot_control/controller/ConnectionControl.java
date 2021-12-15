@@ -119,59 +119,81 @@ public class ConnectionControl {
         new Thread(this::publishProcessor).start();
     }
 
-    private synchronized void publishProcessor(){
+    private void publishProcessor(){
         while(true){
-            // Wait for message to publish
-            while(transmitter == null || publishQueue.isEmpty()){
-                try {
-                    wait();
-                    if (terminateFlag) return;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return;
+            synchronized (publishQueue) {
+                // Wait for message to publish
+                while (transmitter == null || publishQueue.isEmpty()) {
+                    try {
+                        publishQueue.wait();
+                        if (terminateFlag) return;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                 }
-            }
-            // Attempt to publish
-            try {
-                transmitter.publish(publishQueue.removeFirst());
-            } catch (MqttException e) {
-                e.printStackTrace();
+                // Attempt to publish
+                try {
+                    log("publishing");
+                    transmitter.publish(publishQueue.removeFirst());
+                    log("published");
+                } catch (MqttException e) {
+                    log("failed to publish message, bad connection?");
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public synchronized void publishMessage(BotMessage message){
-        publishQueue.add(message);
-        notifyAll();
+    public void publishMessage(BotMessage message){
+        synchronized (publishQueue) {
+            publishQueue.add(message);
+            log("publish message queue: " + message);
+            publishQueue.notifyAll();
+        }
     }
 
     /* Receive message */
 
     public synchronized void terminateMsgQueue(){
         terminateFlag = true;
-        notifyAll();
-    }
-
-    public synchronized void queueMsg(BotMessage newMsg){
-        receiveQueue.add(newMsg);
-        notifyAll();
-    }
-
-    // Synchronized: Get message from transmitter
-    // Stuck until new message comes
-    public synchronized BotMessage waitForMsg(){
-        // Wait if transmitter is not initialized
-        while (transmitter == null || receiveQueue.isEmpty()) {
-            try {
-                wait();
-                if (terminateFlag) return null;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        synchronized (publishQueue) {
+            publishQueue.notifyAll();
         }
+        synchronized (receiveQueue) {
+            receiveQueue.notifyAll();
+        }
+    }
 
-        notifyAll();
-        return receiveQueue.pop();
+    public void queueMsg(BotMessage newMsg){
+        synchronized (receiveQueue){
+            receiveQueue.add(newMsg);
+            receiveQueue.notifyAll();
+        }
+    }
+
+    // Stuck until new message comes
+    public BotMessage waitForMsg(){
+        synchronized (receiveQueue) {
+            while (receiveQueue.isEmpty()) {
+                try {
+                    receiveQueue.wait();
+                    if (terminateFlag) return null;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            BotMessage msg = receiveQueue.pop();
+            receiveQueue.notifyAll();
+            return msg;
+        }
+    }
+
+
+    /* Logging */
+
+    private void log(String msg){
+        System.out.printf("[%s] %s%n", getClass().getSimpleName(), msg);
     }
 
 }

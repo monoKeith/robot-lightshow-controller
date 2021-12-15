@@ -1,6 +1,9 @@
 import com.cyberbotics.webots.controller.*;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class BotControl {
     private enum MovementStates{
         IDLE,
@@ -32,7 +35,7 @@ public class BotControl {
     private LED[] leds;
     private LED rgb;
     // Location management
-    private Location location;
+    private final Location location;
     // State
     private MovementStates movementState;
     // Transmitter
@@ -42,7 +45,7 @@ public class BotControl {
     private boolean locationReported;
 
     // Enable Logging
-    private final boolean LOG_ENABLE = false;
+    public static final boolean LOG_ENABLE = false;
 
     public BotControl(Transmitter transmitter) {
         robot = new Robot();
@@ -71,7 +74,15 @@ public class BotControl {
         // Flag
         locationReported = false;
         // Default velocity
-        resetSpeed();
+        resetVelocity();
+
+        // Power on pulse
+        location.update();
+        try {
+            transmitter.powerOnMessage(location);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
 
         // Start connection handler thread
         new Thread(this::connectionThread).start();
@@ -113,8 +124,8 @@ public class BotControl {
                         double x = Double.parseDouble(msg[1]);
                         double y = Double.parseDouble(msg[2]);
                         location.setTarget(x, y);
-                        locationReported = false;
                         movementState = MovementStates.STOP;
+                        locationReported = false;
                     }
                     case "COLOR" -> {
                         // COLOR <integer-color-code-256^3>
@@ -124,7 +135,7 @@ public class BotControl {
                     case "UUID" -> {
                         // Report UUID
                         try {
-                            transmitter.reportUUID();
+                            transmitter.powerOnMessage(location);
                         } catch (MqttException e) {
                             System.out.println("Failed to report UUID!");
                             e.printStackTrace();
@@ -141,10 +152,14 @@ public class BotControl {
     // Mostly corresponds to movements of the robot
     public void controlThread(){
         location.update();
-        if (LOG_ENABLE){
+        boolean arrived = location.arrived();
+
+        if (LOG_ENABLE) {
             location.log();
+            System.out.println("arrived?" + arrived);
             System.out.println("State: " + movementState.toString());
         }
+
         // Update state according to current state
         switch (movementState) {
             case IDLE -> {
@@ -152,35 +167,28 @@ public class BotControl {
             }
             case STOP -> {
                 // Check position
-                if (!location.checkPosition()){
+                if (!arrived) {
                     // Update state according to alignment
-                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
-                    movementState = location.checkSpinAlignment() ? movementState : MovementStates.ROTATE;
+                    movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
+                    movementState = location.noNeedToSpin() ? movementState : MovementStates.ROTATE;
                 }
             }
             case ROTATE -> {
-                if (location.checkSpinAlignment()){
+                if (location.noNeedToSpin()) {
                     movementState = MovementStates.FORWARD;
                 }
             }
-            case CURVE -> {
-                if (location.checkPosition()){
+            case CURVE, FORWARD -> {
+                if (arrived) {
                     movementState = MovementStates.STOP;
-                } else if (location.checkSpinAlignment()){
-                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
+                } else if (location.noNeedToSpin()) {
+                    movementState = location.noNeedToCurve() ? MovementStates.FORWARD : MovementStates.CURVE;
                 } else {
                     movementState = MovementStates.ROTATE;
                 }
             }
-            case FORWARD -> {
-                if (location.checkPosition()){
-                    // Arrived
-                    movementState = MovementStates.STOP;
-                } else {
-                    // Not arrived yet, update state according to alignment
-                    movementState = location.checkCurveAlignment() ? MovementStates.FORWARD : MovementStates.CURVE;
-                }
-            }
+            // Arrived
+            // Not arrived yet, update state according to alignment
             default -> {
                 System.out.println(
                         String.format("Unknown state: %s, abort.", movementState));
@@ -189,16 +197,17 @@ public class BotControl {
         }
 
         // Action
-        switch(movementState) {
-            case STOP       -> arrived();
-            case ROTATE     -> spin();
-            case CURVE      -> curve();
-            case FORWARD    -> forward();
+        switch (movementState) {
+            case STOP -> arrived();
+            case ROTATE -> spin();
+            case CURVE -> curve();
+            case FORWARD -> forward();
         }
+
     }
 
     // Set wheel velocity to default value
-    private void resetSpeed(){
+    private void resetVelocity(){
         leftWheel.setVelocity(defaultV);
         rightWheel.setVelocity(defaultV);
     }
@@ -206,39 +215,57 @@ public class BotControl {
     // Adjust speed of motor according target direction
     // Sensitivity - One side reach stop when angle offset is 45 degrees
     private void curve(){
+        resetVelocity();
+
+//        double distanceToGo = location.getDistance() * moveConst;
+        double curLPosition = leftPosition.getValue();
+        double curRPosition = rightPosition.getValue();
+
         double speedOffset = (location.directionDiff() / 45) * defaultV;
+        speedOffset = max(-defaultV, speedOffset);
+        speedOffset = min(speedOffset, defaultV);
+
         leftWheel.setVelocity(defaultV - speedOffset);
         rightWheel.setVelocity(defaultV + speedOffset);
+        // Workaround to not set position to infinite
+        leftWheel.setPosition(curLPosition - speedOffset);
+        rightWheel.setPosition(curRPosition + speedOffset);
     }
 
     // Spin robot to point to a target direction
     private void spin(){
+        resetVelocity();
         double curLPosition = leftPosition.getValue();
         double curRPosition = rightPosition.getValue();
         double degreesToTurn = location.directionDiff() * spinConst;
         // Spin wheels in opposite direction
-        resetSpeed();
         leftWheel.setPosition(curLPosition - degreesToTurn);
         rightWheel.setPosition(curRPosition + degreesToTurn);
     }
 
     // Move forward, should be called only when aligned to target
     private void forward(){
+        resetVelocity();
         double curLPosition = leftPosition.getValue();
         double curRPosition = rightPosition.getValue();
         double distanceToGo = location.getDistance() * moveConst;
         // Spin wheels in same direction
-        resetSpeed();
         leftWheel.setPosition(curLPosition + distanceToGo);
         rightWheel.setPosition(curRPosition + distanceToGo);
     }
 
     private void arrived(){
+        // Stop robot
+        resetVelocity();
+        double curLPosition = leftPosition.getValue();
+        double curRPosition = rightPosition.getValue();
+        leftWheel.setPosition(curLPosition);
+        rightWheel.setPosition(curRPosition);
         // Only report once
         if (locationReported) return;
-        System.out.println("Arrived.");
+        if (LOG_ENABLE) System.out.println("Arrived.");
         try {
-            transmitter.reportLocation(location);
+            transmitter.arrivalMessage(location);
             locationReported = true;
         } catch (MqttException e) {
             System.out.println("Failed to publish arrival message!");

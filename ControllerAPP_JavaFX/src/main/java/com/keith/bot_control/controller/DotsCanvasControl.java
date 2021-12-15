@@ -15,8 +15,6 @@ public class DotsCanvasControl {
 
     // resolution of the canvas, default 720x720, must be square for now
     public static int CANVAS_RESOLUTION = 720;
-    // size of playground in Webots, must be square for now (unit: meter)
-    public static int PLAYGROUND_SIZE = 1;
 
     private final BotControl control;
     private DotsView view;
@@ -108,20 +106,26 @@ public class DotsCanvasControl {
                 Point2D canvasPixel = pixel.getPixelLocation();
                 double x = canvasPixel.getX();
                 double y = canvasPixel.getY();
-
+                double R, D;
                 // Draw a ring around selected pixels
                 if (control.pixelIsSelected(pixel)){
                     gc.setFill(SELECTION_RING_COLOR);
-                    gc.fillOval(x - PIXEL_SELECT_R, y - PIXEL_SELECT_R, PIXEL_SELECT_D, PIXEL_SELECT_D);
+                    R = PIXEL_SELECT_R / PLAYGROUND_SIZE;
+                    D = PIXEL_SELECT_D / PLAYGROUND_SIZE;
+                    gc.fillOval(x - R, y - R, D, D);
                 }
 
                 // WHITE circle around the pixel
                 gc.setFill(Color.WHITE);
-                gc.fillOval(x - PIXEL_CIRCLE_R, y - PIXEL_CIRCLE_R, PIXEL_CIRCLE_D, PIXEL_CIRCLE_D);
+                R = PIXEL_CIRCLE_R / PLAYGROUND_SIZE;
+                D = PIXEL_CIRCLE_D / PLAYGROUND_SIZE;
+                gc.fillOval(x - R, y - R, D, D);
 
                 // Draw center of BotPixel
                 gc.setFill(pixel.getColor());
-                gc.fillOval(x - PIXEL_R, y - PIXEL_R, PIXEL_D, PIXEL_D);
+                R = PIXEL_R / PLAYGROUND_SIZE;
+                D = PIXEL_D / PLAYGROUND_SIZE;
+                gc.fillOval(x - R, y - R, D, D);
 
                 // Preview dragging location when dragging selected pixels
                 if (showPreviewPixels && control.pixelIsSelected(pixel)){
@@ -129,13 +133,16 @@ public class DotsCanvasControl {
                     double preview_x = previewLocation.getX();
                     double preview_y = previewLocation.getY();
                     gc.setFill(pixel.getPreviewColor());
-                    gc.fillOval(preview_x - PIXEL_R, preview_y - PIXEL_R, PIXEL_D, PIXEL_D);
+                    R = PIXEL_R / PLAYGROUND_SIZE;
+                    D = PIXEL_D / PLAYGROUND_SIZE;
+                    gc.fillOval(preview_x - R, preview_y - R, D, D);
                 }
 
                 // Show pixelId when not dragging
                 if (!showPreviewPixels && showPixelId){
                     gc.setFill(Color.WHITE);
-                    gc.fillText(pixel.getPixelId()+"", x + PIXEL_CIRCLE_R, y + PIXEL_CIRCLE_R);
+                    R = PIXEL_CIRCLE_R / PLAYGROUND_SIZE;
+                    gc.fillText(pixel.getPixelId()+"", x + R, y + R);
                 }
             }
         });

@@ -3,19 +3,14 @@ package com.keith.bot_control.view;
 import com.keith.bot_control.BotControlAPP;
 import com.keith.bot_control.controller.PropertiesControl;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
 
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +41,7 @@ public class PropertiesView {
     /* Frame properties */
 
     @FXML
-    protected TextField frameName;
+    protected TextField frameName, airTime;
 
     @FXML
     protected CheckBox displayLightBotID;
@@ -62,8 +57,6 @@ public class PropertiesView {
 
     @FXML
     protected TableColumn<Map.Entry<Integer, UUID>, String> botUUIDColumn;
-
-
 
 
     public PropertiesView(){
@@ -165,8 +158,37 @@ public class PropertiesView {
         frameName.setText(name);
     }
 
+    public void setAirTime(double time){
+        airTime.setText(time + "");
+    }
+
     public void displayLightBotIdUpdate(){
         control.showPixelIdUpdate(displayLightBotID.isSelected());
+    }
+
+    @FXML
+    public void duplicateCurrentFrame(){
+        control.duplicateCurrentFrame();
+    }
+
+    @FXML
+    public void deleteCurrentFrame(){
+        control.deleteCurrentFrame();
+    }
+
+    @FXML
+    public void airTimeChange(Event e){
+        control.airTimeUpdate(airTime.getText());
+    }
+
+    @FXML
+    public void moveToLeft(){
+        control.rearrangeSelectedFrame(true);
+    }
+
+    @FXML
+    public void moveToRight(){
+        control.rearrangeSelectedFrame(false);
     }
 
 

@@ -6,29 +6,32 @@ import javafx.geometry.Point2D;
 import java.util.*;
 
 public class ArrivalManager {
-    private static final double posAccuracy = 0.02;
+    private static final double posAccuracy = 0.05;
     // Async class to manage LightBots arrival conditions
+    private final Map<UUID, Point2D> locationMap;
     private Set<UUID> pending;
-    private Map<UUID, Point2D> locationMap;
     private boolean initialized;
+    private boolean quitWaiting;
 
     public ArrivalManager(){
+        locationMap = new HashMap<>();
+        pending = new HashSet<>();
         reset();
     }
 
     public synchronized void reset(){
+        quitWaiting = true;
         initialized = false;
+        pending.clear();
+        notifyAll();
     }
 
     public synchronized void setPending(Map<BotPixel, UUID> pixelMap) {
-        this.locationMap = new HashMap<UUID, Point2D>();
-        for (Map.Entry<BotPixel, UUID> entry: pixelMap.entrySet()){
-            Point2D location = entry.getKey().getPhysicalLocation();
-            UUID uuid = entry.getValue();
-            locationMap.put(uuid, location);
-        }
-        this.pending = this.locationMap.keySet();
+        locationMap.clear();
+        pixelMap.forEach((pixel, uuid) -> locationMap.put(uuid, pixel.getPixelLocation()));
+        this.pending = locationMap.keySet();
         initialized = true;
+        quitWaiting = false;
         notifyAll();
     }
 
@@ -36,32 +39,35 @@ public class ArrivalManager {
         if (!initialized) return;
         Point2D targetLocation = locationMap.get(uuid);
         if (targetLocation == null) {
-            log(String.format("unexpected arrival from: %s", uuid));
+            log(String.format("UNEXPECTED arrival from: %s", uuid));
             return;
         }
-        double distance = targetLocation.distance(curLocation);
-        if (distance > posAccuracy) {
-            log(String.format("WARNING! misaligned LightBot: %s", uuid));
-            return;
-        }
+//        double distance = targetLocation.distance(curLocation);
+//        if (distance > posAccuracy) {
+//            log(String.format("WARNING! misaligned LightBot: %s", uuid));
+//            return;
+//        }
         // Arrived
         pending.remove(uuid);
-        log(String.format("LightBot arrived: %s", uuid));
+        log(String.format("remaining: %d, just arrived: %s", pending.size(), uuid));
         notifyAll();
     }
 
     // Wait for ALL pending UUIDs to arrive
     public synchronized void waitForArrival(){
-        while(!initialized || !pending.isEmpty()){
+        while(!pending.isEmpty()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if (quitWaiting){
+                log("wait for arrival aborted");
+                break;
+            }
         }
         // Stop accepting arrive() once complete
         reset();
-        notifyAll();
     }
 
     /* Logging */

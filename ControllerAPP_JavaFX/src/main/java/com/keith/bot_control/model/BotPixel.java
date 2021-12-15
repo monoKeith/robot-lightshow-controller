@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import static com.keith.bot_control.controller.DotsCanvasControl.*;
 
 public class BotPixel {
+    // size of playground in Webots, must be square for now (unit: meter)
+    public static final int PLAYGROUND_SIZE = 3;
 
     // Constants: drawing pixels on canvas
     public static final int PIXEL_R = 16;
@@ -20,24 +22,27 @@ public class BotPixel {
     public static final double T_PIXEL_D = 2 * T_PIXEL_R;
 
     // Default values
-    public static final Point2D DEFAULT_LOCATION = new Point2D(0,0);
-    public static final Color DEFAULT_COLOR = Color.ORANGE;
     public static final Color SELECTION_RING_COLOR = Color.web("#ff007b");
 
     // Pixel Properties
-    private Point2D physicalLocation;
-    private Point2D pixelLocation;
-    private Point2D pixelPreviewLocation;
-    private Point2D pixelTimelineLocation;
-    private Color color;
-    private Color previewColor;
+    public Point2D pixelLocation;
+    public Point2D physicalLocation;
+    public Point2D pixelPreviewLocation;
+    public Point2D pixelTimelineLocation;
+    public Color color;
+    public Color previewColor;
     // Mapping related
-    private int pixelId;
+    public int pixelId;
 
     public BotPixel(double x, double y, Color color, int Id){
         setPixelLocation(new Point2D(x, y));
         setColor(color);
         this.pixelId = Id;
+    }
+
+    public BotPixel clone(){
+        Color color = Color.color(this.color.getRed(), this.color.getGreen(), this.color.getBlue());
+        return new BotPixel(this.pixelLocation.getX(), this.pixelLocation.getY(), color, this.pixelId);
     }
 
     /* Unit Converters */
