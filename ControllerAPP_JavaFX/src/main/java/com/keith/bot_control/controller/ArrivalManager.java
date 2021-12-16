@@ -42,11 +42,11 @@ public class ArrivalManager {
             log(String.format("UNEXPECTED arrival from: %s", uuid));
             return;
         }
-//        double distance = targetLocation.distance(curLocation);
-//        if (distance > posAccuracy) {
-//            log(String.format("WARNING! misaligned LightBot: %s", uuid));
-//            return;
-//        }
+        double distance = targetLocation.distance(curLocation);
+        if (distance > posAccuracy) {
+            log(String.format("WARNING! misaligned LightBot: %s", uuid));
+            return;
+        }
         // Arrived
         pending.remove(uuid);
         log(String.format("remaining: %d, just arrived: %s", pending.size(), uuid));
